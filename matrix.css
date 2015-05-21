@@ -21,6 +21,10 @@ circle.x {
     fill: black;
 }
 
+circle.a {
+    fill: blue;
+}
+
 line.a {
     stroke: blue;
 }
