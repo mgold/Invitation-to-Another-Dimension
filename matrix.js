@@ -35,7 +35,10 @@ plot.append("line")
 
 var data = d3.range(-3, 4)
 
+var globals = {}
+
 function render(m, b, initialRender){
+    globals.m = m; globals.b = b;
     var f = function(x){return m*x + b}
     var transDur = 1000;
 
@@ -105,18 +108,19 @@ function render(m, b, initialRender){
     var len = Math.sqrt(dx*dx + dy*dy)
     var rot = Math.atan(m) * -180 / Math.PI;
     if (initialRender){
-        var drag = d3.behavior.drag()
+        var dragRot = d3.behavior.drag()
             .on("drag", function(evt){
                 if (d3.event.x == 0){
-                    render(9999.99, b)
+                    render(9999.99, globals.b)
                 }else{
-                    render(-d3.event.y/d3.event.x, b);
+                    render((-d3.event.y-x(globals.b))/d3.event.x, globals.b);
                 }
             })
         var dragHandle = plot.append("g")
-            .attr("id", "dragger")
-            .attr("transform", "rotate("+rot+") translate(0,"+b+")")
-            .call(drag)
+            .attr("id", "draggerRot")
+            .attr("class", "dragger")
+            .attr("transform", "rotate("+rot+") translate(0,"+-x(b)+")")
+            .call(dragRot)
         dragHandle.append("line")
             .attr({x1: -len, x2: -len, y1: 0, y2: 0})
             .attr("class", "a")
@@ -125,11 +129,29 @@ function render(m, b, initialRender){
         dragHandle.append("line")
             .attr("class", "cover")
             .attr({x1: -len, x2: len, y1: 0, y2: 0})
+
+        var dragVert = d3.behavior.drag()
+            .on("drag", function(evt){
+                console.log(d3.event.y)
+                render(globals.m, b-x.invert(d3.event.y))
+            })
+        var side = (x(1)-x(0))*0.8
+        plot.append("rect")
+            .attr("id", "draggerVert")
+            .attr("class", "cover dragger")
+            .attr("transform", "translate(0,"+-x(b)+")")
+            .attr("x", -side)
+            .attr("y", -side)
+            .attr("width", 2*side)
+            .attr("height", 2*side)
+            .call(dragVert)
     }else{
-        d3.select("#dragger")
-            .attr("transform", "rotate("+rot+") translate(0,"+b+")")
+        d3.select("#draggerRot")
+            .attr("transform", "rotate("+rot+",0,"+-x(b)+") translate(0,"+-x(b)+")")
           .select("line")
             .attr({x1: -len, x2: len, y1: 0, y2: 0})
+        d3.select("#draggerVert")
+            .attr("transform", "translate(0,"+-x(b)+")")
     }
 }
 

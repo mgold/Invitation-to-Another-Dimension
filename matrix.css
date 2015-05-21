@@ -29,16 +29,24 @@ line.a {
     stroke: blue;
 }
 
-#dragger {
+#draggerRot {
     cursor: move;
 }
 
-#dragger .cover {
+#draggerVert {
+    cursor: ns-resize;
+}
+
+line.cover {
     fill: none;
     stroke-opacity: 0;
     stroke-width: 10;
 }
 
-#dragger line {
+rect.cover {
+    opacity: 0;
+}
+
+#draggerRot line {
     shape-rendering: geometricPrecision;
 }
