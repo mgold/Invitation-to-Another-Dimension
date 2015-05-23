@@ -57,7 +57,8 @@ function stage_linear(){
 
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
-            .data(["a = mx + b", "a = " + m.toFixed(2) + "x + " + b.toFixed(2)])
+            .data(["<tspan class=a>a</tspan> = mx + b",
+                   "<tspan class=a>a</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan>x + <tspan class=dragB>" + b.toFixed(2) + "</tspan>"])
         symbols.enter().append("text")
             .style("opacity", 0)
           .transition().duration(500).delay(transDur*order)
@@ -66,8 +67,13 @@ function stage_linear(){
           .transition().duration(500)
             .style("opacity", 0)
             .remove();
-        symbols.text(function(d){return d})
+        symbols.html(function(d){return d})
             .translate(function(d,i){return [0, 30*i]})
+
+        symbols.selectAll(".dragM").attr("class", "draggerHoriz")
+            .call(d3.behavior.drag().on("drag",function(){m += d3.event.dx/10; render()}))
+        symbols.selectAll(".dragB").attr("class", "draggerHoriz")
+            .call(d3.behavior.drag().on("drag",function(){b += d3.event.dx/10; render()}))
     }
 
     var lines = function(g, order){

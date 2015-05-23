@@ -6,6 +6,13 @@ path, line {
 
 text {
     font-family: avenir, sans-serif;
+    cursor: default;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 #plot text {
@@ -21,7 +28,7 @@ circle.x {
     fill: black;
 }
 
-circle.a {
+circle.a, tspan.a {
     fill: blue;
 }
 
@@ -35,6 +42,10 @@ line.a {
 
 #draggerVert {
     cursor: ns-resize;
+}
+
+.draggerHoriz {
+    cursor: ew-resize;
 }
 
 line.cover {
