@@ -43,13 +43,16 @@ function stage_linear(){
         .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
 
     function render(initialRender){
-        freeze();
+        if (initialRender){
+            freeze();
+            d3.timer(function(){unfreeze(); return true;}, 4*transDur);
+        }
         circlesX(layer2, 0);
         lines(layer1, 1);
         circlesA(layer2, 1);
-        dragging(layer2, 2, initialRender);
+        dragRot(layer2, 2, initialRender);
+        dragVert(layer2, 2, initialRender);
         symbols(svg.select("#symbols"), 3);
-        d3.timer(function(){unfreeze(); return true;}, 4*transDur);
     }
 
     var symbols = function(g, order){
@@ -106,69 +109,64 @@ function stage_linear(){
         },
         function(sel){
             sel.attr("r", 3)
-                .attr("cy", function(d){ return -x(f(d))})
+               .attr("cy", function(d){ return -x(f(d))})
         }
     )
 
-    var dragging = function(g, order, initialRender){
+    var dragRot = function(g, order, initialRender){
         var dx = x.range()[0]
         var dy = f(x(-3))
         var len = Math.sqrt(dx*dx + dy*dy)
         var rot = Math.atan(m) * -180 / Math.PI;
+        var transform = "rotate("+rot+",0,"+-x(b)+") translate(0,"+-x(b)+")";
         if (initialRender){
-            dragRot(g, order, len);
-            dragVert(g, order);
-        }else{
-            g.select("#draggerRot")
-                .attr("transform", "rotate("+rot+",0,"+-x(b)+") translate(0,"+-x(b)+")")
-              .select("line")
+            var drag = d3.behavior.drag()
+                .on("drag", function(){
+                    if (d3.event.x === 0){
+                        m = 9999.99;
+                    }else{
+                        m = (-d3.event.y-x(b))/d3.event.x;
+                    }
+                    render();
+                })
+            var dragHandle = g.append("g")
+                .attr("id", "draggerRot")
+                .attr("class", "dragger")
+                .attr("transform", transform)
+                .call(drag)
+            dragHandle.append("line")
+                .attr({x1: -len, x2: -len, y1: 0, y2: 0})
+                .attr("class", "a")
+              .transition().duration(transDur).delay(order*transDur)
+                .attr({x2: len})
+            dragHandle.append("line")
+                .attr("class", "cover")
                 .attr({x1: -len, x2: len, y1: 0, y2: 0})
-            g.select("#draggerVert")
-                .attr("transform", "translate(0,"+-x(b)+")")
         }
-    }
-
-    var dragRot = function(g, order, len){
-        var drag = d3.behavior.drag()
-            .on("drag", function(evt){
-                if (d3.event.x === 0){
-                    m = 9999.99;
-                }else{
-                    m = (-d3.event.y-x(b))/d3.event.x;
-                }
-                render();
-            })
-        var dragHandle = g.append("g")
-            .attr("id", "draggerRot")
-            .attr("class", "dragger")
-            .attr("transform", "rotate(-45) translate(0,"+-x(b)+")")
-            .call(drag)
-        dragHandle.append("line")
-            .attr({x1: -len, x2: -len, y1: 0, y2: 0})
-            .attr("class", "a")
-          .transition().duration(transDur).delay(order*transDur)
-            .attr({x2: len})
-        dragHandle.append("line")
-            .attr("class", "cover")
+        g.select("#draggerRot")
+            .attr("transform", transform)
+          .select("line").filter(function(){return !this.__transition__})
             .attr({x1: -len, x2: len, y1: 0, y2: 0})
     }
 
-    var dragVert = function(g, order){
-        var drag = d3.behavior.drag()
-        .on("drag", function(evt){
-            b = -x.invert(d3.event.y)
-            render();
-        })
-        var side = (x(1)-x(0))*0.8
-        g.append("rect")
-            .attr("id", "draggerVert")
-            .attr("class", "cover dragger")
-            .attr("transform", "translate(0,"+-x(b)+")")
-            .attr("x", -side)
-            .attr("y", -side)
-            .attr("width", 2*side)
-            .attr("height", 2*side)
-            .call(drag)
+    var dragVert = function(g, order, initialRender){
+        if (initialRender){
+            var drag = d3.behavior.drag()
+                .on("drag", function(){
+                    b = -x.invert(d3.event.y);
+                    render();
+                })
+            var side = (x(1)-x(0))*0.8
+            g.append("rect")
+                .attr("id", "draggerVert")
+                .attr("class", "cover dragger")
+                .attr("transform", "translate(0,"+-x(b)+")")
+                .attr({x: -side, y: -side, width: 2*side, height: 2*side})
+                .call(drag)
+        }else{
+            g.select("#draggerVert")
+                .attr("transform", "translate(0,"+-x(b)+")")
+        }
     }
 
     render(1, 0, true);
