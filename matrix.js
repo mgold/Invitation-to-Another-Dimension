@@ -24,6 +24,11 @@ svg.append("g")
     .translate(600, 250)
     .attr("id", "plot")
 
+function makeDragger(sel, callback){
+    sel.classed("draggerHoriz", true)
+       .call(d3.behavior.drag().on("drag", callback))
+}
+
 function stage_linear(){
     var x = d3.scale.linear()
             .domain([-5, 5])
@@ -70,10 +75,10 @@ function stage_linear(){
         symbols.html(function(d){return d})
             .translate(function(d,i){return [0, 30*i]})
 
-        symbols.selectAll(".dragM").attr("class", "draggerHoriz")
-            .call(d3.behavior.drag().on("drag",function(){m += d3.event.dx/10; render()}))
-        symbols.selectAll(".dragB").attr("class", "draggerHoriz")
-            .call(d3.behavior.drag().on("drag",function(){b += d3.event.dx/10; render()}))
+        symbols.selectAll(".dragM")
+            .call(makeDragger, function(){m += d3.event.dx/10; render()})
+        symbols.selectAll(".dragB")
+            .call(makeDragger, function(){b += d3.event.dx/10; render()})
     }
 
     var lines = function(g, order){
