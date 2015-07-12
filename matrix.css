@@ -4,7 +4,7 @@ path, line {
   shape-rendering: crispEdges;
 }
 
-text {
+text, p {
     font-family: avenir, sans-serif;
     cursor: default;
     -webkit-touch-callout: none;
@@ -34,6 +34,10 @@ circle.a, tspan.a {
 
 line.a {
     stroke: blue;
+}
+
+span.a {
+    color: blue;
 }
 
 #draggerRot {

@@ -12,9 +12,16 @@ function isFrozen(){
     return _freeze > 0;
 }
 
+function approach(target, current, step){
+    step = step || 0.1;
+    if (Math.abs(target-current) <= step) return target;
+    if (target < current) return current-step;
+    return current + step;
+}
+
 var svg = d3.select("svg")
     .attr("width", screen.width)
-    .attr("height", screen.height)
+    .attr("height", 500)
 
 svg.append("g")
     .translate(100, 250)
@@ -39,6 +46,9 @@ function stage_linear(){
     var m = 1, b = 0;
     var f = function(x){return m*x + b}
 
+    var symbolsParent = svg.select("#symbols")
+    var storyParent = d3.select("#explanation");
+
     var plot = svg.select("#plot");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
@@ -52,18 +62,45 @@ function stage_linear(){
             freeze();
             d3.timer(function(){unfreeze(); return true;}, 4*transDur);
         }
+        story(storyParent);
         circlesX(layer2, 0);
         lines(layer1, 1);
         circlesA(layer2, 1);
         dragRot(layer2, 2, initialRender);
         dragVert(layer2, 2, initialRender);
-        symbols(svg.select("#symbols"), 3);
+        symbols(symbolsParent, 3);
+    }
+
+    var story = function(div){
+        var paras = div.selectAll("p")
+            .data(["A linear function for an input (called x) does two things. First it <i>scales</i> x by multiplying it by a scale factor called m. Then it <i>translates</i> the result by adding another value, called b. The output we call <span class=a>y</span>.",
+        "You can adjust these values in the equations, in the text below, or on the graph itself directly.",
+        "placeholder"])
+
+        paras.exit().remove();
+        paras.enter().append("p");
+        paras.html(function(d,i){
+            if (i !== 2) return d;
+            var sb = (b < 0 ? "subtracts " : "adds ") + Math.abs(b).toFixed(2)
+            var sm = m.toFixed(2)
+            var b0 = -0.1 < b && b < 0.1;
+            var m0 = -0.1 < m && m < 0.1;
+            var m1 = 0.9 < m && m < 1.1;
+            if (b0 && m1) return "The function shown here multiplies x by 1 and then adds 0. In other words, it doesn't change x at all. Geometrically, this means that all triangles are isoceles: the input equals the output.  This function is called the identity."
+            if (m1) return "The function shown here multiplies x by 1 and then "+sb+". Multiplying x by 1 is just x, so this function is just addition, or translation, by "+sb+"."
+            if (b0) return "The function shown here multiplies x by "+sm+" and then adds 0. Adding zero does nothing, so this function is just multiplication, or scaling, by "+sm+"."
+            if (m0) return "The function shown here multiplies x by 0 and then "+sb+". Since anything times zero is zero, it's a constant function, because the values does not depend on x; it's always "+sb+"."
+            var mrange = m > 0 ? (m < 1 ? "between 0 and 1" : "greater than 1") : (m > -1 ? "between -1 and 0" : "less than -1")
+            var bigOrSmall = m < 1 && m > -1 ? "smaller" : "larger"
+            var neg = m < 0 ? " and the sign flips" : ""
+            return "The function shown here multiplies x by "+sm+" and then "+sb+". Because m is "+mrange+", x becomes "+bigOrSmall+neg+" (at least before adding b)."
+        })
     }
 
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
-            .data(["<tspan class=a>a</tspan> = mx + b",
-                   "<tspan class=a>a</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan>x + <tspan class=dragB>" + b.toFixed(2) + "</tspan>"])
+            .data(["<tspan class=a>y</tspan> = mx + b",
+                   "<tspan class=a>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan>x + <tspan class=dragB>" + b.toFixed(2) + "</tspan>"])
         symbols.enter().append("text")
             .style("opacity", 0)
           .transition().duration(500).delay(transDur*order)
