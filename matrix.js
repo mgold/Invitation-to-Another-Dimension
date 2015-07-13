@@ -41,18 +41,20 @@ function makeDragger(callback){
 }
 
 function stage_linear(){
-    var x = d3.scale.linear()
-            .domain([-5, 5])
-            .range([-200, 200])
+    // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
+    var m = 1, b = 0;
+    var hoverX = null;
 
     var data = d3.range(-3, 4)
     var transDur = 1000;
-    var m = 1, b = 0;
     var f = function(x){return m*x + b}
-    var hoverX = null;
 
     var makeDraggerM = makeDragger(function(){m += d3.event.dx/10; render()});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10; render()});
+
+    var x = d3.scale.linear()
+            .domain([-5, 5])
+            .range([-200, 200])
 
     var symbolsParent = svg.select("#symbols")
     var storyParent = d3.select(".first.essay");
@@ -127,6 +129,7 @@ function stage_linear(){
             .style("opacity", 0)
           .transition().duration(500).delay(transDur*order)
             .style("opacity", 1)
+            .attr("dy", "-30px")
         symbols.exit()
           .transition().duration(500)
             .style("opacity", 0)
@@ -182,7 +185,7 @@ function stage_linear(){
             sel.attr("r", 0).attr("cy", 0).attr("cx", function(d){ return x(d)})
         },
         function(sel){
-            sel.attr("r", 3)
+            sel.attr("r", function(d){ return d === hoverX ? 7 : 3})
                .attr("cy", function(d){ return -x(f(d))})
         }
     )
