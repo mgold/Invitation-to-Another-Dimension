@@ -23,6 +23,11 @@ var svg = d3.select("svg")
     .attr("width", screen.width)
     .attr("height", 500)
 
+svg.append("rect")
+    .attr("class", "bg")
+    .attr("width", screen.width)
+    .attr("height", 500)
+
 svg.append("g")
     .translate(100, 250)
     .attr("id", "symbols")
@@ -47,7 +52,7 @@ function stage_linear(){
     var f = function(x){return m*x + b}
 
     var symbolsParent = svg.select("#symbols")
-    var storyParent = d3.select("#explanation");
+    var storyParent = d3.select(".first.essay");
 
     var plot = svg.select("#plot");
     var layer1 = plot.append("g");
@@ -65,7 +70,7 @@ function stage_linear(){
         story(storyParent);
         circlesX(layer2, 0);
         lines(layer1, 1);
-        circlesA(layer2, 1);
+        circlesY(layer2, 1);
         dragRot(layer2, 2, initialRender);
         dragVert(layer2, 2, initialRender);
         symbols(symbolsParent, 3);
@@ -73,14 +78,11 @@ function stage_linear(){
 
     var story = function(div){
         var paras = div.selectAll("p")
-            .data(["A linear function for an input (called x) does two things. First it <i>scales</i> x by multiplying it by a scale factor called m. Then it <i>translates</i> the result by adding another value, called b. The output we call <span class=a>y</span>.",
-        "You can adjust these values in the equations, in the text below, or on the graph itself directly.",
-        "placeholder"])
+            .data(["placeholder"])
 
         paras.exit().remove();
         paras.enter().append("p");
         paras.html(function(d,i){
-            if (i !== 2) return d;
             var sb = (b < 0 ? "subtracts " : "adds ") + Math.abs(b).toFixed(2)
             var sm = m.toFixed(2)
             var b0 = -0.1 < b && b < 0.1;
@@ -99,8 +101,8 @@ function stage_linear(){
 
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
-            .data(["<tspan class=a>y</tspan> = mx + b",
-                   "<tspan class=a>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan>x + <tspan class=dragB>" + b.toFixed(2) + "</tspan>"])
+            .data(["<tspan class=y1>y</tspan> = m<tspan class=x1>x</tspan> + b",
+                   "<tspan class=y1>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan><tspan class=x1>x</tspan> + <tspan class=dragB>" + b.toFixed(2) + "</tspan>"])
         symbols.enter().append("text")
             .style("opacity", 0)
           .transition().duration(500).delay(transDur*order)
@@ -119,12 +121,12 @@ function stage_linear(){
     }
 
     var lines = function(g, order){
-        var lines = g.selectAll("line.a")
+        var lines = g.selectAll("line.y1")
             .data(data)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", function(d){ return -x(f(d))})
         lines.enter().append("line")
-            .attr("class", "a")
+            .attr("class", "y1")
             .attr("x1", function(d){ return x(d)})
             .attr("x2", function(d){ return x(d)})
             .attr({y1: 0, y2: 0})
@@ -146,12 +148,12 @@ function stage_linear(){
         }
     }
 
-    var circlesX = makeCircles("x",
+    var circlesX = makeCircles("x1",
         function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)},
         function(sel){sel.attr("r", 4).attr("cx", function(d){ return x(d)})}
     )
 
-    var circlesA = makeCircles("a",
+    var circlesY = makeCircles("y1",
         function(sel){
             sel.attr("r", 0).attr("cy", 0).attr("cx", function(d){ return x(d)})
         },
@@ -184,7 +186,7 @@ function stage_linear(){
                 .call(drag)
             dragHandle.append("line")
                 .attr({x1: -len, x2: -len, y1: 0, y2: 0})
-                .attr("class", "a")
+                .attr("class", "y1")
               .transition().duration(transDur).delay(order*transDur)
                 .attr({x2: len})
             dragHandle.append("line")
@@ -193,7 +195,7 @@ function stage_linear(){
         }
         g.select("#draggerRot")
             .attr("transform", transform)
-          .select("line").filter(function(){return !this.__transition__})
+          .selectAll("line").filter(function(){return !this.__transition__})
             .attr({x1: -len, x2: len, y1: 0, y2: 0})
     }
 

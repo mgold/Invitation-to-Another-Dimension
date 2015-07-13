@@ -1,14 +1,25 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="matrix.css">
-        <title>Matrices</title>
-    </head>
-    <body>
-        <svg></svg>
-        <div id=explanation></div>
-        <script src="/assets/d3.v3.js" charset="utf-8"></script>
-        <script src="/assets/d3.translate.js"></script>
-        <script src="matrix.js"></script>
-    </body>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type'>
+    <link href='css/matrix.css' rel='stylesheet' type='text/css'>
+    <title>Matrices</title>
+  </head>
+  <body>
+    <div class='essay'>
+      <p>
+        A linear function for an input (called <span class='x1'>x</span>)
+        <i>scales</i> x by multiplying it by a scale factor called m. Then it
+        <i>translates</i> the result by adding another value, called b. The
+        output we call <span class='y1'>y</span>.
+      </p>
+      <p>You can adjust these values in the equations, in the text below, or on the graph itself directly.</p>
+    </div>
+    <svg class='first'></svg>
+    <div class='first essay'>
+    </div>
+  </body>
+  <script charset='utf-8' src='/assets/d3.v3.js'></script>
+  <script src='/assets/d3.translate.js'></script>
+  <script src='matrix.js'></script>
 </html>

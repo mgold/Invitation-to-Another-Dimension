@@ -1,10 +1,14 @@
+body {
+    margin: 0;
+}
+
 path, line {
   fill: none;
   stroke: #888;
   shape-rendering: crispEdges;
 }
 
-text, p {
+text {
     font-family: avenir, sans-serif;
     cursor: default;
     -webkit-touch-callout: none;
@@ -24,24 +28,38 @@ text.label, tspan.label {
     font-size: 16px;
 }
 
-circle.x {
-    fill: black;
+.essay {
+    font-family: klavika-web, sans-serif;
+    width: 620px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-circle.a, tspan.a {
-    fill: blue;
+@mixin dimension($name, $color) {
+    circle.#{$name}, tspan.#{$name} {
+        fill: $color;
+    }
+
+    line.#{$name} {
+        stroke: $color;
+    }
+
+    span.#{$name} {
+        color: $color;
+    }
 }
 
-line.a {
-    stroke: blue;
-}
-
-span.a {
-    color: blue;
-}
+@include dimension("x1", #c03000);
+@include dimension("x2", #a74697);
+@include dimension("y1", #3080f0);
+@include dimension("y2", #30a0b0); // alt: #5070a0
 
 #draggerRot {
     cursor: move;
+    line {
+        shape-rendering: geometricPrecision;
+    }
 }
 
 #draggerVert {
@@ -62,6 +80,6 @@ rect.cover {
     opacity: 0;
 }
 
-#draggerRot line {
-    shape-rendering: geometricPrecision;
+rect.bg {
+    fill: #fafafa;
 }
