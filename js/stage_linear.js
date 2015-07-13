@@ -35,7 +35,7 @@ module.exports = function(){
         .attr({x1: x.range()[0], x2: x.range()[1], y1: 0, y2: 0})
     layer1.append("line")
         .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
-    var storyParent = d3.select(".first.essay");
+    var storyParent = d3.select(".essay p.first");
 
     function render(initialRender){
         if (initialRender){
@@ -143,8 +143,8 @@ module.exports = function(){
 
     var circlesX = makeCircles("x1",
         function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)
-            .on("mouseover", function(d){ hoverX = d; render();})
-            .on("mouseout", function(d){ hoverX = null; render();})
+            .on("mouseover", function(d){ if(!utils.isFrozen()){hoverX = d; render();}})
+            .on("mouseout", function(d){ if(!utils.isFrozen()){hoverX = null; render();}})
         },
         function(sel){sel.attr("r", function(d){ return d === hoverX ? 8 : 4})
                          .attr("cx", function(d){ return x(d)})}
@@ -169,6 +169,7 @@ module.exports = function(){
         if (initialRender){
             var drag = d3.behavior.drag()
                 .on("drag", function(){
+                    if (utils.isFrozen()) return;
                     if (d3.event.x === 0){
                         m = 9999.99;
                     }else{
@@ -200,6 +201,7 @@ module.exports = function(){
         if (initialRender){
             var drag = d3.behavior.drag()
                 .on("drag", function(){
+                    if (utils.isFrozen()) return;
                     b = -x.invert(d3.event.y);
                     render();
                 })
@@ -216,5 +218,5 @@ module.exports = function(){
         }
     }
 
-    return function(){render(1, 0, true);}
+    return function(){render(true);}
 }
