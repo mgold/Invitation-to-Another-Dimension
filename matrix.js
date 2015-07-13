@@ -49,6 +49,7 @@ function stage_linear(){
     var transDur = 1000;
     var m = 1, b = 0;
     var f = function(x){return m*x + b}
+    var hoverX = null;
 
     var makeDraggerM = makeDragger(function(){m += d3.event.dx/10; render()});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10; render()});
@@ -95,26 +96,33 @@ function stage_linear(){
             var sb_pretty = b0 ? "0" : Math.abs(sb)
             var sb_verb = "<span class='dragB'>" + (b < 0 ? "subtracts " : "adds ") + sb_pretty + "</span>"
             var sb_ing = (b < 0 ? "subtracting " : "adding ") + sb_pretty
-            var sm = m.toFixed(2)
+
             var m0 = near(m, 0)
             var m1 = near(m, 1)
+            var sm_pretty = m0 ? "0" : (m1 ? "1" : m.toFixed(2))
+            var sm = "<span class='dragM'>" + sm_pretty + "</span>"
+
             var x = "<span class=x1>x</span>"
-            if (b0 && m1) return "The function shown here multiplies "+x+" by 1 and then "+sb_verb+". In other words, it doesn't change "+x+" at all. Geometrically, this means that all triangles are isoceles: the input equals the output.  This function is called the identity."
-            if (m1) return "The function shown here multiplies "+x+" by 1 and then "+sb_verb+". Multiplying "+x+" by 1 is just "+x+", so this function is just addition, or translation, by "+sb+"."
-            if (b0) return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Adding zero does nothing, so this function is just multiplication, or scaling, by "+sm+"."
-            if (m0) return "The function shown here multiplies "+x+" by 0 and then "+sb_verb+". Since anything times zero is zero, it's a constant function, because the values does not depend on "+x+"; it's always "+sb+"."
+
+            if (b0 && m1) return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". In other words, it doesn't change "+x+" at all. This function is called the identity. What other special functions can you find?"
+            if (m1) return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Multiplying "+x+" by 1 is just "+x+", so this function is only addition, or translation."
+            if (m0) return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Since anything times zero is zero, it's a constant function, because the values does not depend on "+x+"; it's always "+sb+"."
+            if (b0) return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Adding zero does nothing, so this function is just multiplication, or scaling."
             var mrange = m > 0 ? (m < 1 ? "between 0 and 1" : "greater than 1") : (m > -1 ? "between -1 and 0" : "less than -1")
             var bigOrSmall = m < 1 && m > -1 ? "smaller" : "larger"
             var neg = m < 0 ? " and the sign flips" : ""
             return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Because m is "+mrange+", "+x+" becomes "+bigOrSmall+neg+" (at least before "+sb_ing+")."
         })
         paras.selectAll(".dragB").call(makeDraggerB);
+        paras.selectAll(".dragM").call(makeDraggerM);
     }
 
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class=y1>y</tspan> = m<tspan class=x1>x</tspan> + b",
-                   "<tspan class=y1>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan><tspan class=x1>x</tspan> + <tspan class=dragB>" + b.toFixed(2) + "</tspan>"])
+                   "<tspan class=y1>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan><tspan class=x1>x</tspan> + <tspan class=dragB>" + b.toFixed(2) + "</tspan>",
+                   "<tspan class=y1>"+f(hoverX).toFixed(2)+"</tspan> = " + m.toFixed(2) + "*<tspan class=x1>"+hoverX+"</tspan> + " + b.toFixed(2)
+                   ])
         symbols.enter().append("text")
             .style("opacity", 0)
           .transition().duration(500).delay(transDur*order)
@@ -123,7 +131,7 @@ function stage_linear(){
           .transition().duration(500)
             .style("opacity", 0)
             .remove();
-        symbols.html(function(d){return d})
+        symbols.html(function(d,i){return i==2 && hoverX === null ? "" : d})
             .translate(function(d,i){return [0, 30*i]})
 
         symbols.selectAll(".dragM")
@@ -161,8 +169,12 @@ function stage_linear(){
     }
 
     var circlesX = makeCircles("x1",
-        function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)},
-        function(sel){sel.attr("r", 4).attr("cx", function(d){ return x(d)})}
+        function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)
+            .on("mouseover", function(d){ hoverX = d; render();})
+            .on("mouseout", function(d){ hoverX = null; render();})
+        },
+        function(sel){sel.attr("r", function(d){ return d === hoverX ? 8 : 4})
+                         .attr("cx", function(d){ return x(d)})}
     )
 
     var circlesY = makeCircles("y1",
