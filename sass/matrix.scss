@@ -80,6 +80,18 @@ rect.cover {
     opacity: 0;
 }
 
-rect.bg {
-    fill: #fafafa;
+$svg_height: 500px;
+
+.bg {
+    width: 100%;
+    height: $svg_height;
+    background-color: #fafafa;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
 }
+
+svg {
+    width: 100%;
+    height: $svg_height;
+}
+

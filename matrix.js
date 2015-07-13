@@ -19,26 +19,25 @@ function approach(target, current, step){
     return current + step;
 }
 
-var svg = d3.select("svg")
-    .attr("width", screen.width)
-    .attr("height", 500)
+function clamp(lo, hi, val){
+    return Math.max(lo, Math.min(hi, val));
+}
 
-svg.append("rect")
-    .attr("class", "bg")
-    .attr("width", screen.width)
-    .attr("height", 500)
+var svg = d3.select("svg")
 
 svg.append("g")
-    .translate(100, 250)
+    .translate(250, 250)
     .attr("id", "symbols")
 
 svg.append("g")
     .translate(600, 250)
     .attr("id", "plot")
 
-function makeDragger(sel, callback){
-    sel.classed("draggerHoriz", true)
-       .call(d3.behavior.drag().on("drag", callback))
+function makeDragger(callback){
+    return function(sel){
+        sel.classed("draggerHoriz", true)
+           .call(d3.behavior.drag().on("drag", function(){if (!isFrozen()) callback()}))
+    }
 }
 
 function stage_linear(){
@@ -50,6 +49,9 @@ function stage_linear(){
     var transDur = 1000;
     var m = 1, b = 0;
     var f = function(x){return m*x + b}
+
+    var makeDraggerM = makeDragger(function(){m += d3.event.dx/10; render()});
+    var makeDraggerB = makeDragger(function(){b += d3.event.dx/10; render()});
 
     var symbolsParent = svg.select("#symbols")
     var storyParent = d3.select(".first.essay");
@@ -67,6 +69,7 @@ function stage_linear(){
             freeze();
             d3.timer(function(){unfreeze(); return true;}, 4*transDur);
         }
+        b = clamp(-10, 10, b)
         story(storyParent);
         circlesX(layer2, 0);
         lines(layer1, 1);
@@ -76,6 +79,10 @@ function stage_linear(){
         symbols(symbolsParent, 3);
     }
 
+    var eps = 0.01
+    var near = function(a, b){
+        return b-eps < a && b + eps > a;
+    }
     var story = function(div){
         var paras = div.selectAll("p")
             .data(["placeholder"])
@@ -83,20 +90,25 @@ function stage_linear(){
         paras.exit().remove();
         paras.enter().append("p");
         paras.html(function(d,i){
-            var sb = (b < 0 ? "subtracts " : "adds ") + Math.abs(b).toFixed(2)
+            var b0 = near(b, 0)
+            var sb = b.toFixed(2)
+            var sb_pretty = b0 ? "0" : Math.abs(sb)
+            var sb_verb = "<span class='dragB'>" + (b < 0 ? "subtracts " : "adds ") + sb_pretty + "</span>"
+            var sb_ing = (b < 0 ? "subtracting " : "adding ") + sb_pretty
             var sm = m.toFixed(2)
-            var b0 = -0.1 < b && b < 0.1;
-            var m0 = -0.1 < m && m < 0.1;
-            var m1 = 0.9 < m && m < 1.1;
-            if (b0 && m1) return "The function shown here multiplies x by 1 and then adds 0. In other words, it doesn't change x at all. Geometrically, this means that all triangles are isoceles: the input equals the output.  This function is called the identity."
-            if (m1) return "The function shown here multiplies x by 1 and then "+sb+". Multiplying x by 1 is just x, so this function is just addition, or translation, by "+sb+"."
-            if (b0) return "The function shown here multiplies x by "+sm+" and then adds 0. Adding zero does nothing, so this function is just multiplication, or scaling, by "+sm+"."
-            if (m0) return "The function shown here multiplies x by 0 and then "+sb+". Since anything times zero is zero, it's a constant function, because the values does not depend on x; it's always "+sb+"."
+            var m0 = near(m, 0)
+            var m1 = near(m, 1)
+            var x = "<span class=x1>x</span>"
+            if (b0 && m1) return "The function shown here multiplies "+x+" by 1 and then "+sb_verb+". In other words, it doesn't change "+x+" at all. Geometrically, this means that all triangles are isoceles: the input equals the output.  This function is called the identity."
+            if (m1) return "The function shown here multiplies "+x+" by 1 and then "+sb_verb+". Multiplying "+x+" by 1 is just "+x+", so this function is just addition, or translation, by "+sb+"."
+            if (b0) return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Adding zero does nothing, so this function is just multiplication, or scaling, by "+sm+"."
+            if (m0) return "The function shown here multiplies "+x+" by 0 and then "+sb_verb+". Since anything times zero is zero, it's a constant function, because the values does not depend on "+x+"; it's always "+sb+"."
             var mrange = m > 0 ? (m < 1 ? "between 0 and 1" : "greater than 1") : (m > -1 ? "between -1 and 0" : "less than -1")
             var bigOrSmall = m < 1 && m > -1 ? "smaller" : "larger"
             var neg = m < 0 ? " and the sign flips" : ""
-            return "The function shown here multiplies x by "+sm+" and then "+sb+". Because m is "+mrange+", x becomes "+bigOrSmall+neg+" (at least before adding b)."
+            return "The function shown here multiplies "+x+" by "+sm+" and then "+sb_verb+". Because m is "+mrange+", "+x+" becomes "+bigOrSmall+neg+" (at least before "+sb_ing+")."
         })
+        paras.selectAll(".dragB").call(makeDraggerB);
     }
 
     var symbols = function(g, order){
@@ -115,9 +127,9 @@ function stage_linear(){
             .translate(function(d,i){return [0, 30*i]})
 
         symbols.selectAll(".dragM")
-            .call(makeDragger, function(){m += d3.event.dx/10; render()})
+            .call(makeDraggerM)
         symbols.selectAll(".dragB")
-            .call(makeDragger, function(){b += d3.event.dx/10; render()})
+            .call(makeDraggerB)
     }
 
     var lines = function(g, order){
