@@ -1,46 +1,5 @@
-// Freezing ia a simple counting semaphore to prevent changing the stage during
-// a transition.
-var _freeze = 0
-function freeze(){
-    _freeze++;
-}
-function unfreeze(){
-    if (_freeze <= 0) console.warn("Unfreezing when freeze is", _freeze)
-    _freeze--;
-}
-function isFrozen(){
-    return _freeze > 0;
-}
-
-function approach(target, current, step){
-    step = step || 0.1;
-    if (Math.abs(target-current) <= step) return target;
-    if (target < current) return current-step;
-    return current + step;
-}
-
-function clamp(lo, hi, val){
-    return Math.max(lo, Math.min(hi, val));
-}
-
-var svg = d3.select("svg")
-
-svg.append("g")
-    .translate(250, 250)
-    .attr("id", "symbols")
-
-svg.append("g")
-    .translate(600, 250)
-    .attr("id", "plot")
-
-function makeDragger(callback){
-    return function(sel){
-        sel.classed("draggerHoriz", true)
-           .call(d3.behavior.drag().on("drag", function(){if (!isFrozen()) callback()}))
-    }
-}
-
-function stage_linear(){
+var utils = require('./utils');
+module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     var m = 1, b = 0;
     var hoverX = null;
@@ -49,6 +8,12 @@ function stage_linear(){
     var transDur = 1000;
     var f = function(x){return m*x + b}
 
+    var makeDragger = function(callback){
+        return function(sel){
+            sel.classed("draggerHoriz", true)
+               .call(d3.behavior.drag().on("drag", function(){if (!utils.isFrozen()) callback()}))
+        }
+    }
     var makeDraggerM = makeDragger(function(){m += d3.event.dx/10; render()});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10; render()});
 
@@ -56,23 +21,28 @@ function stage_linear(){
             .domain([-5, 5])
             .range([-200, 200])
 
-    var symbolsParent = svg.select("#symbols")
-    var storyParent = d3.select(".first.essay");
-
-    var plot = svg.select("#plot");
+    // DOM element selections
+    var svg = d3.select("svg.first")
+    var symbolsParent = svg.append("g")
+        .translate(250, 250)
+        .attr("id", "symbols")
+    var plot = svg.append("g")
+        .translate(600, 250)
+        .attr("id", "plot")
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
     layer1.append("line")
         .attr({x1: x.range()[0], x2: x.range()[1], y1: 0, y2: 0})
     layer1.append("line")
         .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
+    var storyParent = d3.select(".first.essay");
 
     function render(initialRender){
         if (initialRender){
-            freeze();
-            d3.timer(function(){unfreeze(); return true;}, 4*transDur);
+            utils.freeze();
+            d3.timer(function(){utils.unfreeze(); return true;}, 4*transDur);
         }
-        b = clamp(-10, 10, b)
+        b = utils.clamp(-10, 10, b)
         story(storyParent);
         circlesX(layer2, 0);
         lines(layer1, 1);
@@ -246,7 +216,5 @@ function stage_linear(){
         }
     }
 
-    render(1, 0, true);
+    return function(){render(1, 0, true);}
 }
-
-stage_linear();
