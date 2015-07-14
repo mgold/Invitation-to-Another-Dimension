@@ -28,6 +28,10 @@ text.label, tspan.label {
     font-size: 16px;
 }
 
+tspan.sub, small {
+    font-size: 8px;
+}
+
 .essay {
     font-family: klavika-web, sans-serif;
     width: 620px;
@@ -36,8 +40,14 @@ text.label, tspan.label {
     margin-right: auto;
 }
 
+.component text {
+    fill: white;
+    text-anchor: middle;
+}
+
 @mixin dimension($name, $color) {
-    circle.#{$name}, tspan.#{$name} {
+    circle.#{$name}, tspan.#{$name}, text.#{$name}, .component rect.#{$name}
+    {
         fill: $color;
     }
 
@@ -54,6 +64,7 @@ text.label, tspan.label {
 @include dimension("x2", #a74697);
 @include dimension("y1", #3080f0);
 @include dimension("y2", #30a0b0); // alt: #5070a0
+@include dimension("param", #aaa);
 
 #draggerRot {
     cursor: move;
@@ -78,6 +89,16 @@ line.cover {
 
 rect.cover {
     opacity: 0;
+}
+
+path.brace {
+    stroke: #666;
+    stroke-width: 2px;
+}
+
+text.eq, text.plus {
+    font-size: 34px;
+    fill: #666;
 }
 
 $svg_height: 500px;

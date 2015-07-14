@@ -1,4 +1,5 @@
 require('./d3.translate')
+require('./d3.place')
 var stage_linear = require('./stage_linear')()
 var stage_vector_line = require('./stage_vector_line')()
 
