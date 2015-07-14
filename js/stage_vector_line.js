@@ -68,9 +68,9 @@ module.exports = function(){
         var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
             .data(["<tspan class=y1>y"+sub1+"</tspan> = m"+sub1+"<tspan class=x1>x</tspan> + b"+sub1,
-                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = "+m1.toFixed(2)+"*<tspan class=x1>"+curX.toFixed(2)+"</tspan> "+utils.b(b1),
+                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
                    "<tspan class=y2>y"+sub2+"</tspan> = m"+sub2+"<tspan class=x1>x</tspan> + b"+sub2,
-                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = "+m2.toFixed(2)+"*<tspan class=x1>"+curX.toFixed(2)+"</tspan> "+utils.b(b2)
+                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = <tspan class=dragM2>"+m2.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB2>"+utils.b(b2)+"</tspan>",
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -82,12 +82,15 @@ module.exports = function(){
             .style("opacity", 0)
             .remove();
         symbols.html(function(d){return d})
-            /*
-        symbols.selectAll(".dragM")
-            .call(makeDraggerM)
-        symbols.selectAll(".dragB")
-            .call(makeDraggerB)
-            */
+
+        symbols.selectAll(".dragM1")
+            .call(makeDraggerM1)
+        symbols.selectAll(".dragB1")
+            .call(makeDraggerB1)
+        symbols.selectAll(".dragM2")
+            .call(makeDraggerM2)
+        symbols.selectAll(".dragB2")
+            .call(makeDraggerB2)
     }
 
     var symbols2 = function(g, order){
