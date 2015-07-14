@@ -30,7 +30,7 @@ module.exports.cross = function(a, b) {
 }
 
 module.exports.b = function(b){
-    return b < 0 ? "- "+Math.abs(b) : "+ "+b
+    return b < 0 ? "- "+Math.abs(b).toFixed(2) : "+ "+b.toFixed(2)
 }
 
 module.exports.vec = function(g){

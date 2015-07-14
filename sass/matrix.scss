@@ -10,22 +10,20 @@ path, line {
 
 text {
     font-family: avenir, sans-serif;
-    cursor: default;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
+    not .component &, .y1+&, .y2+& {
+        cursor: default;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 
-#plot text {
-    font-size: 12px;
-}
-
-text.label, tspan.label {
-    text-anchor: end;
-    font-size: 16px;
+    .component & {
+        fill: white;
+        text-anchor: middle;
+    }
 }
 
 tspan.sub, small {
@@ -38,11 +36,6 @@ tspan.sub, small {
     display: block;
     margin-left: auto;
     margin-right: auto;
-}
-
-.component text {
-    fill: white;
-    text-anchor: middle;
 }
 
 @mixin dimension($name, $color) {

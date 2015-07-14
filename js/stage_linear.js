@@ -92,8 +92,8 @@ module.exports = function(){
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class=y1>y</tspan> = m<tspan class=x1>x</tspan> + b",
-                   "<tspan class=y1>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan><tspan class=x1>x</tspan> + <tspan class=dragB>" + b.toFixed(2) + "</tspan>",
-                   "<tspan class=y1>"+f(hoverX).toFixed(2)+"</tspan> = " + m.toFixed(2) + "*<tspan class=x1>"+hoverX+"</tspan> + " + b.toFixed(2)
+                   "<tspan class=y1>y</tspan> = <tspan class=dragM>" + m.toFixed(2) + "</tspan><tspan class=x1>x</tspan> <tspan class=dragB>" + utils.b(b) + "</tspan>",
+                   "<tspan class=y1>"+f(hoverX).toFixed(2)+"</tspan> = " + m.toFixed(2) + "*<tspan class=x1>"+hoverX+"</tspan> " + utils.b(b)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)

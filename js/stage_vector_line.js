@@ -50,6 +50,8 @@ module.exports = function(){
             d3.timer(function(){utils.unfreeze(); return true;}, 2*transDur);
         }
         curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
+        m1 = utils.clamp(-10, 10, m1)
+        m2 = utils.clamp(-10, 10, m2)
         story(storyParent);
         circleX(layer2, 0);
         linesY(layer1, 1);
@@ -66,9 +68,9 @@ module.exports = function(){
         var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
             .data(["<tspan class=y1>y"+sub1+"</tspan> = m"+sub1+"<tspan class=x1>x</tspan> + b"+sub1,
-                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = "+m1+"*<tspan class=x1>"+curX.toFixed(2)+"</tspan> "+utils.b(b1),
+                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = "+m1.toFixed(2)+"*<tspan class=x1>"+curX.toFixed(2)+"</tspan> "+utils.b(b1),
                    "<tspan class=y2>y"+sub2+"</tspan> = m"+sub2+"<tspan class=x1>x</tspan> + b"+sub2,
-                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = "+m2+"*<tspan class=x1>"+curX.toFixed(2)+"</tspan> "+utils.b(b2)
+                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = "+m2.toFixed(2)+"*<tspan class=x1>"+curX.toFixed(2)+"</tspan> "+utils.b(b2)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -102,11 +104,15 @@ module.exports = function(){
             .selectAll("g")
             .data([[m1.toFixed(2)], [m2.toFixed(2)]])
             .call(utils.vec)
+            .each(function(d,i){
+                i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
+            })
 
         g.place("text.x1")
             .translate(134, 58)
             .style("font-weight", "600")
             .text(curX.toFixed(2))
+            .call(makeDraggerX)
 
         g.place("text.plus")
             .translate(170, 63)
@@ -116,6 +122,9 @@ module.exports = function(){
             .selectAll("g")
             .data([[b1.toFixed(2)], [b2.toFixed(2)]])
             .call(utils.vec)
+            .each(function(d,i){
+                i ? makeDraggerB2(d3.select(this)) : makeDraggerB1(d3.select(this))
+            })
 
     }
 
