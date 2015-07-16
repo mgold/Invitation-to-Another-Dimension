@@ -75,11 +75,17 @@ tspan.sub, small {
     cursor: ew-resize;
 }
 
+$dark-gray: #666666;
 $negative-color: #5070a0;
 #scalar-field .y1 {
     fill-opacity: 0.9;
     &.negative {
         fill: $negative-color;
+    }
+    &.current {
+        fill-opacity: 1;
+        stroke: $dark-gray;
+        stroke-width: 2px;
     }
 }
 
@@ -98,13 +104,13 @@ rect.cover {
 }
 
 path.brace {
-    stroke: #666;
+    stroke: $dark-gray;
     stroke-width: 2px;
 }
 
 text.eq, text.plus, text.dot {
     font-size: 34px;
-    fill: #666;
+    fill: $dark-gray;
 }
 
 $svg_height: 500px;

@@ -2,7 +2,7 @@ var utils = require('./utils');
 module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     var m1 = 1, m2 = -2, b = 0.5;
-    var curX1 = null, curX2 = null;
+    var curX = null;
 
     var data = d3.range(-3, 4)
     var transDur = 1000;
@@ -17,7 +17,6 @@ module.exports = function(){
     var makeDraggerM1 = makeDragger(function(){m1 += d3.event.dx/20});
     var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/20});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10});
-    var makeDraggerX = makeDragger(function(){curX += x.invert(d3.event.dx)});
 
     var x = d3.scale.linear()
         .domain([-3, 3])
@@ -103,14 +102,15 @@ module.exports = function(){
             .call(makeDraggerM2)
         symbols.selectAll(".dragB")
             .call(makeDraggerB)
-            .call(function(){console.log(this.size())})
     }
 
     var symbols2 = function(g, order){
+        var y = curX ? f(curX).toFixed(2) : "y"
         g.place("text.y1")
-            .translate(20, 58)
-            .text("y")
+            .translate(30, 59)
+            .text(y)
             .style("font-weight", 600)
+            .style("text-anchor", "end")
 
         g.place("text.eq")
             .translate(40, 64)
@@ -128,9 +128,11 @@ module.exports = function(){
             .translate(133, 64)
             .text("•")
 
+        var x1 = curX ? curX.x1 : "x1"
+        var x2 = curX ? curX.x2 : "x2"
         g.place("g.x").translate(160, 0)
             .selectAll("g")
-            .data([["x1", "x1"], ["x2", "x2"]])
+            .data([[x1, "x1"], [x2, "x2"]])
             .call(utils.vec)
 
         g.place("text.plus")
@@ -157,6 +159,12 @@ module.exports = function(){
             .attr("cy", function(d){return x(d.x2)})
             .attr("r", 0)
             .classed("negative", function(d){return f(d) < 0})
+            .on("mouseenter", function(d){ if (!curX){ curX = d; d3.select(this).classed("current", true); render()}})
+            .on("mouseout", function(d){
+                var sel = d3.select(this);
+                if (sel.classed("current")){
+                    curX = null; sel.classed("current", null); render()}
+                })
           .transition().duration(transDur).delay(transDur*order)
             .attr("r", function(d){return r(Math.abs(f(d)))})
     }
