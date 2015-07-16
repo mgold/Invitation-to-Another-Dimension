@@ -1,7 +1,7 @@
 var utils = require('./utils');
 module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
-    var m1 = 1, m2 = -2, b = 0.5;
+    var m1 = 2, m2 = -4, b = 0.5;
     var curX = null;
 
     var data = d3.range(-3, 4)
@@ -82,8 +82,8 @@ module.exports = function(){
         var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
             .data(["<tspan class=y1>y</tspan> = m"+sub1+"<tspan class=x1>x"+sub1+"</tspan> +  m"+sub2+"<tspan class=x2>x"+sub2+"</tspan> + b",
-                   "<tspan class=y1>y</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan><tspan class=x1>x"+sub1+"</tspan> <tspan class=dragM2>"+utils.b(m2)+"</tspan><tspan class=x2>x"+sub2+"</tspan> <tspan class=dragB>" + utils.b(b) + "</tspan>"
-                   //"<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
+                   "<tspan class=y1>y</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan><tspan class=x1>x"+sub1+"</tspan> <tspan class=dragM2>"+utils.b(m2)+"</tspan><tspan class=x2>x"+sub2+"</tspan> <tspan class=dragB>" + utils.b(b) + "</tspan>",
+                   !curX ? "" : "<tspan class=y1>"+f(curX).toFixed(2)+"</tspan> = "+m1.toFixed(2)+"×<tspan class=x1>"+curX.x1+"</tspan> "+utils.b(m2)+"×<tspan class=x2>"+curX.x2+"</tspan> " + utils.b(b)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
