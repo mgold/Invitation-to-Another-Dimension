@@ -36,6 +36,7 @@ tspan.sub, small {
     display: block;
     margin-left: auto;
     margin-right: auto;
+    text-align: justify;
 }
 
 @mixin dimension($name, $color) {
@@ -89,7 +90,7 @@ path.brace {
     stroke-width: 2px;
 }
 
-text.eq, text.plus {
+text.eq, text.plus, text.dot {
     font-size: 34px;
     fill: #666;
 }

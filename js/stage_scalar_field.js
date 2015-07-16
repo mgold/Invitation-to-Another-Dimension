@@ -1,9 +1,8 @@
 var utils = require('./utils');
 module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
-    var m1 = 1, b1 = 0;
-    var m2 = 2, b2 = -1;
-    var curX = 2;
+    var m1 = 1, m2 = 2, b = 0;
+    var curX1 = 2, curX2 = -1;
 
     var data = d3.range(-3, 4)
     var transDur = 0 //1000;
@@ -18,10 +17,8 @@ module.exports = function(){
         }
     }
     var makeDraggerM1 = makeDragger(function(){m1 += d3.event.dx/10});
-    var makeDraggerB1 = makeDragger(function(){b1 += d3.event.dx/10});
     var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/10});
-    var makeDraggerB2 = makeDragger(function(){b2 += d3.event.dx/10});
-    var makeDraggerB2 = makeDragger(function(){b2 += d3.event.dx/10});
+    var makeDraggerB = makeDragger(function(){b += d3.event.dx/10});
     var makeDraggerX = makeDragger(function(){curX += x.invert(d3.event.dx)});
 
     var x = d3.scale.linear()
@@ -29,27 +26,29 @@ module.exports = function(){
             .range([-200, 200])
 
     // DOM element selections
-    var svg = d3.select("svg.second")
+    var svg = d3.select("svg.third")
     var symbols1Parent = svg.append("g")
         .translate(250, 250)
     var symbols2Parent = svg.append("g")
         .translate(850, 200)
     var plot = svg.append("g")
-        .attr("transform", "translate(600, 250) rotate(-45)")
-    var layer1 = plot.append("g");
-    var layer2 = plot.append("g");
+        .translate(600, 250)
+    var layer1 = plot.append("g")
+    var layer2 = plot.append("g")
     layer1.append("line")
         .attr({x1: x.range()[0], x2: x.range()[1], y1: 0, y2: 0})
         .attr("class", "x1")
     layer1.append("line")
-        .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
-    var storyParent = d3.select(".essay p.second");
+        .attr({x1: 0, x2: 0, y1: x.range()[0], y2: x.range()[1]})
+        .attr("class", "x2")
+    var storyParent = d3.select(".essay p.third");
 
     function render(initialRender){
         if (initialRender){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 2*transDur);
         }
+        /*
         curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
         m1 = utils.clamp(-10, 10, m1)
         m2 = utils.clamp(-10, 10, m2)
@@ -57,6 +56,7 @@ module.exports = function(){
         circleX(layer2, 0);
         linesY(layer1, 1);
         symbols1(symbols1Parent, 2);
+        */
         symbols2(symbols2Parent, 3);
     }
 
@@ -69,9 +69,9 @@ module.exports = function(){
         var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
             .data(["<tspan class=y1>y"+sub1+"</tspan> = m"+sub1+"<tspan class=x1>x</tspan> + b"+sub1,
-                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>×<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
+                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
                    "<tspan class=y2>y"+sub2+"</tspan> = m"+sub2+"<tspan class=x1>x</tspan> + b"+sub2,
-                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = <tspan class=dragM2>"+m2.toFixed(2)+"</tspan>×<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB2>"+utils.b(b2)+"</tspan>",
+                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = <tspan class=dragM2>"+m2.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB2>"+utils.b(b2)+"</tspan>",
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -95,10 +95,10 @@ module.exports = function(){
     }
 
     var symbols2 = function(g, order){
-        g.place("g.y").translate(-20, 0)
-            .selectAll("g")
-            .data([[f1(curX).toFixed(2), "y1"], [f2(curX).toFixed(2), "y2"]])
-            .call(utils.vec)
+        g.place("text.y1")
+            .translate(20, 58)
+            .text("y")
+            .style("font-weight", 600)
 
         g.place("text.eq")
             .translate(40, 64)
@@ -112,23 +112,24 @@ module.exports = function(){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
             })
 
-        g.place("text.x1")
-            .translate(134, 58)
-            .style("font-weight", "600")
-            .text(curX.toFixed(2))
-            .call(makeDraggerX)
+        g.place("text.dot")
+            .translate(133, 64)
+            .text("•")
+
+        g.place("g.x").translate(160, 0)
+            .selectAll("g")
+            .data([["x1", "x1"], ["x2", "x2"]])
+            .call(utils.vec)
 
         g.place("text.plus")
-            .translate(170, 63)
+            .translate(230, 63)
             .text("+")
 
-        g.place("g.b").translate(200, 0)
-            .selectAll("g")
-            .data([[b1.toFixed(2)], [b2.toFixed(2)]])
-            .call(utils.vec)
-            .each(function(d,i){
-                i ? makeDraggerB2(d3.select(this)) : makeDraggerB1(d3.select(this))
-            })
+        g.place("text.b")
+            .translate(270, 58)
+            .text(b.toFixed(2))
+            .style("font-weight", 600)
+            .call(makeDraggerB)
 
     }
 

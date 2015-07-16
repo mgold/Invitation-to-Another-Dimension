@@ -13,7 +13,7 @@ gulp.task('sass', function() {
 });
 
 gulp.task('browserify', function () {
-    browserify('./js/main.js').bundle()
+    browserify('./js/main.js', {debug: true}).bundle()
         .pipe(source('js/main.js'))
         .pipe(rename('bundle.js'))
         .pipe(gulp.dest('./compiled/'))

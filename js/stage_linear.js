@@ -33,6 +33,7 @@ module.exports = function(){
     var layer2 = plot.append("g");
     layer1.append("line")
         .attr({x1: x.range()[0], x2: x.range()[1], y1: 0, y2: 0})
+        .attr("class", "x1")
     layer1.append("line")
         .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
     var storyParent = d3.select(".essay p.first");
