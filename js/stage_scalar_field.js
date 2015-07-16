@@ -2,7 +2,7 @@ var utils = require('./utils');
 module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     var m1 = 1, m2 = -2, b = 0.5;
-    var curX1 = 2, curX2 = -1;
+    var curX1 = null, curX2 = null;
 
     var data = d3.range(-3, 4)
     var transDur = 1000;
@@ -30,7 +30,7 @@ module.exports = function(){
     // DOM element selections
     var svg = d3.select("svg.third").attr("id", "scalar-field")
     var symbols1Parent = svg.append("g")
-        .translate(230, 250)
+        .translate(160, 250)
     var symbols2Parent = svg.append("g")
         .translate(850, 200)
     var plot = svg.append("g")
@@ -44,10 +44,11 @@ module.exports = function(){
             //utils.freeze();
             //d3.timer(function(){utils.unfreeze(); return true;}, 2*transDur);
         }
-        /*
-        curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
         m1 = utils.clamp(-10, 10, m1)
         m2 = utils.clamp(-10, 10, m2)
+        b = utils.clamp(-10, 10, b)
+        /*
+        curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
         story(storyParent);
         */
         axes(layer1, 0, initialRender)
@@ -81,12 +82,13 @@ module.exports = function(){
         var sub1 = "<tspan class=sub>1</tspan>"
         var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
-            .data(["<tspan class=y1>y</tspan> = m"+sub1+"<tspan class=x1>x"+sub1+"</tspan> +  m"+sub2+"<tspan class=x2>x"+sub2+"</tspan> + b"
+            .data(["<tspan class=y1>y</tspan> = m"+sub1+"<tspan class=x1>x"+sub1+"</tspan> +  m"+sub2+"<tspan class=x2>x"+sub2+"</tspan> + b",
+                   "<tspan class=y1>y</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan><tspan class=x1>x"+sub1+"</tspan> <tspan class=dragM2>"+utils.b(m2)+"</tspan><tspan class=x2>x"+sub2+"</tspan> <tspan class=dragB>" + utils.b(b) + "</tspan>"
                    //"<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
-            //.translate(function(d,i){return [0, [-60, -30, 40, 70][i]]})
+            .translate(function(d,i){return [0, [-20, 10, 40, 70][i]]})
           .transition().duration(500).delay(transDur*order)
             .style("opacity", 1)
         symbols.exit()
@@ -95,16 +97,13 @@ module.exports = function(){
             .remove();
         symbols.html(function(d){return d})
 
-            /*
         symbols.selectAll(".dragM1")
             .call(makeDraggerM1)
-        symbols.selectAll(".dragB1")
-            .call(makeDraggerB1)
         symbols.selectAll(".dragM2")
             .call(makeDraggerM2)
-        symbols.selectAll(".dragB2")
-            .call(makeDraggerB2)
-            */
+        symbols.selectAll(".dragB")
+            .call(makeDraggerB)
+            .call(function(){console.log(this.size())})
     }
 
     var symbols2 = function(g, order){
