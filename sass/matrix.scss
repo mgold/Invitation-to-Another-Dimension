@@ -57,7 +57,7 @@ tspan.sub, small {
 @include dimension("x1", #c03000);
 @include dimension("x2", #a74697);
 @include dimension("y1", #3080f0);
-@include dimension("y2", #30a0b0); // alt: #5070a0
+@include dimension("y2", #30a0b0);
 @include dimension("param", #aaa);
 
 #draggerRot {
@@ -73,6 +73,18 @@ tspan.sub, small {
 
 .draggerHoriz {
     cursor: ew-resize;
+}
+
+$negative-color: #5070a0;
+#scalar-field .y1 {
+    fill-opacity: 0.9;
+    &.negative {
+        fill: $negative-color;
+    }
+}
+
+span.negative {
+    color: $negative-color;
 }
 
 line.cover {
