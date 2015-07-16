@@ -30,7 +30,7 @@ module.exports = function(){
     // DOM element selections
     var svg = d3.select("svg.third").attr("id", "scalar-field")
     var symbols1Parent = svg.append("g")
-        .translate(250, 250)
+        .translate(230, 250)
     var symbols2Parent = svg.append("g")
         .translate(850, 200)
     var plot = svg.append("g")
@@ -49,10 +49,10 @@ module.exports = function(){
         m1 = utils.clamp(-10, 10, m1)
         m2 = utils.clamp(-10, 10, m2)
         story(storyParent);
-        symbols1(symbols1Parent, 2);
         */
         axes(layer1, 0, initialRender)
         circlesY(layer2, 1);
+        symbols1(symbols1Parent, 2);
         symbols2(symbols2Parent, 3);
     }
 
@@ -81,14 +81,12 @@ module.exports = function(){
         var sub1 = "<tspan class=sub>1</tspan>"
         var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
-            .data(["<tspan class=y1>y"+sub1+"</tspan> = m"+sub1+"<tspan class=x1>x</tspan> + b"+sub1,
-                   "<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
-                   "<tspan class=y2>y"+sub2+"</tspan> = m"+sub2+"<tspan class=x1>x</tspan> + b"+sub2,
-                   "<tspan class=y2>"+f2(curX).toFixed(2)+"</tspan> = <tspan class=dragM2>"+m2.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB2>"+utils.b(b2)+"</tspan>",
+            .data(["<tspan class=y1>y</tspan> = m"+sub1+"<tspan class=x1>x"+sub1+"</tspan> +  m"+sub2+"<tspan class=x2>x"+sub2+"</tspan> + b"
+                   //"<tspan class=y1>"+f1(curX).toFixed(2)+"</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan>*<tspan class=x1>"+curX.toFixed(2)+"</tspan> <tspan class=dragB1>"+utils.b(b1)+"</tspan>",
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
-            .translate(function(d,i){return [0, [-60, -30, 40, 70][i]]})
+            //.translate(function(d,i){return [0, [-60, -30, 40, 70][i]]})
           .transition().duration(500).delay(transDur*order)
             .style("opacity", 1)
         symbols.exit()
@@ -97,6 +95,7 @@ module.exports = function(){
             .remove();
         symbols.html(function(d){return d})
 
+            /*
         symbols.selectAll(".dragM1")
             .call(makeDraggerM1)
         symbols.selectAll(".dragB1")
@@ -105,6 +104,7 @@ module.exports = function(){
             .call(makeDraggerM2)
         symbols.selectAll(".dragB2")
             .call(makeDraggerB2)
+            */
     }
 
     var symbols2 = function(g, order){
