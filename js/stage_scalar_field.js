@@ -36,20 +36,17 @@ module.exports = function(){
         .translate(600, 250)
     var layer1 = plot.append("g")
     var layer2 = plot.append("g")
-    var storyParent = d3.select(".essay p.third");
+    var storySliderParent = d3.select("span.third");
 
     function render(initialRender){
         if (initialRender){
-            //utils.freeze();
-            //d3.timer(function(){utils.unfreeze(); return true;}, 2*transDur);
+            utils.freeze();
+            d3.timer(function(){utils.unfreeze(); return true;}, 3*transDur);
         }
         m1 = utils.clamp(-10, 10, m1)
         m2 = utils.clamp(-10, 10, m2)
         b = utils.clamp(-10, 10, b)
-        /*
-        curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
-        story(storyParent);
-        */
+        storySlider(storySliderParent);
         axes(layer1, 0, initialRender)
         circlesY(layer2, 1);
         symbols1(symbols1Parent, 2);
@@ -73,8 +70,8 @@ module.exports = function(){
         }
     }
 
-    var story = function(p){
-        p.text("I'm less certain about this visualization but keep reading.")
+    var storySlider = function(g){
+        g.text(b.toFixed(2)).call(makeDraggerB)
     }
 
     var symbols1 = function(g, order){
