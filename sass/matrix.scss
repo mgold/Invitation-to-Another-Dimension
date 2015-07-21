@@ -10,7 +10,7 @@ path, line {
 
 text {
     font-family: avenir, sans-serif;
-    not .component &, .y1+&, .y2+& {
+    not &.draggerHoriz {
         cursor: default;
         -webkit-touch-callout: none;
         -webkit-user-select: none;
@@ -40,7 +40,7 @@ tspan.sub, small {
 }
 
 @mixin dimension($name, $color) {
-    circle.#{$name}, tspan.#{$name}, text.#{$name}, .component rect.#{$name}
+    circle.#{$name}, tspan.#{$name}, text.#{$name}, .component.#{$name} rect
     {
         fill: $color;
     }
@@ -59,6 +59,36 @@ tspan.sub, small {
 @include dimension("y1", #3080f0);
 @include dimension("y2", #30a0b0);
 @include dimension("param", #aaa);
+
+.component{
+    &.inactive {
+        rect{
+            fill: #e2e2e2;
+            stroke: #999;
+        }
+        text {
+            fill: #555;
+        }
+    }
+
+    &.mOffDiag {
+        fill: #c2c2c2;
+    }
+
+    &.b {
+        fill: #888;
+    }
+
+    &.point {
+        cursor: pointer;
+        fill: rgb(5, 215, 0);
+    }
+
+    &.vector {
+        cursor: pointer;
+        fill: rgb(5, 215, 0); // TODO: pick another color
+    }
+}
 
 #draggerRot {
     cursor: move;

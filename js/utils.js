@@ -40,11 +40,11 @@ module.exports.b = function(b){
 
 var s = 50, half_s = 25, margin = 4, offset = s+margin;
 var components = function(g){
-    var entering = g.enter().append("g").attr("class", "component");
+    var entering = g.enter().append("g")
+        .attr("class", function(d){return "component " + (d[1] || "param")})
     entering.append("rect")
     entering.append("text")
     g.select("rect")
-        .attr("class", function(d){return d[1] || "param"})
         .attr({width: s, height: s})
     g.select("text")
         .html(function(d){return d[0]})

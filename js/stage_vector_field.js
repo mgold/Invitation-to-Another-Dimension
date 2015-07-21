@@ -78,16 +78,24 @@ module.exports = function(){
 
         g.append("g")
             .selectAll("g")
-            .data([[m11], [m21], [0],
-                   [m12], [m22], [0],
-                   [m13], [m23], [1]])
+            .data([[m11], [m21, "mOffDiag"], [0, "inactive"],
+                   [m12, "mOffDiag"], [m22], [0, "inactive"],
+                   [m13, "b"], [m23, "b"], [1, "inactive"]])
             .call(utils.matrix)
 
         g.append("g")
             .translate(180, 0)
             .selectAll("g")
-            .data([[3, "x1"], [-2, "x2"], [1]])
+            .data([[3, "x1"], [-2, "x2"], [point ? 1 : 0, point ? "point" : "vector"]])
             .call(utils.vec)
+
+        g.select(".point, .vector")
+         .on("click", function(){
+             if (!utils.isFrozen()){
+                 point = !point;
+                 render();
+             }
+         })
 
         return
 

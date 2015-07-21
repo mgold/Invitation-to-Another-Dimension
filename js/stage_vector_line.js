@@ -124,7 +124,7 @@ module.exports = function(){
 
         g.place("g.b").translate(200, 0)
             .selectAll("g")
-            .data([[b1.toFixed(2)], [b2.toFixed(2)]])
+            .data([[b1.toFixed(2), "b"], [b2.toFixed(2), "b"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerB2(d3.select(this)) : makeDraggerB1(d3.select(this))
