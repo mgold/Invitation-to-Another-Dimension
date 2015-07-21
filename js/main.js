@@ -1,3 +1,5 @@
+Math.TAU = Math.PI*2;
+
 require('./d3.translate')
 require('./d3.place')
 
