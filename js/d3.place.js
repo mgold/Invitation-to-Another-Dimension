@@ -1,5 +1,5 @@
 /* d3.selection.place()  -  an unofficial add-on
-Place an item of the given tag and class (as "tag.class") into the DOM, unless it already exists.
+Place one item of the given tag and class (as "tag.class") into the DOM, unless it already exists.
 Returns the selection either found in or just added to the DOM.
 
 Caveats: does not support arbitrary selectors e.g. ids. Might do multiple appends for selections of more than one

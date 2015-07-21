@@ -5,6 +5,7 @@ module.exports = function(){
     var m11 = 2,   m12 = -0.5, m13 = 1.5,
         m21 = 0.5, m22 = 3,    m23 = -1.8;
     var point = true;
+    var curPos = null;
 
     var transDur = 1000;
 
@@ -18,7 +19,8 @@ module.exports = function(){
     var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/20});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10});
 
-    var f = function(x1,x2){
+    var f = function(a){
+        var x1 = a[0], x2 = a[1]
         if (point){
             return [x1 * m11 + x2 * m12 + m13,
                     x1 * m21 + x2 + m22 + m23,
@@ -31,7 +33,7 @@ module.exports = function(){
     }
 
     var x = d3.scale.linear()
-        .domain([-5, 5])
+        .domain([-3, 3])
         .range([-150, 150])
 
     var r = d3.scale.sqrt()
@@ -54,7 +56,8 @@ module.exports = function(){
         }
         //m1 = utils.clamp(-10, 10, m1)
         axes(layer1, 0, initialRender)
-        symbols(symbolsParent, 1);
+        circlesY(layer2, 1)
+        symbols(symbolsParent, 2);
     }
 
     var axes = function(g, order, initialRender){
@@ -74,8 +77,40 @@ module.exports = function(){
         }
     }
 
-    var symbols = function(g, order){
+    var circlesY = function(g, order){
+        var r = x(1);
+        var bases = g.selectAll("g.base")
+            .data(d3.range(0, Math.TAU-0.01, Math.TAU/12)
+                    .map(function(d){var a = [r*Math.cos(d), r*Math.sin(d)]; a.theta = d; return a;}));
+        bases.select("line") // update selection only
+            .attr("x2", function(d){return f(d)[0]})
+            .attr("y2", function(d){return f(d)[1]})
+        var entering = bases.enter().append("g").attr("class", "base")
+            .translate(function(d){return d})
+        entering.append("circle").attr("r", 0)
+          .transition().delay(transDur*order).duration(transDur)
+            .attr("r", 4)
+        entering.append("line").attr({x1: 0, y1: 0, x2: 0, y2:0})
+          .transition().delay(transDur*(order+1)).duration(transDur)
+            .attr("x2", function(d){return f(d)[0]})
+            .attr("y2", function(d){return f(d)[1]})
 
+        bases.on("mouseenter", function(d){
+            if (!utils.isFrozen() && curPos === null){
+                d3.select(this).classed("current", true)
+                curPos = d;
+            }
+        }).on("mouseout", function(d){
+            if (!utils.isFrozen() && curPos === d){
+                d3.select(this).classed("current", false)
+                curPos = null;
+            }
+        })
+
+        bases.exit().remove();
+    }
+
+    var symbols = function(g, order){
         g.place("g.matrix")
             .selectAll("g")
             .data([[m11], [m21, "mOffDiag"], [0, "inactive"],

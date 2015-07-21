@@ -96,6 +96,13 @@ tspan.sub, small {
     }
 }
 
+.base {
+    fill: #888;
+    &.current {
+        fill: #000;
+    }
+}
+
 #draggerRot {
     cursor: move;
     line {
