@@ -81,12 +81,12 @@ tspan.sub, small {
 
     &.point {
         cursor: pointer;
-        fill: rgb(5, 215, 0);
+        fill: #05d700;
     }
 
     &.vector {
         cursor: pointer;
-        fill: rgb(5, 215, 0); // TODO: pick another color
+        fill: #00D7C7;
     }
 }
 
