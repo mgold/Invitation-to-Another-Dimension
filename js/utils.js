@@ -29,6 +29,9 @@ module.exports.cross = function(a, b) {
     return c;
 }
 
+module.exports.sub1 = "<tspan class=sub>1</tspan>"
+module.exports.sub2 = "<tspan class=sub>2</tspan>"
+
 module.exports.b = function(b){
     return b < 0.005 ? "- "+Math.abs(b).toFixed(2) : "+ "+b.toFixed(2)
 }
@@ -44,7 +47,7 @@ module.exports.vec = function(g){
         .attr({width: s, height: s})
 
     g.select("text")
-        .text(function(d){return d[0]})
+        .html(function(d){return d[0]})
         .translate(half_s, half_s+6)
     if (entering.size()){
         var line = d3.svg.line();

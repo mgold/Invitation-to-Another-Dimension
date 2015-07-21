@@ -75,12 +75,9 @@ module.exports = function(){
     }
 
     var symbols1 = function(g, order){
-        var sub1 = "<tspan class=sub>1</tspan>"
-        var sub2 = "<tspan class=sub>2</tspan>"
         var symbols = g.selectAll("text")
-            .data(["<tspan class=y1>y</tspan> = m"+sub1+"<tspan class=x1>x"+sub1+"</tspan> +  m"+sub2+"<tspan class=x2>x"+sub2+"</tspan> + b",
-                   "<tspan class=y1>y</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan><tspan class=x1>x"+sub1+"</tspan> <tspan class=dragM2>"+utils.b(m2)+"</tspan><tspan class=x2>x"+sub2+"</tspan> <tspan class=dragB>" + utils.b(b) + "</tspan>",
-                   !curX ? "" : "<tspan class=y1>"+f(curX).toFixed(2)+"</tspan> = "+m1.toFixed(2)+"×<tspan class=x1>"+curX.x1+"</tspan> "+utils.b(m2)+"×<tspan class=x2>"+curX.x2+"</tspan> " + utils.b(b)
+            .data(["<tspan class=y1>y</tspan> = m"+utils.sub1+"<tspan class=x1>x"+utils.sub1+"</tspan> + m"+utils.sub2+"<tspan class=x2>x"+utils.sub2+"</tspan> + b",
+                   "<tspan class=y1>y</tspan> = <tspan class=dragM1>"+m1.toFixed(2)+"</tspan><tspan class=x1>x"+utils.sub1+"</tspan> <tspan class=dragM2>"+utils.b(m2)+"</tspan><tspan class=x2>x"+utils.sub2+"</tspan> <tspan class=dragB>" + utils.b(b) + "</tspan>", !curX ? "" : "<tspan class=y1>"+f(curX).toFixed(2)+"</tspan> = "+m1.toFixed(2)+"×<tspan class=x1>"+curX.x1+"</tspan> "+utils.b(m2)+"×<tspan class=x2>"+curX.x2+"</tspan> " + utils.b(b)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -125,8 +122,8 @@ module.exports = function(){
             .translate(133, 64)
             .text("•")
 
-        var x1 = curX ? curX.x1 : "x1"
-        var x2 = curX ? curX.x2 : "x2"
+        var x1 = curX ? curX.x1 : "x"+utils.sub1
+        var x2 = curX ? curX.x2 : "x"+utils.sub2
         g.place("g.x").translate(160, 0)
             .selectAll("g")
             .data([[x1, "x1"], [x2, "x2"]])
