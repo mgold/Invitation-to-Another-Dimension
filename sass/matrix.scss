@@ -82,11 +82,17 @@ tspan.sub, small {
     &.point {
         cursor: pointer;
         fill: #05d700;
+        rect {
+            stroke: darken(#05d700, 10%);
+        }
     }
 
     &.vector {
         cursor: pointer;
         fill: #00D7C7;
+        rect {
+            stroke: darken(#00D7C7, 10%);
+        }
     }
 }
 

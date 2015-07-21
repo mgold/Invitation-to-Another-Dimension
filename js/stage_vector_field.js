@@ -76,14 +76,14 @@ module.exports = function(){
 
     var symbols = function(g, order){
 
-        g.append("g")
+        g.place("g.matrix")
             .selectAll("g")
             .data([[m11], [m21, "mOffDiag"], [0, "inactive"],
                    [m12, "mOffDiag"], [m22], [0, "inactive"],
                    [m13, "b"], [m23, "b"], [1, "inactive"]])
             .call(utils.matrix)
 
-        g.append("g")
+        g.place("g.vector3")
             .translate(180, 0)
             .selectAll("g")
             .data([[3, "x1"], [-2, "x2"], [point ? 1 : 0, point ? "point" : "vector"]])
@@ -96,47 +96,6 @@ module.exports = function(){
                  render();
              }
          })
-
-        return
-
-        g.place("rect.m11")
-            .translate(30, 59)
-            .text(y)
-            .style("font-weight", 600)
-            .style("text-anchor", "end")
-
-        g.place("text.eq")
-            .translate(40, 64)
-            .text("=")
-
-        g.place("g.m").translate(74, 0)
-            .selectAll("g")
-            .data([[m1.toFixed(2)], [m2.toFixed(2)]])
-            .call(utils.vec)
-            .each(function(d,i){
-                i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
-            })
-
-        g.place("text.dot")
-            .translate(133, 64)
-            .text("•")
-
-        var x1 = curX ? curX.x1 : "x"+utils.sub1
-        var x2 = curX ? curX.x2 : "x"+utils.sub2
-        g.place("g.x").translate(160, 0)
-            .selectAll("g")
-            .data([[x1, "x1"], [x2, "x2"]])
-            .call(utils.vec)
-
-        g.place("text.plus")
-            .translate(230, 63)
-            .text("+")
-
-        g.place("text.b")
-            .translate(270, 58)
-            .text(b.toFixed(2))
-            .style("font-weight", 600)
-            .call(makeDraggerB)
 
     }
 
