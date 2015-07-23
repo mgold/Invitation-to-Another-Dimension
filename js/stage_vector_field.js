@@ -94,6 +94,7 @@ module.exports = function(){
           .transition().delay(transDur*(order+1)).duration(transDur)
             .attr("x2", function(d){return f(d)[0]})
             .attr("y2", function(d){return f(d)[1]})
+            .attr("class", "y")
 
         bases.on("mouseenter", function(d){
             if (!utils.isFrozen() && curPos === null){

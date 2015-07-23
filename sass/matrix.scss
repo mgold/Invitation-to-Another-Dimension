@@ -60,6 +60,11 @@ tspan.sub, small {
 @include dimension("y2", #30a0b0);
 @include dimension("param", #aaa);
 
+line.y {
+    stroke: #0d47a1;
+    shape-rendering: geometricPrecision;
+}
+
 .component{
     &.inactive {
         rect{
