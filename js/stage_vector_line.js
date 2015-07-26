@@ -133,12 +133,12 @@ module.exports = function(){
     }
 
     var linesY = function(g, order){
-        var lines = g.selectAll("line.y")
+        var lines = g.selectAll("line.y1, line.y2")
             .data([45, 135])
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", function(d,i){ return -x(f[i](curX))})
         lines.enter().append("line")
-            .attr("class", function(d,i){return "y y"+(i+1)})
+            .attr("class", function(d,i){return "y"+(i+1)})
             .attr({y1: 0, y2: 0})
             .style("stroke-width", "2px")
           .transition().delay(transDur).duration(transDur)
