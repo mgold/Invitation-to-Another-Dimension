@@ -3,7 +3,7 @@ module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     // Matrix index notation is row then column
     var m11 = 2,   m12 = -0.5, m13 = 1.5,
-        m21 = 0.5, m22 = 3,    m23 = -1.8;
+        m21 = 4,   m22 = 3,    m23 = -1.8;
     var point = false;
     var curPos = null;
 
@@ -22,21 +22,12 @@ module.exports = function(){
                 }))
         }
     }
-    var makeDraggerM1 = makeDragger(function(){m1 += d3.event.dx/20});
-    var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/20});
-    var makeDraggerB = makeDragger(function(){b += d3.event.dx/10});
 
     var f = function(a){
         var x1 = a[0], x2 = a[1]
-        if (point){
-            return [x1 * m11 + x2 * m12 + m13,
-                    x1 * m21 + x2 * m22 + m23,
-                    1]
-        }else{
-            return [x1 * m11 + x2 * m12,
-                    x1 * m21 + x2 * m22,
-                    0]
-        }
+        return [x1*m11 + x2*m12 + m13*point, // multiplying by booleans ;)
+                x1*m21 + x2*m22 + m23*point,
+                1]
     }
 
     var x = d3.scale.linear()
