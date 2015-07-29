@@ -4,7 +4,7 @@ module.exports = function(){
     // Matrix index notation is row then column
     var m11 = 2,   m12 = -0.5, m13 = 1.5,
         m21 = 0.5, m22 = 3,    m23 = -1.8;
-    var point = true;
+    var point = false;
     var curPos = null;
 
     var params = "m11 m12 m13 m21 m22 m23".split(" ");
@@ -145,8 +145,8 @@ module.exports = function(){
 
         params.forEach(makeDragger(g));
 
-        var x1 = curPos && curPos.x1.toFixed(2) || "x1"
-        var x2 = curPos && curPos.x2.toFixed(2) || "x2"
+        var x1 = curPos && curPos.x1.toFixed(2) || "x"+utils.sub1
+        var x2 = curPos && curPos.x2.toFixed(2) || "x"+utils.sub2
         g.place("g.vectorX")
             .translate(180, 0)
             .selectAll("g")
