@@ -30,11 +30,11 @@ module.exports = function(){
                 1]
     }
 
-    var rez = 5, halfRez = Math.floor(rez/2);
+    var rez = 7, halfRez = Math.floor(rez/2);
 
     var x = d3.scale.linear()
         .domain([-3, 3])
-        .range([-150, 150])
+        .range([-200, 200])
 
     var y = d3.scale.linear()
         .domain([-10, 10])
@@ -59,7 +59,7 @@ module.exports = function(){
             d3.timer(function(){utils.unfreeze(); return true;}, 3*transDur);
         }
         params.forEach(function(matrixElem){
-            eval(matrixElem + " = utils.clamp(-10, 10, "+matrixElem+")");
+            eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
         })
         axes(layer1, 0, initialRender)
         circlesX(layer2, 1)
@@ -98,18 +98,18 @@ module.exports = function(){
         bases.select("line").call(lineEnds) // update selection only
         var entering = bases.enter().append("g").attr("class", "base")
             .translate(function(d){return [x(d.x1), -x(d.x2)]})
-        entering.append("circle").attr("r", 0)
-          .transition().delay(transDur*order).duration(transDur)
-            .attr({cx: 0, cy: 0, r: 3})
         entering.append("line")
             .attr({x1: 0, y1: 0, x2: 0, y2: 0})
           .transition().delay(transDur*(order+1)).duration(transDur)
             .attr("class", "y")
             .call(lineEnds)
         entering.append("circle").attr("r", 0)
+          .transition().delay(transDur*order).duration(transDur)
+            .attr({cx: 0, cy: 0, r: 2})
+        entering.append("circle").attr("r", 0)
             .attr("class", "y")
           .transition().delay(transDur*(order+2)).duration(transDur)
-            .attr("r", 2)
+            .attr("r", 3)
         bases.select("circle.y")
             .attr("cx", function(d){return y(d.y1)})
             .attr("cy", function(d){return -y(d.y2)})
