@@ -19,11 +19,6 @@ text {
         -ms-user-select: none;
         user-select: none;
     }
-
-    .component & {
-        fill: white;
-        text-anchor: middle;
-    }
 }
 
 tspan.sub, small {
@@ -66,6 +61,15 @@ line.y {
 }
 
 .component{
+    text {
+        fill: white;
+        text-anchor: middle;
+    }
+
+    &.x1, &.x2 {
+        cursor: default;
+    }
+
     &.inactive {
         rect{
             fill: #e2e2e2;
