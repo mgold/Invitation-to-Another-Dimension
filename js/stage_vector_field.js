@@ -30,9 +30,15 @@ module.exports = function(){
                 1]
     }
 
+    var rez = 5, halfRez = Math.floor(rez/2);
+
     var x = d3.scale.linear()
         .domain([-3, 3])
         .range([-150, 150])
+
+    var y = d3.scale.linear()
+        .domain([-10, 10])
+        .range([x.range()[0]/rez, x.range()[1]/rez])
 
     var r = d3.scale.sqrt()
         .domain([0, 60])
@@ -79,35 +85,34 @@ module.exports = function(){
 
     var circlesX = function(g, order){
         var lineEnds = function(){
-            this.attr("x2", function(d){return x(d.y1)})
-                .attr("y2", function(d){return -x(d.y2)})
+            this.attr("x2", function(d){return y(d.y1)})
+                .attr("y2", function(d){return -y(d.y2)})
         }
         var bases = g.selectAll("g.base")
-            .data(d3.range(0, Math.TAU-0.01, Math.TAU/12)
-                    .map(function(theta){
-                        var x1 = Math.cos(theta), x2 = Math.sin(theta),
+            .data(d3.range(rez*rez)
+                    .map(function(i){
+                        var x1 = i % rez - halfRez, x2 = Math.floor(i / rez) - halfRez,
                             image = f([x1, x2]),
                             y1 = image[0], y2 = image[1];
-                        return {theta: theta, x1: x1, y1: y1, x2: x2, y2: y2}}))
+                        return {i: i, x1: x1, y1: y1, x2: x2, y2: y2}}))
         bases.select("line").call(lineEnds) // update selection only
         var entering = bases.enter().append("g").attr("class", "base")
+            .translate(function(d){return [x(d.x1), -x(d.x2)]})
         entering.append("circle").attr("r", 0)
           .transition().delay(transDur*order).duration(transDur)
-            .attr("cx", function(d){return x(d.x1)})
-            .attr("cy", function(d){return -x(d.x2)})
-            .attr("r", 4)
+            .attr({cx: 0, cy: 0, r: 3})
         entering.append("line")
-            .each(function(d){ d3.select(this).attr({x1: x(d.x1), y1: x(-d.x2), x2: x(d.x1), y2: x(-d.x2)})})
+            .attr({x1: 0, y1: 0, x2: 0, y2: 0})
           .transition().delay(transDur*(order+1)).duration(transDur)
             .attr("class", "y")
             .call(lineEnds)
         entering.append("circle").attr("r", 0)
             .attr("class", "y")
           .transition().delay(transDur*(order+2)).duration(transDur)
-            .attr("r", 3)
+            .attr("r", 2)
         bases.select("circle.y")
-            .attr("cx", function(d){return x(d.y1)})
-            .attr("cy", function(d){return -x(d.y2)})
+            .attr("cx", function(d){return y(d.y1)})
+            .attr("cy", function(d){return -y(d.y2)})
 
         bases.on("mouseenter", function(d){
             if (!utils.isFrozen() && curPos === null){
@@ -116,7 +121,7 @@ module.exports = function(){
                 render();
             }
         }).on("mouseout", function(d){
-            if (!utils.isFrozen() && curPos && curPos.theta === d.theta){
+            if (!utils.isFrozen() && curPos && curPos.i === d.i){
                 d3.select(this).classed("current", false)
                 curPos = null;
                 render();
