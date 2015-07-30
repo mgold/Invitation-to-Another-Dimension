@@ -55,7 +55,12 @@ tspan.sub, small {
 @include dimension("y2", #30a0b0);
 @include dimension("param", #aaa);
 
-@include dimension("y", #0d47a1);
+$y-color: #0d47a1;
+@include dimension("y", $y-color);
+marker path {
+    fill: $y-color;
+    stroke: none;
+}
 line.y {
     shape-rendering: geometricPrecision;
 }

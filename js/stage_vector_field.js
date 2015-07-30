@@ -62,7 +62,7 @@ module.exports = function(){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
         })
         axes(layer1, 0, initialRender)
-        circlesX(layer2, 1)
+        circlesX(layer2, 1, initialRender)
         symbols(symbolsParent, 2);
     }
 
@@ -83,10 +83,13 @@ module.exports = function(){
         }
     }
 
-    var circlesX = function(g, order){
+    var circlesX = function(g, order, initialRender){
         var lineEnds = function(){
             this.attr("x2", function(d){return y(d.y1)})
                 .attr("y2", function(d){return -y(d.y2)})
+        }
+        var isZero = function(d){
+            return Math.abs(d.y1) < 0.01 && Math.abs(d.y2) < 0.01
         }
         var bases = g.selectAll("g.base")
             .data(d3.range(rez*rez)
@@ -100,19 +103,31 @@ module.exports = function(){
             .translate(function(d){return [x(d.x1), -x(d.x2)]})
         entering.append("line")
             .attr({x1: 0, y1: 0, x2: 0, y2: 0})
+            .style("marker-end", function(d){
+                if (!isZero(d)){
+                    return "url(#arrowhead)";
+                }else{
+                    return null;
+                }})
           .transition().delay(transDur*(order+1)).duration(transDur)
             .attr("class", "y")
             .call(lineEnds)
         entering.append("circle").attr("r", 0)
           .transition().delay(transDur*order).duration(transDur)
             .attr({cx: 0, cy: 0, r: 2})
-        entering.append("circle").attr("r", 0)
+
+        entering.filter(isZero).append("circle").attr("r", 0)
             .attr("class", "y")
           .transition().delay(transDur*(order+2)).duration(transDur)
             .attr("r", 3)
         bases.select("circle.y")
             .attr("cx", function(d){return y(d.y1)})
             .attr("cy", function(d){return -y(d.y2)})
+        if (initialRender){
+            svg.select("marker path")
+            .transition().delay(transDur*(order+2)).duration(transDur)
+            .attr("d", "M 0 0 -6 -3 -4 0 -6 3")
+        }
 
         bases.on("mouseenter", function(d){
             if (!utils.isFrozen() && curPos === null){
@@ -127,6 +142,7 @@ module.exports = function(){
                 render();
             }
         })
+
 
         bases.exit().remove();
     }
