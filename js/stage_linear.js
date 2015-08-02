@@ -179,8 +179,7 @@ module.exports = function(){
                     render();
                 })
             var dragHandle = g.append("g")
-                .attr("id", "draggerRot")
-                .attr("class", "dragger")
+                .attr("class", "draggerRot dragger")
                 .attr("transform", transform)
                 .call(drag)
             dragHandle.append("line")
@@ -192,7 +191,7 @@ module.exports = function(){
                 .attr("class", "cover")
                 .attr({x1: -len, x2: len, y1: 0, y2: 0})
         }
-        g.select("#draggerRot")
+        g.select(".draggerRot")
             .attr("transform", transform)
           .selectAll("line").filter(function(){return !this.__transition__})
             .attr({x1: -len, x2: len, y1: 0, y2: 0})
@@ -208,13 +207,12 @@ module.exports = function(){
                 })
             var side = (x(1)-x(0))*0.8
             g.append("rect")
-                .attr("id", "draggerVert")
-                .attr("class", "cover dragger")
+                .attr("class", "cover dragger draggerVert")
                 .attr("transform", "translate(0,"+-x(b)+")")
                 .attr({x: -side, y: -side, width: 2*side, height: 2*side})
                 .call(drag)
         }else{
-            g.select("#draggerVert")
+            g.select(".draggerVert")
                 .attr("transform", "translate(0,"+-x(b)+")")
         }
     }

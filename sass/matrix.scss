@@ -130,14 +130,14 @@ line.y {
     }
 }
 
-#draggerRot {
+.draggerRot {
     cursor: move;
     line {
         shape-rendering: geometricPrecision;
     }
 }
 
-#draggerVert {
+.draggerVert {
     cursor: ns-resize;
 }
 
