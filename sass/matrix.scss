@@ -27,6 +27,19 @@ tspan.sub, small {
 
 .essay {
     font-family: klavika-web, sans-serif;
+    h1 {
+        font-family: avenir, klavika-web, sans-serif;
+        margin-bottom: -4px;
+    }
+    h2 {
+        font-family: avenir, klavika-web, sans-serif;
+        font-size: 18px;
+        font-weight: normal;
+        margin-top: 0px;
+    }
+    li:not(:first-child){
+        margin-top: 16px;
+    }
     width: 620px;
     display: block;
     margin-left: auto;

@@ -61,7 +61,7 @@ module.exports = function(){
     }
 
     var story = function(p){
-        p.text("I'm less certain about this visualization but keep reading.")
+        //p.text("I'm less certain about this visualization but keep reading.")
     }
 
     var symbols1 = function(g, order){

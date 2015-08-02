@@ -7,10 +7,30 @@
   </head>
   <body>
     <div class='essay'>
+      <h1>Invitation to Another Dimension</h1>
+      <h2>from Max Goldstein</h2>
       <p>
-        A linear function for an input (called <span class='x1'>x</span>) <i>scales</i> x by multiplying it by a scale
-        factor called m. Then it <i>translates</i> the result by adding another value, called b. The output we call
-        <span class='y1'>y</span>.
+        So much of math seems to be unrelated bits and pieces. Learn this for the test, then forget it to make room for
+        the next thing. But this is an illusion fostered by the frequently atrocious high school curriculum. Mathematics
+        has structure, ideas that start simple and then are extended and combined. Here, we're looking at two of them:
+
+        <ul>
+            <li>Functions transform inputs into outputs. You can group similar functions by how many inputs and outputs
+            they take. For our purposes, each input or output is just a number. We'll call the inputs <span
+                class='x1'>x</span> and the outputs <span class='y1'>y</span>, adding subscript numbers once we get more
+            than one. Each input or output is called a <i>dimension</i>.
+            </li>
+
+            <li>We're looking at functions that use addition and multiplication only to turn inputs into outputs. We'll
+            see that geometrically, addition is <i>translation</i> and multiplication is <i>scaling</i>. We'll leave the
+            polynomials, exponentials, and sine waves for another day.
+            </li>
+        </ul>
+
+        A linear function for an input, called <span class='x1'>x</span>, will scale the input by multiplying it by a
+        scale factor called m. Then it <i>translates</i> the result by adding another value, called b. The output we
+        call <span class='y1'>y</span>.
+
       </p>
       <p>
         You can adjust these values in the equations, in the text below, or on the graph itself directly. Hover over a
@@ -38,7 +58,16 @@
         <p class='second'></p>
         <p>
           The vector equation uses the two fundamental operations of linear algebra: scalar multiplication and vector
-          addition.
+          addition. Scalar multiplication (a scalar is just a single number, instead of a vector) multiplies each
+          component of the vector by the scalar. Vector addition adds two vectors (of equal length) by component: the
+          first component of the new vector is the sum of the first components of the two vectors being added, and so
+          on down the line.
+        </p>
+        <p>
+          We're used to plotting the x-axis horizontally and the y-axis vertically. Now that we want to consider two
+          inputs, we have to use the vertical axis for <span class="x2">x<small>2</small></span>. The output we encode
+          as the area of circles, either <span class=y1>positive</span> or <span class=negative>negative</span>. This
+          type of diagram is known as a <i>scalar field</i>.
         </p>
     </div>
     <div class='bg'>
@@ -47,26 +76,48 @@
     <div class='essay'>
         <p class='third'></p>
         <p>
-        This is a scalar field: two inputs going to one output, encoded as the area of circles, either <span
-            class=y1>positive</span> or <span class=negative>negative</span>. Bear in mind that this is a sample; the
-        true scalar field is a continuous surface "above" and "below" the plane of the screen, tilted flatness
-        interrupted by a V-shaped rift. You might see this rift as a "wave" of whiteness moving across the field as you
-        change the additive constant (<span class='third param'></span>). It's
-        tempting to see the wave moving perpendicular to itself, but this is an
-        illusion – it's always moving vertically.
+        Bear in mind that this is a sample; the true scalar field is a continuous surface "above" and "below" the plane
+        of the screen, tilted flatness interrupted by a V-shaped rift. You might see this rift as a "wave" of whiteness
+        moving across the field as you change the additive constant (<span class='third param'></span>). It's tempting
+        to see the wave moving perpendicular to itself, but this is an illusion – it's always moving vertically.
         </p>
         <p>
           The vector equation on the right uses the dot product of two vectors to concisely represent the repeated
-          multiplication and addition operations on the left.
+          multiplication and addition operations on the left. The dot product multiplies each pair of components
+          together, and then adds them all up, taking two vectors to a single scalar.
         </p>
         <p>
-          Now we can ask, what happens when we have two inputs and two outputs? Graphically, the result is a <i>vector field</i>;
-          symbolically, we use a <i>matrix</i> to compactly store all the parameters. A matrix is really just a
-          function.
+        Now we can ask, what happens when we have two inputs and two outputs? 
+        </p>
+        <p>
+          We use a <i>matrix</i> to compactly store all the parameters. A matrix is really just a description of a
+          function; terse, but useful one you know how to think of it. The scale factors go down the main diagonal, top
+          left to bottom right. The translations are on the right side. The bottom row is always zero-zero-one.
+        </p>
+        <p>
+          It's the remaining numbers where things get interesting: they control the "crosstalk" between the first and
+          second function. The first input can influence the second output, and vice versa. Despite carefully examining
+          all the ingredients in isolation, we couldn't have predicted this would happen when we put them together.
+        </p>
+        <p>
+          Graphically, a matrix's function is a <i>vector field</i>. Instead of having one number at every point in the
+          plane, we now have two. A vector field shows the result vector (but not its components), shrunken down so they
+          don't overlap when repeated. This allows us to see patterns of swirls, attraction, and repulsion.
         </p>
     </div>
     <div class='bg'>
         <svg class='fourth'></svg>
+    </div>
+    <div class='essay'>
+        <p>
+          It's worth noting that a vector field is not the only way to think about this function; two overlapping scalar
+          fields would also work. Nicky Case has <a href=http://ncase.me/matrix/>a demo</a> where the two dimensions of
+          input double up to also show the two dimensions of output. You can see where a point starts and where it ends
+          relative to the same pair of axes. All of these are valid tradeoffs, given the inherently tricky problem of
+          trying to depict four dimensional functions using only a 2D plane.
+        </p>
+        <p>
+        </p>
     </div>
   </body>
   <script charset='utf-8' src='/assets/d3.v3.js'></script>
