@@ -88,9 +88,6 @@ module.exports = function(){
             this.attr("x2", function(d){return y(d.y1)})
                 .attr("y2", function(d){return -y(d.y2)})
         }
-        var isZero = function(d){
-            return Math.abs(d.y1) < 0.01 && Math.abs(d.y2) < 0.01
-        }
         var bases = g.selectAll("g.base")
             .data(d3.range(rez*rez)
                     .map(function(i){
@@ -103,12 +100,6 @@ module.exports = function(){
             .translate(function(d){return [x(d.x1), -x(d.x2)]})
         entering.append("line")
             .attr({x1: 0, y1: 0, x2: 0, y2: 0})
-            .style("marker-end", function(d){
-                if (!isZero(d)){
-                    return "url(#arrowhead)";
-                }else{
-                    return null;
-                }})
           .transition().delay(transDur*(order+1)).duration(transDur)
             .attr("class", "y")
             .call(lineEnds)
@@ -116,18 +107,7 @@ module.exports = function(){
           .transition().delay(transDur*order).duration(transDur)
             .attr({cx: 0, cy: 0, r: 2})
 
-        entering.filter(isZero).append("circle").attr("r", 0)
-            .attr("class", "y")
-          .transition().delay(transDur*(order+2)).duration(transDur)
-            .attr("r", 3)
-        bases.select("circle.y")
-            .attr("cx", function(d){return y(d.y1)})
-            .attr("cy", function(d){return -y(d.y2)})
-        if (initialRender){
-            svg.select("marker path")
-            .transition().delay(transDur*(order+2)).duration(transDur)
-            .attr("d", "M 0 0 -6 -3 -4 0 -6 3")
-        }
+        markers(g, order+1, initialRender);
 
         bases.on("mouseenter", function(d){
             if (!utils.isFrozen() && curPos === null){
@@ -142,9 +122,40 @@ module.exports = function(){
                 render();
             }
         })
+    }
 
+    var isZero = function(d){
+        return y(d.y1*d.y1 + d.y2*d.y2) < 2;
+    }
 
-        bases.exit().remove();
+    function markers(g, order, initialRender){
+        if (initialRender){
+            svg.selectAll(".base").append("g").attr("class", "marker").translate(0,0)
+            var markers = svg.selectAll(".marker")
+            markers.transition().delay(transDur*order).duration(transDur)
+                .attr("transform", function(d){return "translate("+y(d.y1)+","+ -y(d.y2)+")"})
+
+            markers.append("circle").attr("class", "roundhead y")
+                .attr("r", 0)
+              .transition().delay(transDur*order).duration(transDur)
+                .attr("r", 2)
+
+            markers.append("path").attr("class", "arrowhead")
+                .attr("d", "M 0 0 0 0 0 0 Z")
+                .transition().delay(transDur*order).duration(transDur)
+                .attr("d", "M 0 0 -6 -3 -6 3 Z")
+        }else{
+            var markers = svg.selectAll(".base").select(".marker");
+            markers.translate(function(d){
+                return [y(d.y1), -y(d.y2)]})
+        }
+        markers.select(".roundhead")
+            .attr("display", function(d){return isZero(d) ? null : "none"})
+        markers.select(".arrowhead")
+            .attr("display", function(d){return isZero(d) ? "none" : null})
+            .attr("transform", function(d){
+                var angle = Math.atan2(d.y1, d.y2) * (360/Math.TAU) - 90;
+                return"rotate("+angle+")"})
     }
 
     var symbols = function(g, order){

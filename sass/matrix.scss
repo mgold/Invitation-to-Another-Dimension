@@ -70,9 +70,10 @@ tspan.sub, small {
 
 $y-color: #0d47a1;
 @include dimension("y", $y-color);
-marker path {
+.marker path, .marker line {
     fill: $y-color;
     stroke: none;
+    shape-rendering: geometricPrecision;
 }
 line.y {
     shape-rendering: geometricPrecision;
