@@ -45,6 +45,7 @@ module.exports = function(){
         .range([1, x(1) - x(0.5)])
 
     // DOM element selections
+    var storyParent = d3.select("p.fourth")
     var svg = d3.select("svg.fourth")
     var symbolsParent = svg.append("g")
         .translate(850, 200)
@@ -66,6 +67,7 @@ module.exports = function(){
         circlesX(layer2, 1, initialRender)
         covers(layer3, 0, initialRender)
         symbols(symbolsParent, 3, initialRender);
+        story(storyParent, 3, initialRender);
     }
 
     var axes = function(g, order, initialRender){
@@ -230,6 +232,30 @@ module.exports = function(){
             .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])
             .call(utils.vec)
 
+    }
+
+    var story = function(p, order, initialRender){
+        if (initialRender){
+            var bind = function(sel, html){
+                svg.select(".component."+sel)
+                    .on("mouseenter", function(){
+                        if (!utils.isFrozen()){
+                            typeof html === "function" ? p.html(html()) : p.html(html)
+                        }
+                    })
+                    .on("mouseleave", function(){
+                        p.html("<br/>")
+                    })
+            }
+
+            bind("m11", "This number controls how much <span class=x1>x<small>1</small></span> affects <span class=y1>y<small>1</small></span>.")
+            bind("m12", "This number controls how much <span class=x2>x<small>2</small></span> affects <span class=y1>y<small>1</small></span>.")
+            bind("m21", "This number controls how much <span class=x1>x<small>1</small></span> affects <span class=y2>y<small>2</small></span>.")
+            bind("m22", "This number controls how much <span class=x2>x<small>2</small></span> affects <span class=y2>y<small>2</small></span>.")
+
+            bind("m13", function(){ return point ? "A constant added to <span class=y1>y<small>1</small></span>." : "Does nothing for vectors."})
+            bind("m23", function(){ return point ? "A constant added to <span class=y2>y<small>2</small></span>." : "Does nothing for vectors."})
+        }
     }
 
     return function(){render(true);}
