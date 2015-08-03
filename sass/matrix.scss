@@ -171,8 +171,9 @@ line.cover {
     stroke-width: 10;
 }
 
-rect.cover {
+rect.cover, path.cover {
     opacity: 0;
+    fill: initial;
 }
 
 path.brace {

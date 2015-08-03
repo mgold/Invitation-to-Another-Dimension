@@ -52,6 +52,7 @@ module.exports = function(){
         .translate(600, 250)
     var layer1 = plot.append("g")
     var layer2 = plot.append("g")
+    var layer3 = plot.append("g")
 
     function render(initialRender){
         if (initialRender){
@@ -63,6 +64,7 @@ module.exports = function(){
         })
         axes(layer1, 0, initialRender)
         circlesX(layer2, 1, initialRender)
+        covers(layer3, 0, initialRender)
         symbols(symbolsParent, 2);
     }
 
@@ -108,7 +110,6 @@ module.exports = function(){
             .attr({cx: 0, cy: 0, r: 2})
 
         arrowheads(g, order+1, initialRender);
-        covers(g, order, initialRender);
     }
 
     var isZero = function(d){
@@ -147,40 +148,38 @@ module.exports = function(){
     }
 
     function covers(g, order, initialRender){
-        if (initialRender){
-            var s = x(1) - x(0), hs = s/2;
-            d3.selectAll(".base").append("rect")
-                .attr("class", "cover")
-                .attr("width", s)
-                .attr("height", s)
-                .attr("x", -hs)
-                .attr("y", -hs)
-              .on("mouseenter", function(d){
-                if (!utils.isFrozen()){
-                    console.log("in")
-                    d3.select(this.parentNode).classed("current", true)
-                    curPos = d;
-                    render();
+        var data = [].concat.apply([], svg.selectAll("g.base").data().map(function(d){
+            var points = [{x: x(d.x1) + y(d.y1), y: -x(d.x2) - y(d.y2), d: d}];
+                if (!isZero(d)){
+                    points.push({x: x(d.x1), y: -x(d.x2), d: d});
                 }
-              })
-              .on("mouseout", function(d){ d3.select(this.parentNode).classed("current", false) })
+                return points;
+        }))
+        var min = x.range()[0] - 40, max = x.range()[1] + 40;
+        var voro = d3.geom.voronoi()
+            .clipExtent([[min, min], [max, max]])
+            .x(function(d){return d.x})
+            .y(function(d){return d.y})
+        var triangles = voro(data)
 
-                  /*
-            s = x.range()[1] - x.range()[0]; hs = s/2;
-            g.append("rect")
-                .attr("class", "cover")
-                .attr("width", s)
-                .attr("height", s)
-                .attr("x", -hs)
-                .attr("y", -hs)
-              .on("mouseout", function(d){
-                console.log("out")
-                curPos = null;
-                render();
-                //if (!utils.isFrozen()){ render(); }
-            })
-            */
-        }
+        g.selectAll("path")
+            .data(triangles)
+            .enter()
+            .append("path")
+            .attr("class", "cover") // comment out to see the voronoi diagram
+        g.selectAll("path")
+            .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
+            .on("mouseenter", function(d){
+                if (!utils.isFrozen()){
+                    d3.select(this.parentNode).classed("current", true)
+                    curPos = d.point.d;
+                    render();
+                }})
+            .on("mouseout", function(d){
+                if (!utils.isFrozen()){
+                    curPos = null;
+                    render();
+                }})
     }
 
     var symbols = function(g, order){
