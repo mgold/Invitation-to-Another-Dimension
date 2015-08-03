@@ -16,7 +16,7 @@ module.exports = function(){
                 .classed("draggerHoriz", true)
                 .call(d3.behavior.drag().on("drag", function(){
                     if (!utils.isFrozen()){
-                        eval(matrixElem + " += d3.event.dx/20"); // it's not evil, it's metaprogramming!
+                        eval(matrixElem + " += d3.event.dx/10"); // it's not evil, it's metaprogramming!
                         render();
                     }
                 }))
@@ -191,9 +191,9 @@ module.exports = function(){
 
         g.place("g.matrix")
             .selectAll("g")
-            .data([[m11.toFixed(2), "param m11"], [m21.toFixed(2), "mOffDiag m21"], [0, "inactive"],
-                   [m12.toFixed(2), "mOffDiag m12"], [m22.toFixed(2), "param m22"], [0, "inactive"],
-                   [m13.toFixed(2), "b m13"], [m23.toFixed(2), "b m23"], [1, "inactive"]])
+            .data([[m11.toFixed(1), "param m11"], [m21.toFixed(1), "mOffDiag m21"], [0, "inactive"],
+                   [m12.toFixed(1), "mOffDiag m12"], [m22.toFixed(1), "param m22"], [0, "inactive"],
+                   [m13.toFixed(1), "b m13"], [m23.toFixed(1), "b m23"], [1, "inactive"]])
             .call(utils.matrix)
 
         params.forEach(makeDragger(g));
@@ -223,8 +223,8 @@ module.exports = function(){
             .translate(170, 90)
             .text("=")
 
-        var y1 = curPos && curPos.y1.toFixed(2) || "y"+utils.sub1
-        var y2 = curPos && curPos.y2.toFixed(2) || "y"+utils.sub2
+        var y1 = curPos && curPos.y1.toFixed(1) || "y"+utils.sub1
+        var y2 = curPos && curPos.y2.toFixed(1) || "y"+utils.sub2
         g.place("g.vectorY").translate(205, 0)
             .selectAll("g")
             .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])

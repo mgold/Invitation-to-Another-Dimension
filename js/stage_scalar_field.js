@@ -14,8 +14,8 @@ module.exports = function(){
                .call(d3.behavior.drag().on("drag", function(){if (!utils.isFrozen()){callback(); render();}}))
         }
     }
-    var makeDraggerM1 = makeDragger(function(){m1 += d3.event.dx/20});
-    var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/20});
+    var makeDraggerM1 = makeDragger(function(){m1 += d3.event.dx/10});
+    var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/10});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10});
 
     var x = d3.scale.linear()
@@ -71,13 +71,14 @@ module.exports = function(){
     }
 
     var storySlider = function(g){
-        g.text(b.toFixed(2)).call(makeDraggerB)
+        g.text(b.toFixed(1)).call(makeDraggerB)
     }
 
     var symbols1 = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class='y1'>y</tspan> = m"+utils.sub1+"<tspan class='x1'>x"+utils.sub1+"</tspan> + m"+utils.sub2+"<tspan class='x2'>x"+utils.sub2+"</tspan> + b",
-                   "<tspan class='y1'>y</tspan> = <tspan class='dragM1'>"+m1.toFixed(2)+"</tspan><tspan class='x1'>x"+utils.sub1+"</tspan> <tspan class='dragM2'>"+utils.b(m2)+"</tspan><tspan class='x2'>x"+utils.sub2+"</tspan> <tspan class='dragB'>" + utils.b(b) + "</tspan>", !curX ? "" : "<tspan class='y1'>"+f(curX).toFixed(2)+"</tspan> = "+m1.toFixed(2)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.b(m2)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.b(b)
+                   "<tspan class='y1'>y</tspan> = <tspan class='dragM1'>"+m1.toFixed(1)+"</tspan><tspan class='x1'>x"+utils.sub1+"</tspan> <tspan class='dragM2'>"+utils.b(m2, 1)+"</tspan><tspan class='x2'>x"+utils.sub2+"</tspan> <tspan class='dragB'>" + utils.b(b, 1) + "</tspan>",
+                   !curX ? "" : "<tspan class='y1'>"+f(curX).toFixed(1)+"</tspan> = "+m1.toFixed(1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.b(m2, 1)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.b(b, 1)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -101,7 +102,7 @@ module.exports = function(){
                 .attr("opacity", 1)
         }
 
-        var y = curX ? f(curX).toFixed(2) : "y"
+        var y = curX ? f(curX).toFixed(1) : "y"
         g.place("text.y1")
             .translate(30, 59)
             .text(y)
@@ -114,7 +115,7 @@ module.exports = function(){
 
         g.place("g.m").translate(74, 0)
             .selectAll("g")
-            .data([[m1.toFixed(2)], [m2.toFixed(2)]])
+            .data([[m1.toFixed(1)], [m2.toFixed(1)]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
@@ -132,12 +133,15 @@ module.exports = function(){
             .call(utils.vec)
 
         g.place("text.plus")
-            .translate(230, 63)
-            .text("+")
+            .translate(220, 63)
+            .text(b < -0.01 ? "–" : "+")
+            // make the minus line up with the plus - probably very font dependent
+            .attr("dy", b < -0.01 ? "-2px" : null)
+            .attr("dx", b < -0.01 ? "2.7px" : null)
 
         g.place("text.b")
-            .translate(270, 58)
-            .text(b.toFixed(2))
+            .translate(245, 58)
+            .text(Math.abs(b).toFixed(1))
             .style("font-weight", 600)
             .call(makeDraggerB)
 
