@@ -2,8 +2,8 @@ var utils = require('./utils');
 module.exports = function(){
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     // Matrix index notation is row then column
-    var m11 = 2,   m12 = -0.5, m13 = 1.5,
-        m21 = 4,   m22 = 3,    m23 = -1.8;
+    var m11 = -3.4, m12 = -0.65, m13 = 1.5,
+        m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
     var point = false;
     var curPos = null;
 
