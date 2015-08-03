@@ -109,6 +109,7 @@ module.exports = function(){
           .transition().delay(transDur*order).duration(transDur)
             .attr({cx: 0, cy: 0, r: 2})
 
+        bases.classed("current", function(d){ return curPos && d.i === curPos.i })
         arrowheads(g, order+1, initialRender);
     }
 
@@ -155,7 +156,7 @@ module.exports = function(){
                 }
                 return points;
         }))
-        var min = x.range()[0] - 40, max = x.range()[1] + 40;
+        var min = x.range()[0] - 30, max = x.range()[1] + 30;
         var voro = d3.geom.voronoi()
             .clipExtent([[min, min], [max, max]])
             .x(function(d){return d.x})
@@ -171,7 +172,6 @@ module.exports = function(){
             .attr("d", function(d) { return "M" + d.join("L") + "Z"; })
             .on("mouseenter", function(d){
                 if (!utils.isFrozen()){
-                    d3.select(this.parentNode).classed("current", true)
                     curPos = d.point.d;
                     render();
                 }})
