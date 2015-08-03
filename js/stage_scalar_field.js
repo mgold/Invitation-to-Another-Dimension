@@ -50,7 +50,7 @@ module.exports = function(){
         axes(layer1, 0, initialRender)
         circlesY(layer2, 1);
         symbols1(symbols1Parent, 2);
-        symbols2(symbols2Parent, 3);
+        symbols2(symbols2Parent, 2.5, initialRender);
     }
 
     var axes = function(g, order, initialRender){
@@ -82,12 +82,8 @@ module.exports = function(){
         symbols.enter().append("text")
             .style("opacity", 0)
             .translate(function(d,i){return [0, [-20, 10, 40, 70][i]]})
-          .transition().duration(500).delay(transDur*order)
+          .transition().duration(transDur/2).delay(transDur*order)
             .style("opacity", 1)
-        symbols.exit()
-          .transition().duration(500)
-            .style("opacity", 0)
-            .remove();
         symbols.html(function(d){return d})
 
         symbols.selectAll(".dragM1")
@@ -98,7 +94,13 @@ module.exports = function(){
             .call(makeDraggerB)
     }
 
-    var symbols2 = function(g, order){
+    var symbols2 = function(g, order, initialRender){
+        if (initialRender){
+            g.attr("opacity", 0)
+                .transition().duration(transDur/2).delay(transDur*order)
+                .attr("opacity", 1)
+        }
+
         var y = curX ? f(curX).toFixed(2) : "y"
         g.place("text.y1")
             .translate(30, 59)

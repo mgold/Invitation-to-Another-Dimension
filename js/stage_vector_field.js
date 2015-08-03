@@ -57,7 +57,7 @@ module.exports = function(){
     function render(initialRender){
         if (initialRender){
             utils.freeze();
-            d3.timer(function(){utils.unfreeze(); return true;}, 3*transDur);
+            d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
         }
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
@@ -65,7 +65,7 @@ module.exports = function(){
         axes(layer1, 0, initialRender)
         circlesX(layer2, 1, initialRender)
         covers(layer3, 0, initialRender)
-        symbols(symbolsParent, 2);
+        symbols(symbolsParent, 3, initialRender);
     }
 
     var axes = function(g, order, initialRender){
@@ -182,7 +182,13 @@ module.exports = function(){
                 }})
     }
 
-    var symbols = function(g, order){
+    var symbols = function(g, order, initialRender){
+        if (initialRender){
+            g.attr("opacity", 0)
+                .transition().duration(transDur/2).delay(transDur*order)
+                .attr("opacity", 1)
+        }
+
         g.place("g.matrix")
             .selectAll("g")
             .data([[m11.toFixed(2), "param m11"], [m21.toFixed(2), "mOffDiag m21"], [0, "inactive"],
