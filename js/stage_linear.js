@@ -29,22 +29,19 @@ module.exports = function(){
     var plot = svg.append("g")
         .translate(600, 250)
         .attr("id", "plot")
+    var layer0 = plot.append("g");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
-    layer1.append("line")
-        .attr({x1: x.range()[0], x2: x.range()[1], y1: 0, y2: 0})
-        .attr("class", "x1")
-    layer1.append("line")
-        .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
     var storyParent = d3.select(".essay p.first");
 
     function render(initialRender){
         if (initialRender){
             utils.freeze();
-            d3.timer(function(){utils.unfreeze(); return true;}, 4*transDur);
+            d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
         }
         b = utils.clamp(-10, 10, b)
         story(storyParent);
+        axis(layer0, 0, initialRender);
         circlesX(layer2, 0);
         lines(layer1, 1);
         circlesY(layer2, 1);
@@ -90,6 +87,21 @@ module.exports = function(){
         paras.selectAll(".dragM").call(makeDraggerM);
     }
 
+    var axis = function(g, order, initialRender){
+        if (initialRender){
+            var zero = x(0);
+            g.append("line")
+                .attr("class", "x1")
+                .attr({x1: zero, x2: zero, y1: 0, y2: 0})
+              .transition().duration(transDur).delay(transDur*order)
+                .attr({x1: x.range()[0], x2: x.range()[1]})
+            g.append("line")
+                .attr({x1: zero, x2: zero, y1: 0, y2: 0})
+              .transition().duration(transDur).delay(transDur*order)
+                .attr({y1: 10, y2: -10})
+            }
+    }
+
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class='y1'>y</tspan> = m<tspan class='x1'>x</tspan> + b",
@@ -98,11 +110,11 @@ module.exports = function(){
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
-          .transition().duration(500).delay(transDur*order)
+          .transition().duration(transDur/2).delay(transDur*order)
             .style("opacity", 1)
             .attr("dy", "-30px")
         symbols.exit()
-          .transition().duration(500)
+          .transition().duration(transDur/2)
             .style("opacity", 0)
             .remove();
         symbols.html(function(d,i){return i==2 && hoverX === null ? "" : d})
