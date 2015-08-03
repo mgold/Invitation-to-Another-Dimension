@@ -4,7 +4,7 @@ module.exports = function(){
     // Matrix index notation is row then column
     var m11 = -3.4, m12 = -0.65, m13 = 1.5,
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
-    var point = false;
+    var point = true;
     var curPos = null;
 
     var params = "m11 m12 m13 m21 m22 m23".split(" ");
@@ -45,10 +45,12 @@ module.exports = function(){
         .range([1, x(1) - x(0.5)])
 
     // DOM element selections
-    var storyParent = d3.select("p.fourth")
     var svg = d3.select("svg.fourth")
     var symbolsParent = svg.append("g")
         .translate(850, 200)
+    var storyParent = svg.append("g")
+        .translate(845, 385)
+        .append("text")
     var plot = svg.append("g")
         .translate(600, 250)
     var layer1 = plot.append("g")
@@ -234,27 +236,38 @@ module.exports = function(){
 
     }
 
-    var story = function(p, order, initialRender){
+    var story = function(g, order, initialRender){
         if (initialRender){
+            var timeoutID;
             var bind = function(sel, html){
                 svg.select(".component."+sel)
                     .on("mouseenter", function(){
                         if (!utils.isFrozen()){
-                            typeof html === "function" ? p.html(html()) : p.html(html)
+                            clearTimeout(timeoutID) // it's safe to clear an invalid ID
+                            typeof html === "function" ? g.html(html()) : g.html(html)
                         }
                     })
                     .on("mouseleave", function(){
-                        p.html("<br/>")
+                        timeoutID = setTimeout(function(){ g.text("") }, 100);
                     })
             }
 
-            bind("m11", "This number controls how much <span class=x1>x<small>1</small></span> affects <span class=y1>y<small>1</small></span>.")
-            bind("m12", "This number controls how much <span class=x2>x<small>2</small></span> affects <span class=y1>y<small>1</small></span>.")
-            bind("m21", "This number controls how much <span class=x1>x<small>1</small></span> affects <span class=y2>y<small>2</small></span>.")
-            bind("m22", "This number controls how much <span class=x2>x<small>2</small></span> affects <span class=y2>y<small>2</small></span>.")
+            bind("m11", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
+            bind("m12", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
+            bind("m21", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
+            bind("m22", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
 
-            bind("m13", function(){ return point ? "A constant added to <span class=y1>y<small>1</small></span>." : "Does nothing for vectors."})
-            bind("m23", function(){ return point ? "A constant added to <span class=y2>y<small>2</small></span>." : "Does nothing for vectors."})
+            bind("m13", function(){ return point ? "A constant added to <tspan class='y1'>y"+utils.sub1+"</tspan>." : "Does nothing for vectors."})
+            bind("m23", function(){ return point ? "A constant added to <tspan class='y2'>y"+utils.sub2+"</tspan>." : "Does nothing for vectors."})
+
+            bind("x1", "The first input.")
+            bind("x2", "The second input.")
+            bind("y1", "The first output.")
+            bind("y2", "The second output.")
+
+            //TODO make this update when the component is clicked
+            //Also it relies on it being a point not a vector on start
+            bind("point", function(){ return point ? "A 1 indicates this is a point." : "A 0 indicates this is a vector." })
         }
     }
 
