@@ -39,7 +39,7 @@ module.exports = function(){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
         }
-        b = utils.clamp(-10, 10, b)
+        b = utils.clamp(-5, 5, b)
         story(storyParent);
         axis(layer0, 0, initialRender);
         circlesX(layer2, 0);

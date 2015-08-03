@@ -161,10 +161,10 @@ module.exports = function(){
             .clipExtent([[min, min], [max, max]])
             .x(function(d){return d.x})
             .y(function(d){return d.y})
-        var triangles = voro(data)
+        var polys = voro(data).filter(function(d){ return !!d.length })
 
         g.selectAll("path")
-            .data(triangles)
+            .data(polys)
             .enter()
             .append("path")
             .attr("class", "cover") // comment out to see the voronoi diagram
