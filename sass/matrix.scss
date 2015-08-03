@@ -128,6 +128,7 @@ line.y {
     fill: #888;
     &.current {
         fill: #000;
+        stroke-width: 2px;
     }
 }
 

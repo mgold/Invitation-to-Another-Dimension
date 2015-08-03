@@ -9,6 +9,7 @@ var stage_vector_line = require('./stage_vector_line')()
 var stage_scalar_field = require('./stage_scalar_field')()
 var stage_vector_field = require('./stage_vector_field')()
 
+//TODO: run these on mouseover of the svg
 stage_linear();
 stage_vector_line();
 stage_scalar_field();

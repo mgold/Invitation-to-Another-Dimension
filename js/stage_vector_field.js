@@ -107,31 +107,19 @@ module.exports = function(){
           .transition().delay(transDur*order).duration(transDur)
             .attr({cx: 0, cy: 0, r: 2})
 
-        markers(g, order+1, initialRender);
-
-        bases.on("mouseenter", function(d){
-            if (!utils.isFrozen() && curPos === null){
-                d3.select(this).classed("current", true)
-                curPos = d;
-                render();
-            }
-        }).on("mouseout", function(d){
-            if (!utils.isFrozen() && curPos && curPos.i === d.i){
-                d3.select(this).classed("current", false)
-                curPos = null;
-                render();
-            }
-        })
+        arrowheads(g, order+1, initialRender);
+        covers(g, order, initialRender);
     }
 
     var isZero = function(d){
         return y(d.y1*d.y1 + d.y2*d.y2) < 2;
     }
 
-    function markers(g, order, initialRender){
+    function arrowheads(g, order, initialRender){
+        var markers;
         if (initialRender){
             svg.selectAll(".base").append("g").attr("class", "marker").translate(0,0)
-            var markers = svg.selectAll(".marker")
+            markers = svg.selectAll(".marker")
             markers.transition().delay(transDur*order).duration(transDur)
                 .attr("transform", function(d){return "translate("+y(d.y1)+","+ -y(d.y2)+")"})
 
@@ -145,7 +133,7 @@ module.exports = function(){
                 .transition().delay(transDur*order).duration(transDur)
                 .attr("d", "M 0 0 -6 -3 -6 3 Z")
         }else{
-            var markers = svg.selectAll(".base").select(".marker");
+            markers = svg.selectAll(".base").select(".marker");
             markers.translate(function(d){
                 return [y(d.y1), -y(d.y2)]})
         }
@@ -156,6 +144,43 @@ module.exports = function(){
             .attr("transform", function(d){
                 var angle = Math.atan2(d.y1, d.y2) * (360/Math.TAU) - 90;
                 return"rotate("+angle+")"})
+    }
+
+    function covers(g, order, initialRender){
+        if (initialRender){
+            var s = x(1) - x(0), hs = s/2;
+            d3.selectAll(".base").append("rect")
+                .attr("class", "cover")
+                .attr("width", s)
+                .attr("height", s)
+                .attr("x", -hs)
+                .attr("y", -hs)
+              .on("mouseenter", function(d){
+                if (!utils.isFrozen()){
+                    console.log("in")
+                    d3.select(this.parentNode).classed("current", true)
+                    curPos = d;
+                    render();
+                }
+              })
+              .on("mouseout", function(d){ d3.select(this.parentNode).classed("current", false) })
+
+                  /*
+            s = x.range()[1] - x.range()[0]; hs = s/2;
+            g.append("rect")
+                .attr("class", "cover")
+                .attr("width", s)
+                .attr("height", s)
+                .attr("x", -hs)
+                .attr("y", -hs)
+              .on("mouseout", function(d){
+                console.log("out")
+                curPos = null;
+                render();
+                //if (!utils.isFrozen()){ render(); }
+            })
+            */
+        }
     }
 
     var symbols = function(g, order){
