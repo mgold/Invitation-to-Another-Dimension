@@ -60,7 +60,7 @@ module.exports.vec = function(g){
         var line = d3.svg.line();
         var h = g.data().length * (s+margin), w = s + 2*margin
         var pad = -margin
-        var node = d3.select(g.node()) // clear selection, do only once
+        var node = d3.select(g.node().parentNode) // clear selection, do only once
         node.append("path").datum([[15+pad, pad], [pad, pad], [pad, h], [15+pad, h]])
             .attr("d", line)
             .attr("class", "brace")

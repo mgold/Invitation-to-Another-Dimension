@@ -198,13 +198,18 @@ module.exports = function(){
 
         params.forEach(makeDragger(g));
 
-        var x1 = curPos && curPos.x1.toFixed(2) || "x"+utils.sub1
-        var x2 = curPos && curPos.x2.toFixed(2) || "x"+utils.sub2
+        var x1 = curPos && curPos.x1.toFixed(0) || "x"+utils.sub1
+        var x2 = curPos && curPos.x2.toFixed(0) || "x"+utils.sub2
         g.place("g.vectorX")
-            .translate(180, 0)
+            .attr("transform", "translate(0, -15), rotate(-90)")
             .selectAll("g")
             .data([[x1, "x1"], [x2, "x2"], [point ? 1 : 0, point ? "point" : "vector"]])
             .call(utils.vec)
+          .selectAll("text")
+            .attr("transform", function(d, i, j){
+                var translate = d3.select(this).translate();
+                return "translate("+(translate[0]-5)+","+(translate[1]-6)+") rotate(90)"
+            })
 
         g.select(".point, .vector")
          .on("click", function(){
@@ -214,26 +219,16 @@ module.exports = function(){
              }
          })
 
-        if (curPos){
-            g.place("text.eq")
-                .translate(240, 90)
-                .text("=")
-        }else{
-            g.select("text.eq").remove();
-        }
+        g.place("text.eq")
+            .translate(170, 90)
+            .text("=")
 
-        var result = g.place("g.vectorY")
-          .translate(273, 0)
-          .selectAll("g")
-        if (!curPos){
-          result.remove();
-        }else{
-          var y1 = curPos && curPos.y1.toFixed(2) || "y1"
-          var y2 = curPos && curPos.y2.toFixed(2) || "y2"
-          result
-              .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])
-              .call(utils.vec)
-        }
+        var y1 = curPos && curPos.y1.toFixed(2) || "y"+utils.sub1
+        var y2 = curPos && curPos.y2.toFixed(2) || "y"+utils.sub2
+        g.place("g.vectorY").translate(205, 0)
+            .selectAll("g")
+            .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])
+            .call(utils.vec)
 
     }
 
