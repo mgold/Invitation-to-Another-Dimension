@@ -6,7 +6,7 @@ module.exports = function(){
     var curX = 2;
 
     var data = d3.range(-3, 4)
-    var transDur = 0 //1000;
+    var transDur = 1000;
     var f1 = function(x){return m1*x + b1}
     var f2 = function(x){return m2*x + b2}
     var f = [f1, f2]
@@ -20,7 +20,6 @@ module.exports = function(){
     var makeDraggerM1 = makeDragger(function(){m1 += d3.event.dx/10});
     var makeDraggerB1 = makeDragger(function(){b1 += d3.event.dx/10});
     var makeDraggerM2 = makeDragger(function(){m2 += d3.event.dx/10});
-    var makeDraggerB2 = makeDragger(function(){b2 += d3.event.dx/10});
     var makeDraggerB2 = makeDragger(function(){b2 += d3.event.dx/10});
     var makeDraggerX = makeDragger(function(){curX += x.invert(d3.event.dx)});
 
@@ -36,28 +35,40 @@ module.exports = function(){
         .translate(850, 200)
     var plot = svg.append("g")
         .attr("transform", "translate(600, 250) rotate(-45)")
+    var layer0 = plot.append("g");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
-    layer1.append("line")
-        .attr({x1: x.range()[0], x2: x.range()[1], y1: 0, y2: 0})
-        .attr("class", "x1")
-    layer1.append("line")
-        .attr({x1: x(0), x2: x(0), y1: 10, y2: -10})
     var storyParent = d3.select(".essay p.second");
 
     function render(initialRender){
         if (initialRender){
             utils.freeze();
-            d3.timer(function(){utils.unfreeze(); return true;}, 2*transDur);
+            d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
         }
         curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
         m1 = utils.clamp(-10, 10, m1)
         m2 = utils.clamp(-10, 10, m2)
         story(storyParent);
-        circleX(layer2, 0);
-        linesY(layer1, 1);
+        axis(layer0, 0, initialRender);
+        circleX(layer2, 1);
+        linesY(layer1, 1.5);
         symbols1(symbols1Parent, 2);
-        symbols2(symbols2Parent, 3);
+        symbols2(symbols2Parent, 2.5, initialRender);
+    }
+
+    var axis = function(g, order, initialRender){
+        if (initialRender){
+            var zero = x(0);
+            g.append("line")
+                .attr("class", "x1")
+                .attr({x1: zero, x2: zero, y1: 0, y2: 0})
+              .transition().duration(transDur).delay(transDur*order)
+                .attr({x1: x.range()[0], x2: x.range()[1]})
+            g.append("line")
+                .attr({x1: zero, x2: zero, y1: 0, y2: 0})
+              .transition().duration(transDur).delay(transDur*order)
+                .attr({y1: 10, y2: -10})
+        }
     }
 
     var story = function(p){
@@ -74,10 +85,10 @@ module.exports = function(){
         symbols.enter().append("text")
             .style("opacity", 0)
             .translate(function(d,i){return [0, [-60, -30, 40, 70][i]]})
-          .transition().duration(500).delay(transDur*order)
+          .transition().duration(transDur/2).delay(transDur*order)
             .style("opacity", 1)
         symbols.exit()
-          .transition().duration(500)
+          .transition().duration(transDur/2)
             .style("opacity", 0)
             .remove();
         symbols.html(function(d){return d})
@@ -92,7 +103,13 @@ module.exports = function(){
             .call(makeDraggerB2)
     }
 
-    var symbols2 = function(g, order){
+    var symbols2 = function(g, order, initialRender){
+        if (initialRender){
+            g.attr("opacity", 0)
+            .transition().duration(transDur).delay(transDur*order)
+              .attr("opacity", 1)
+        }
+
         g.place("g.y").translate(-20, 0)
             .selectAll("g")
             .data([[f1(curX).toFixed(2), "y1"], [f2(curX).toFixed(2), "y2"]])
@@ -139,7 +156,7 @@ module.exports = function(){
             .attr("class", function(d,i){return "y"+(i+1)})
             .attr({y1: 0, y2: 0})
             .style("stroke-width", "2px")
-          .transition().delay(transDur).duration(transDur)
+          .transition().delay(transDur*order).duration(transDur)
             .attr("y2", function(d,i){ return -x(f[i](curX))})
         lines.attr("x1", function(d){ return x(curX)})
             .attr("x2", function(d){ return x(curX)})
@@ -147,12 +164,12 @@ module.exports = function(){
     }
 
     var circleX = function(g, order){
-        var circle = g.selectAll("circle") .data([0])
-        circle.exit().transition().attr("r", 0).remove();
+        var circle = g.selectAll("circle").data([0])
         circle.enter().append("circle")
             .attr("class", "x1")
-          .transition().duration(transDur).delay(transDur*order)
-            .attr("r", 4).attr("cy", 0)
+            .attr("r", 0)
+          .transition().delay(transDur*order).duration(transDur)
+            .attr("r", 4)
         circle.attr("cx", x(curX)).call(makeDraggerX).style("cursor", "nesw-resize")
     }
 
