@@ -44,15 +44,16 @@ module.exports = function(){
         .domain([0, 60])
         .range([1, x(1) - x(0.5)])
 
+    var centerX = window.innerWidth/2;
     // DOM element selections
     var svg = d3.select("svg.fourth")
     var symbolsParent = svg.append("g")
-        .translate(850, 200)
+        .translate(centerX+250, 200)
     var storyParent = svg.append("g")
-        .translate(845, 385)
+        .translate(centerX+245, 385)
         .append("text")
     var plot = svg.append("g")
-        .translate(600, 250)
+        .translate(centerX, 250)
     var layer1 = plot.append("g")
     var layer2 = plot.append("g")
     var layer3 = plot.append("g")

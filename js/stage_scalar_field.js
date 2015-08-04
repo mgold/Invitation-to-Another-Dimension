@@ -26,14 +26,15 @@ module.exports = function(){
         .domain([0, 60])
         .range([1, x(1) - x(0.5)])
 
+    var centerX = window.innerWidth/2;
     // DOM element selections
     var svg = d3.select("svg.third").attr("id", "scalar-field")
-    var symbols1Parent = svg.append("g")
-        .translate(160, 250)
-    var symbols2Parent = svg.append("g")
-        .translate(850, 200)
     var plot = svg.append("g")
-        .translate(600, 250)
+        .translate(centerX, 250)
+    var symbols1Parent = svg.append("g")
+        .translate(centerX - 420, 250)
+    var symbols2Parent = svg.append("g")
+        .translate(centerX + 240, 200)
     var layer1 = plot.append("g")
     var layer2 = plot.append("g")
     var storySliderParent = d3.select("span.third");

@@ -21,13 +21,14 @@ module.exports = function(){
             .domain([-5, 5])
             .range([-200, 200])
 
+    var centerX = window.innerWidth/2;
     // DOM element selections
     var svg = d3.select("svg.first")
     var symbolsParent = svg.append("g")
-        .translate(250, 250)
+        .translate(centerX - 350, 250)
         .attr("id", "symbols")
     var plot = svg.append("g")
-        .translate(600, 250)
+        .translate(centerX, 250)
         .attr("id", "plot")
     var layer0 = plot.append("g");
     var layer1 = plot.append("g");

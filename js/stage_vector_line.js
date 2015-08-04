@@ -27,14 +27,15 @@ module.exports = function(){
             .domain([-3, 3])
             .range([-200, 200])
 
+    var centerX = window.innerWidth/2;
     // DOM element selections
     var svg = d3.select("svg.second")
     var symbols1Parent = svg.append("g")
-        .translate(250, 250)
+        .translate(centerX-350, 250)
     var symbols2Parent = svg.append("g")
-        .translate(850, 200)
+        .translate(centerX+250, 200)
     var plot = svg.append("g")
-        .attr("transform", "translate(600, 250) rotate(-45)")
+        .attr("transform", "translate("+centerX+", 250) rotate(-45)")
     var layer0 = plot.append("g");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
