@@ -187,18 +187,18 @@ module.exports = function(){
     }
 
     var symbols = function(g, order, initialRender){
-        if (initialRender){
-            g.attr("opacity", 0)
-                .transition().duration(transDur/2).delay(transDur*order)
-                .attr("opacity", 1)
-        }
-
         g.place("g.matrix")
             .selectAll("g")
             .data([[m11.toFixed(1), "param m11"], [m21.toFixed(1), "mOffDiag m21"], [0, "inactive"],
                    [m12.toFixed(1), "mOffDiag m12"], [m22.toFixed(1), "param m22"], [0, "inactive"],
                    [m13.toFixed(1), "b m13"], [m23.toFixed(1), "b m23"], [1, "inactive"]])
             .call(utils.matrix)
+            .call(function(){
+                if (initialRender){
+                    this.attr("opacity", 0)
+                  .transition().duration(transDur/2).delay(transDur*(order+1/2))
+                      .attr("opacity", 1)
+                }})
 
         params.forEach(makeDragger(g));
 
@@ -214,6 +214,14 @@ module.exports = function(){
                 var translate = d3.select(this).translate();
                 return "translate("+(translate[0]-5)+","+(translate[1]-6)+") rotate(90)"
             })
+
+        g.select("g.vectorX")
+            .call(function(){
+                if (initialRender){
+                    this.attr("opacity", 0)
+                  .transition().duration(transDur/2).delay(transDur*order)
+                      .attr("opacity", 1)
+                }})
 
         g.select(".point, .vector")
          .on("click", function(){
@@ -234,6 +242,13 @@ module.exports = function(){
             .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])
             .call(utils.vec)
 
+        g.selectAll("g.vectorY, text.eq")
+          .call(function(){
+            if (initialRender){
+                this.attr("opacity", 0)
+              .transition().duration(transDur/2).delay(transDur*(order+1))
+                  .attr("opacity", 1)
+            }})
     }
 
     var story = function(g, order, initialRender){
