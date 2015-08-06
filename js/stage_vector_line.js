@@ -50,7 +50,7 @@ module.exports = function(){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
         }
-        curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
+        curX = utils.snapTo(0, utils.clamp(x.domain()[0], x.domain()[1], curX))
         m1 = utils.clamp(-4, 4, m1)
         m2 = utils.clamp(-4, 4, m2)
         b1 = utils.clamp(-4, 4, b1)

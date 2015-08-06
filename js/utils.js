@@ -22,6 +22,9 @@ module.exports.approach = function(target, current, step){
 module.exports.clamp = function(lo, hi, val){
     return Math.max(lo, Math.min(hi, val));
 }
+module.exports.snapTo = function(target, val){
+    return Math.abs(target - val) < 0.06 ? target : val;
+}
 
 module.exports.cross = function(a, b) {
     var c = [], n = a.length, m = b.length, i, j;
@@ -34,7 +37,7 @@ module.exports.sub2 = "<tspan class='sub'>2</tspan>"
 
 module.exports.b = function(b, p){
     p = p || 2;
-    return b < 0.005 ? "- "+Math.abs(b).toFixed(p) : "+ "+b.toFixed(p)
+    return b < -0.005 ? "- "+Math.abs(b).toFixed(p) : "+ "+Math.abs(b).toFixed(p)
 }
 
 // vector and matrix drawing routines
