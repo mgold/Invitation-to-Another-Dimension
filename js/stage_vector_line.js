@@ -27,6 +27,10 @@ module.exports = function(){
             .domain([-3, 3])
             .range([-200, 200])
 
+    var y = d3.scale.linear()
+            .domain([-16, 16])
+            .range([-200, 200])
+
     var centerX = window.innerWidth/2;
     // DOM element selections
     var svg = d3.select("svg.second")
@@ -47,8 +51,10 @@ module.exports = function(){
             d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
         }
         curX = utils.clamp(x.domain()[0], x.domain()[1], curX)
-        m1 = utils.clamp(-10, 10, m1)
-        m2 = utils.clamp(-10, 10, m2)
+        m1 = utils.clamp(-4, 4, m1)
+        m2 = utils.clamp(-4, 4, m2)
+        b1 = utils.clamp(-4, 4, b1)
+        b2 = utils.clamp(-4, 4, b2)
         story(storyParent);
         axis(layer0, 0, initialRender);
         circleX(layer2, 1);
@@ -152,13 +158,13 @@ module.exports = function(){
         var lines = g.selectAll("line.y1, line.y2")
             .data([45, 135])
         lines.exit().transition().style("opacity", 0).remove();
-        lines.attr("y2", function(d,i){ return -x(f[i](curX))})
+        lines.attr("y2", function(d,i){ return -y(f[i](curX))})
         lines.enter().append("line")
             .attr("class", function(d,i){return "y"+(i+1)})
             .attr({y1: 0, y2: 0})
             .style("stroke-width", "2px")
           .transition().delay(transDur*order).duration(transDur)
-            .attr("y2", function(d,i){ return -x(f[i](curX))})
+            .attr("y2", function(d,i){ return -y(f[i](curX))})
         lines.attr("x1", function(d){ return x(curX)})
             .attr("x2", function(d){ return x(curX)})
             .attr("transform", function(d){return "rotate("+d+","+x(curX)+",0)"})
@@ -171,7 +177,9 @@ module.exports = function(){
             .attr("r", 0)
           .transition().delay(transDur*order).duration(transDur)
             .attr("r", 4)
-        circle.attr("cx", x(curX)).call(makeDraggerX).style("cursor", "nesw-resize")
+        circle.attr("cx", x(curX))
+            .style("cursor", "nesw-resize")
+            .call(makeDraggerX)
     }
 
     return function(){render(true);}
