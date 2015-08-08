@@ -53,6 +53,12 @@ tspan.sub, small {
         fill: $color;
     }
 
+    .component.#{$name}.stroked rect
+    {
+        stroke: darken($color, 10%);
+        stroke-width: 2px;
+    }
+
     line.#{$name} {
         stroke: $color;
     }
@@ -78,6 +84,9 @@ $y-color: #0d47a1;
 line.y {
     shape-rendering: geometricPrecision;
 }
+
+@include dimension("point", #FF851B);
+@include dimension("vector", #ECCC00);
 
 .component{
     text {
@@ -107,20 +116,8 @@ line.y {
         fill: #888;
     }
 
-    &.point {
+    &.point, &.vector {
         cursor: pointer;
-        fill: #05d700;
-        rect {
-            stroke: darken(#05d700, 10%);
-        }
-    }
-
-    &.vector {
-        cursor: pointer;
-        fill: #16E460;
-        rect {
-            stroke: darken(#16E460, 10%);
-        }
     }
 }
 

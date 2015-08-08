@@ -225,9 +225,11 @@ module.exports = function(){
                 }})
 
         g.select(".point, .vector")
+         .classed("stroked", true)
          .on("click", function(){
              if (!utils.isFrozen()){
                  point = !point;
+                 storyParent.html(point ? pointStory : vectorStory );
                  render();
              }
          })
@@ -252,6 +254,8 @@ module.exports = function(){
             }})
     }
 
+    var pointStory = "A 1 indicates this is a <tspan class='point'>point</tspan>."
+    var vectorStory = "A 0 indicates this is a <tspan class='vector'>vector</tspan>."
     var story = function(g, order, initialRender){
         if (initialRender){
             var timeoutID;
@@ -265,6 +269,7 @@ module.exports = function(){
                     })
                     .on("mouseleave", function(){
                         timeoutID = setTimeout(function(){ g.text("") }, 100);
+                        // don't hide it immediately to prevent flicker
                     })
             }
 
@@ -273,8 +278,9 @@ module.exports = function(){
             bind("m21", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
             bind("m22", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
 
-            bind("m13", function(){ return point ? "A constant added to <tspan class='y1'>y"+utils.sub1+"</tspan>." : "Does nothing for vectors."})
-            bind("m23", function(){ return point ? "A constant added to <tspan class='y2'>y"+utils.sub2+"</tspan>." : "Does nothing for vectors."})
+            var nothing4Vectors =  "Does nothing for <tspan class='vector'>vectors</tspan>."
+            bind("m13", function(){ return point ? "A constant added to <tspan class='y1'>y"+utils.sub1+"</tspan>." : nothing4Vectors})
+            bind("m23", function(){ return point ? "A constant added to <tspan class='y2'>y"+utils.sub2+"</tspan>." : nothing4Vectors})
 
             bind("x1", "The first input.")
             bind("x2", "The second input.")
@@ -283,7 +289,7 @@ module.exports = function(){
 
             //TODO make this update when the component is clicked
             //Also it relies on it being a point not a vector on start
-            bind("point", function(){ return point ? "A 1 indicates this is a point." : "A 0 indicates this is a vector." })
+            bind("point", function(){ return point ? pointStory : vectorStory })
         }
     }
 
