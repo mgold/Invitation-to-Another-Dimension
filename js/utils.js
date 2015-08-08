@@ -34,6 +34,7 @@ module.exports.cross = function(a, b) {
 
 module.exports.sub1 = "<tspan class='sub'>1</tspan>"
 module.exports.sub2 = "<tspan class='sub'>2</tspan>"
+module.exports.sub3 = "<tspan class='sub'>3</tspan>"
 
 module.exports.b = function(b, p){
     p = p || 2;

@@ -27,7 +27,7 @@ module.exports = function(){
         var x1 = a[0], x2 = a[1]
         return [x1*m11 + x2*m12 + m13*point, // multiplying by booleans ;)
                 x1*m21 + x2*m22 + m23*point,
-                1]
+                +point]
     }
 
     var rez = 7, halfRez = Math.floor(rez/2);
@@ -39,10 +39,6 @@ module.exports = function(){
     var y = d3.scale.linear()
         .domain([-10, 10])
         .range([x.range()[0]/rez, x.range()[1]/rez])
-
-    var r = d3.scale.sqrt()
-        .domain([0, 60])
-        .range([1, x(1) - x(0.5)])
 
     var centerX = window.innerWidth/2;
     // DOM element selections

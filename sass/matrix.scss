@@ -69,10 +69,13 @@ tspan.sub, small {
 }
 
 @include dimension("x1", #c03000);
-@include dimension("x2", #a74697);
+@include dimension("x2", #85144b);
 @include dimension("y1", #3080f0);
-@include dimension("y2", #30a0b0);
+@include dimension("y2", #3596bd);
 @include dimension("param", #aaa);
+
+@include dimension("x3", #a74697);
+@include dimension("y3", #45c5ef);
 
 $y-color: #0d47a1;
 @include dimension("y", $y-color);
