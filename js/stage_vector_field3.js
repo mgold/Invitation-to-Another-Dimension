@@ -68,8 +68,8 @@ module.exports = function(){
             .selectAll("g")
             .data([[m11.toFixed(1), "param m11"],    [m21.toFixed(1), "mOffDiag m21"], [m31.toFixed(1), "mOffDiag m31"], [0, "inactive"],
                    [m12.toFixed(1), "mOffDiag m12"], [m22.toFixed(1), "param m22"],    [m32.toFixed(1), "mOffDiag m32"], [0, "inactive"],
-                   [m12.toFixed(1), "mOffDiag m13"], [m23.toFixed(1), "mOffDiag m23"], [m33.toFixed(1), "param m33"],    [0, "inactive"],
-                   [m13.toFixed(1), "b m14"],        [m24.toFixed(1), "b m24"],        [m34.toFixed(1), "b m34"],        [1, "inactive"]])
+                   [m13.toFixed(1), "mOffDiag m13"], [m23.toFixed(1), "mOffDiag m23"], [m33.toFixed(1), "param m33"],    [0, "inactive"],
+                   [m14.toFixed(1), "b m14"],        [m24.toFixed(1), "b m24"],        [m34.toFixed(1), "b m34"],        [1, "inactive"]])
             .call(utils.matrix)
             .call(function(){
                 if (initialRender){
