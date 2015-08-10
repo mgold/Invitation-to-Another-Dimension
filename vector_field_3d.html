@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MathBox</title>
+
+  <style type="text/css" media="screen">
+    html, body { height: 100%; }
+    body { margin: 0; padding: 0 }
+    canvas { display: block }
+    
+    div + div + div { max-width: 80%; }
+    .mathbox-label {
+      font-family: 'klavika-web', sans-serif;
+      font-weight: normal;
+      font-style: normal;
+      text-shadow:
+        3px 0px 1px rgb(255, 255, 255),
+        -3px 0px 1px rgb(255, 255, 255),
+        0px -3px 1px rgb(255, 255, 255),
+        0px 3px 1px rgb(255, 255, 255),
+        2px 2px 1px rgb(255, 255, 255),
+        -2px 2px 1px rgb(255, 255, 255),
+        2px -2px 1px rgb(255, 255, 255),
+        -2px -2px 1px rgb(255, 255, 255),
+        3px 2px 1px rgb(255, 255, 255),
+        -3px 2px 1px rgb(255, 255, 255),
+        3px -2px 1px rgb(255, 255, 255),
+        -3px -2px 1px rgb(255, 255, 255),
+        1px 3px 1px rgb(255, 255, 255),
+        -1px 3px 1px rgb(255, 255, 255),
+        1px -3px 1px rgb(255, 255, 255),
+        -1px -3px 1px rgb(255, 255, 255),
+        -1px -1px 1px rgb(255, 255, 255),
+        -1px 1px 1px rgb(255, 255, 255),
+        1px -1px 1px rgb(255, 255, 255),
+        1px 1px 1px rgb(255, 255, 255);
+    }
+  </style>
+
+
+<!--
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      "HTML-CSS": { availableFonts: ["TeX"] },
+      extensions: ["tex2jax.js"],
+      jax: ["input/TeX","output/HTML-CSS"],
+      tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]},
+      messageStyle: 'none'
+    });
+  </script>
+  <script type="text/javascript"
+    src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+-->
+
+  <script type="text/javascript" charset="utf-8" src="assets/Mathbox-bundle.js"></script>
+
+  <script type="text/javascript" charset="utf-8">
+  /**
+   * Bootstrap
+   */
+  DomReady.ready(function() {
+    ThreeBox.preload([
+      'assets/snippets.glsl.html',
+    ], function () {
+
+      // MathBox boilerplate
+      var mathbox = window.mathbox = mathBox({
+        cameraControls: true,
+        cursor:         true,
+        controlClass:   ThreeBox.OrbitControls,
+        elementResize:  true,
+        fullscreen:     true,
+        screenshot:     true,
+        stats:          false,
+        scale:          1,
+      });
+
+      //if (top == window) mathbox.start();
+      mathbox.start();
+
+      // Set up director
+      var script = window.mathboxScript;
+      var director = window.director = new MathBox.Director(mathbox, script);
+
+      // Arrow controls
+      // Controls for stand-alone
+      window.addEventListener('keydown', function (e) {
+        if (e.keyCode == 38 || e.keyCode == 37) director.back();
+        else if (e.keyCode == 40 || e.keyCode == 39) director.forward();
+        else {
+          return;
+        }
+
+        document.getElementById('info').style.opacity = '0';
+      });
+
+      window.mathboxSetup(mathbox);
+
+      // Rotate camera continuously
+      var t = 0;
+      mathbox.world().loop().hookPreRender(function () {
+        t = -(+new Date() * .00045);
+        mathbox.set('camera', { phi: t });
+      });
+    });
+  });
+  </script>
+  
+  <script type="text/javascript" charset="utf-8">
+
+  /**
+   * Setup
+   */
+  window.mathboxSetup = function (mathbox) {
+
+    // Viewport camera/setup
+    mathbox
+      // Polar viewport
+      .viewport({
+        type: 'cartesian',
+        range: [[-1, 1], [-1, 1], [-1, 1]],
+        scale: [1, 1, 1],
+        rotation: [0, 0, 0],
+      })
+      .camera({
+        orbit: 12.5,
+        phi: τ/4,
+        theta: .5,
+      })
+      .transition(300)
+
+      .vector({
+        n: 1,                              // Number of vectors
+        //data: null,
+        data: [[0,0,0], [1,1,1]],                       // Array of alternating start and end points
+        // each an array of 2 or 3 elements
+        //expression: function (i, end) {    // Live expression for start/end points.
+            //return 0;                        // Return single value or array of 2/3 elements.
+            // Fill this out using parent
+        //},
+        line: true,                        // Whether to draw vector lines
+        arrow: true,                       // Whether to draw arrowheads
+        size: .07,                         // Size of the arrowhead relative to the stage
+        color: 0x2745A0,
+        })
+
+  }
+
+  /** 
+   * Script
+   */
+  window.mathboxScript = [
+
+  ];
+
+  </script>
+
+</head>
+<body>
+  <div id="info"></div>
+</body>
+</html>

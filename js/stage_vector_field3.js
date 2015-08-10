@@ -7,6 +7,7 @@ module.exports = function(){
         m31 = 4.8,  m32 = -1.9,  m33 = -1.8; m34 = -0.9;
     var point = true;
     var curPos = null;
+    window.myGlobal = "hello";
 
     var params = "m11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34".split(" ");
     var transDur = 1000;
@@ -42,13 +43,12 @@ module.exports = function(){
         .domain([-10, 10])
         .range([x.range()[0]/rez, x.range()[1]/rez])
 
-    var centerX = window.innerWidth/2;
     // DOM element selections
-    var svg = d3.select("svg.fifth")
+    var svg = d3.select("svg.fifth").style("width", "50%")
     var symbolsParent = svg.append("g")
-        .translate(centerX+150, 175)
+        .translate(150, 175)
     var storyParent = svg.append("g")
-        .translate(centerX+145, 410)
+        .translate(145, 410)
         .append("text")
 
     function render(initialRender){
@@ -61,7 +61,6 @@ module.exports = function(){
         })
         symbols(symbolsParent, 0, initialRender);
         story(storyParent, 0, initialRender);
-        viewport(svg, 1, initialRender);
     }
 
     var symbols = function(g, order, initialRender){
@@ -184,9 +183,9 @@ module.exports = function(){
     }
 
     function viewport(g, order, initialRender){
-        if (initialRender){
-            var element = d3.select(svg.node().parentElement).append("div").node()
-            var mathbox = mathBox(element, {});
+        if (!mathboxRendered && mathbox){
+            mathboxRendered = true;
+            mathbox.start();
             mathbox
             // Cartesian viewport
             .viewport({

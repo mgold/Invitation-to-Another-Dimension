@@ -201,3 +201,13 @@ svg {
     height: $svg_height;
 }
 
+.mathbox {
+    max-width: $svg-height;
+    width: $svg-height;
+    height: $svg-height;
+    margin-left: 0px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
