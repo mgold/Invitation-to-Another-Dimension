@@ -87,7 +87,7 @@
           together, and then adds them all up, taking two vectors to a single scalar.
         </p>
         <p>
-        Now we can ask, what happens when we have two inputs and two outputs? 
+          Now we can ask, what happens when we have two inputs and two outputs?
         </p>
         <p>
           We use a <i>matrix</i> to compactly store all the parameters. A matrix is really just a description of a
@@ -96,8 +96,9 @@
         </p>
         <p>
           It's the remaining numbers where things get interesting: they control the "crosstalk" between the first and
-          second function. The first input can influence the second output, and vice versa. Despite carefully examining
-          all the ingredients in isolation, we couldn't have predicted this would happen when we put them together.
+          second function. The first input can influence the second output, and vice versa, a phenomenon known as
+          <i>shear</i>. Despite carefully examining all the ingredients in isolation, we couldn't have predicted this
+          would happen when we put them together.
         </p>
         <p>
           Graphically, a matrix's function is a <i>vector field</i>. Instead of having one number at every point in the
@@ -141,7 +142,20 @@
     </div>
     <div class='essay'>
         <p>
-          More discussion here.
+          A 3D vector field might look like a forest of blue arrows, but it's visualizing a function from 3 input to
+          three outputs, squeezing six dimensions onto your screen's two. It's actually easier to see when you adjust
+          the matrix and see how the arrows change – predictably, in lines and at right angles. There is symmetry in the
+          motion, each left counterbalanced by a right wherever the sign is flipped. By modifying the matrix, you're
+          getting a glimpse into the space of all possible matrices, a <i>twelve</i> dimensional space. Do we need
+          fifteen inputs to specify three outputs? Not for a single function, no, but breaking things apart allows us to
+          see adjacent functions in many dimensions. If something isn't right, you have a lot of knobs to turn.
+        </p>
+        <p>
+          Perhaps more importantly, you should have some idea of what each of those knobs <i>do</i> thanks to the
+          presentation. Color, notation, and interactivity have been chosen very carefully to give a consistent
+          design. More importantly, each stage incrementally built on <span class=y1>y</span> = m<span class=x1>x</span>
+          + b. Addition and multiplication, translation and scaling, served as guideposts as we hoisted ourselves
+          higher.
         </p>
     </div>
   </body>
