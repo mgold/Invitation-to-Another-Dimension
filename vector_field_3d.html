@@ -57,6 +57,16 @@
   <script type="text/javascript" charset="utf-8" src="assets/Mathbox-bundle.js"></script>
 
   <script type="text/javascript" charset="utf-8">
+
+    var n = 5, n2 = n*n, n3 = n2*n;
+    var pointForIndex = [];
+    for(var t = 0; t < n3; t++){
+        var i = t % n, j = Math.floor((t % n2)/n) - 1, k = Math.floor(t / n2);
+        i-= 2; k-=2; j--; // 0..4 -> -2..2
+        i*= 0.5; j*= 0.5; k*= 0.5; // -1, 0.5, 0, 0.5, 1
+        pointForIndex.push([i,j,k])
+    }
+
   /**
    * Bootstrap
    */
@@ -98,12 +108,6 @@
 
       window.mathboxSetup(mathbox);
 
-      // Rotate camera continuously
-      var t = 0;
-      mathbox.world().loop().hookPreRender(function () {
-        t = -(+new Date() * .00025);
-        mathbox.set('camera', { phi: t });
-      });
     });
   });
   </script>
@@ -115,13 +119,13 @@
    */
   window.mathboxSetup = function (mathbox) {
 
-
+    var scale = 0.9;
     mathbox
     // Cartesian viewport
     .viewport({
           type: 'cartesian',
-      range: [[-3, 3], [-3, 3], [-3, 3]],
-      scale: [1, 1, 1],
+      range: [[-2, 2], [-2, 2], [-2, 2]],
+      scale: [scale, scale, scale],
     })
     // Apply automatic 300ms fade in/out
     .transition(300)
@@ -165,20 +169,20 @@
         })
 
         .vector({
-          n: 27,                              // Number of vectors
+          n: n3,                              // Number of vectors
           data: null,                        // Array of alternating start and end points,
                                              // each an array of 2 or 3 elements
           expression: function (n, end) {    // Live expression for start/end points.
-              var i = n % 3, j = Math.floor((n % 9)/3) - 1, k = Math.floor(n / 9);
-              i--; k--; // 0..2 -> -1..1
-              if (!end) return [i,j,k]
-              var result = parent.vf3_f([i,j,k])
-              result = result.map(function(d){ return d/10 })
-              return [i+result[0], j+result[1], k+result[2]]
+              var point = pointForIndex[n];
+              if (!end) return point;
+              var result = parent.vf3_f(point)
+              result = result.map(function(d){ return d / 16 })
+              return [point[0]+result[0], point[1]+result[1], point[2]+result[2]]
           },
+          color: 0x0d47a1,
           line: true,                        // Whether to draw vector lines
           arrow: true,                       // Whether to draw arrowheads
-          size: .03,                         // Size of the arrowhead relative to the stage
+          size: .028,                         // Size of the arrowhead relative to the stage
         })
   }
 
