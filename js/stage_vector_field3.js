@@ -44,11 +44,11 @@ module.exports = function(){
         .range([x.range()[0]/rez, x.range()[1]/rez])
 
     // DOM element selections
-    var svg = d3.select("svg.fifth").style("width", "50%")
+    var svg = d3.select("svg.fifth").style("width", "340px")
     var symbolsParent = svg.append("g")
-        .translate(150, 175)
+        .translate(5, 175)
     var storyParent = svg.append("g")
-        .translate(145, 410)
+        .translate(0, 410)
         .append("text")
 
     function render(initialRender){
