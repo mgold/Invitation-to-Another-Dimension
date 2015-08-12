@@ -128,7 +128,7 @@
       scale: [scale, scale, scale],
     })
     // Apply automatic 300ms fade in/out
-    .transition(300)
+    .transition(500)
 
         // Add XYZ axes
         .axis({
@@ -167,7 +167,7 @@
             tickUnit: [ 1, 1],      // Base unit for ticks on each axis. Set to π e.g. to space ticks at multiples of π.
             tickScale: [ 10, 10 ],  // Integer denoting the base for recursive division on each axis. 2 = binary, 10 = decimal
         })
-
+    .transition(800)
         .vector({
           n: n3,                              // Number of vectors
           data: null,                        // Array of alternating start and end points,
@@ -184,6 +184,7 @@
           arrow: true,                       // Whether to draw arrowheads
           size: .028,                         // Size of the arrowhead relative to the stage
         })
+    .animate('camera', { orbit: 2, phi: Math.PI*5/2 - .4 }, { delay: 3500, duration: 11000 })
   }
 
   window.mathboxScript = [ ];

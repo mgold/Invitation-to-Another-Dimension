@@ -9,7 +9,7 @@ module.exports = function(){
     var curPos = null;
 
     var params = "m11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34".split(" ");
-    var transDur = 1000;
+    var transDur = 1500;
 
     var makeDragger = function(selection){
         return function(matrixElem){
@@ -55,13 +55,15 @@ module.exports = function(){
     function render(initialRender){
         if (initialRender){
             utils.freeze();
-            d3.timer(function(){utils.unfreeze(); return true;}, 1.5*transDur);
+            d3.timer(function(){utils.unfreeze(); return true;}, 2.5*transDur);
+
+            d3.select(".mathbox").attr("src", "vector_field_3d.html")
         }
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
         })
-        symbols(symbolsParent, 0, initialRender);
-        story(storyParent, 0, initialRender);
+        symbols(symbolsParent, 1, initialRender);
+        story(storyParent, 1, initialRender);
     }
 
     var symbols = function(g, order, initialRender){
