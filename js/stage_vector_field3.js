@@ -45,23 +45,31 @@ module.exports = function(){
         .range([x.range()[0]/rez, x.range()[1]/rez])
 
     // DOM element selections
-    var svg = d3.select("svg.fifth").style("width", "340px")
+    var svg = d3.select("svg.fifth").style("width", "320px")
     var symbolsParent = svg.append("g")
         .translate(5, 175)
     var storyParent = svg.append("g")
         .translate(0, 410)
         .append("text")
+    var mathbox = d3.select(".mathbox")
 
     function render(initialRender){
         if (initialRender){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 2.5*transDur);
 
-            d3.select(".mathbox").attr("src", "vector_field_3d.html")
+            mathbox.attr("src", "vector_field_3d.html")
+            setInterval(function(){
+                var wid = svg.node().parentNode.getClientRects()[0].width
+                var padding = wid - 480 - 30 - 320; // mathbox width, padding, svg width
+                mathbox.style("padding-left", padding/2+"px")
+            }, 750)
         }
+
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
         })
+
         symbols(symbolsParent, 1, initialRender);
         story(storyParent, 1, initialRender);
     }
