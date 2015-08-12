@@ -61,7 +61,7 @@ module.exports = function(){
             mathbox.attr("src", "vector_field_3d.html")
             setInterval(function(){
                 var wid = svg.node().parentNode.getClientRects()[0].width
-                var padding = wid - 480 - 30 - 320; // mathbox width, padding, svg width
+                var padding = wid - 500 - 30 - 320; // mathbox width, padding, svg width
                 mathbox.style("padding-left", padding/2+"px")
             }, 750)
         }

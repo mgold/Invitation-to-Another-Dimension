@@ -180,9 +180,10 @@
               return [point[0]+result[0], point[1]+result[1], point[2]+result[2]]
           },
           color: 0x0d47a1,
+          lineWidth: 1.5,
           line: true,                        // Whether to draw vector lines
           arrow: true,                       // Whether to draw arrowheads
-          size: .028,                         // Size of the arrowhead relative to the stage
+          size: .02,                         // Size of the arrowhead relative to the stage
         })
     .animate('camera', { orbit: 2, phi: Math.PI*5/2 - .4 }, { delay: 3500, duration: 11000 })
   }
