@@ -7,7 +7,6 @@ module.exports = function(){
         m31 = 4.8,  m32 = -1.9,  m33 = -1.8; m34 = -0.9;
     var point = true;
     var curPos = null;
-    window.myGlobal = "hello";
 
     var params = "m11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34".split(" ");
     var transDur = 1000;
@@ -29,9 +28,11 @@ module.exports = function(){
         var x1 = a[0], x2 = a[1], x3 = a[2];
         return [x1*m11 + x2*m12 + x3*m13 + m14*point, // multiplying by booleans ;)
                 x1*m21 + x2*m22 + x3*m23 + m24*point,
-                x1*m31 + x2*m32 + x3*m33 + m34*point
+                x1*m31 + x2*m32 + x3*m33 + m34*point,
+                +point
                ]
     }
+    window.vf3_f = f;
 
     var rez = 7, halfRez = Math.floor(rez/2);
 
@@ -176,82 +177,7 @@ module.exports = function(){
             bind("y2", "The second output.")
             bind("y3", "The third output.")
 
-            //TODO make this update when the component is clicked
-            //Also it relies on it being a point not a vector on start
             bind("point", function(){ return point ? pointStory : vectorStory })
-        }
-    }
-
-    function viewport(g, order, initialRender){
-        if (!mathboxRendered && mathbox){
-            mathboxRendered = true;
-            mathbox.start();
-            mathbox
-            // Cartesian viewport
-            .viewport({
-                  type: 'cartesian',
-              range: [[-3, 3], [-3, 3], [-3, 3]],
-              scale: [1, 1, 1],
-            })
-            // Apply automatic 300ms fade in/out
-            .transition(300)
-
-                // Add XYZ axes
-                .axis({
-                  id: 'x-axis',
-                  axis: 0,
-                  color: 0xc03000,
-                  ticks: 5,
-                  lineWidth: 2,
-                  size: .05,
-                  labels: true,
-                })
-                .axis({
-                  id: 'y-axis',
-                  axis: 1,
-                  color: 0xa74697,
-                  ticks: 5,
-                  lineWidth: 2,
-                  size: .05,
-                  labels: true,
-                })
-                .axis({
-                  id: 'z-axis',
-                  axis: 2,
-                  color: 0xc2185b,
-                  ticks: 5,
-                  lineWidth: 2,
-                  size: .05,
-                  labels: true,
-                })
-                .grid({
-                    axis: [ 0, 2 ],         // Primary and secondary grid axis (0 = X, 1 = Y, 2 = Z)
-                    offset: [0, 0, 0],      // Shift grid position
-                    show: [ true, true ],   // Show horizontal and vertical direction
-                    n: 2,                   // Number of points on grid line (set to higher for curved viewports)
-                    ticks: [ 6, 6 ],      // Approximate number of ticks on axis (ticks are spaced at sensible units).
-                    tickUnit: [ 1, 1],      // Base unit for ticks on each axis. Set to π e.g. to space ticks at multiples of π.
-                    tickScale: [ 10, 10 ],  // Integer denoting the base for recursive division on each axis. 2 = binary, 10 = decimal
-                })
-
-            .vector({
-                  n: 27,                              // Number of vectors
-                  data: null,                        // Array of alternating start and end points,
-                                                     // each an array of 2 or 3 elements
-                  expression: function (n, end) {    // Live expression for start/end points.
-                      var i = n % 3, j = Math.floor((n % 9)/3) - 1, k = Math.floor(n / 9);
-                      i--; k--; // 0..3 -> -1..1
-                      return end ? f([i,j,k]) : [i,j,k]
-                  },
-                  line: true,                        // Whether to draw vector lines
-                  arrow: true,                       // Whether to draw arrowheads
-                  size: .03,                         // Size of the arrowhead relative to the stage
-            })
-            //.animate('camera', { orbit: 3.5, phi: Math.TAU*5/8 + .2 }, { delay: 500, duration: 5000 })
-            //.animate('camera', { orbit: 3.5, phi: Math.TAU*1/8 + .2 }, { delay: 500, duration: 5000 })
-            //.animate('camera', { orbit: 3.5, phi: Math.TAU*5/8 + .2 }, { delay: 500, duration: 5000 })
-            //.animate('camera', { orbit: 3.5, phi: Math.TAU*1/8 + .2 }, { delay: 500, duration: 5000 })
-            //.animate('camera', { orbit: 3.5, phi: Math.TAU*5/8 + .2 }, { delay: 500, duration: 5000 })
         }
     }
 

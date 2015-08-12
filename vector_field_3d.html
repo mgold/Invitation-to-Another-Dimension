@@ -101,7 +101,7 @@
       // Rotate camera continuously
       var t = 0;
       mathbox.world().loop().hookPreRender(function () {
-        t = -(+new Date() * .00045);
+        t = -(+new Date() * .00025);
         mathbox.set('camera', { phi: t });
       });
     });
@@ -115,45 +115,74 @@
    */
   window.mathboxSetup = function (mathbox) {
 
-    // Viewport camera/setup
-    mathbox
-      // Polar viewport
-      .viewport({
-        type: 'cartesian',
-        range: [[-1, 1], [-1, 1], [-1, 1]],
-        scale: [1, 1, 1],
-        rotation: [0, 0, 0],
-      })
-      .camera({
-        orbit: 12.5,
-        phi: τ/4,
-        theta: .5,
-      })
-      .transition(300)
 
-      .vector({
-        n: 1,                              // Number of vectors
-        //data: null,
-        data: [[0,0,0], [1,1,1]],                       // Array of alternating start and end points
-        // each an array of 2 or 3 elements
-        //expression: function (i, end) {    // Live expression for start/end points.
-            //return 0;                        // Return single value or array of 2/3 elements.
-            // Fill this out using parent
-        //},
-        line: true,                        // Whether to draw vector lines
-        arrow: true,                       // Whether to draw arrowheads
-        size: .07,                         // Size of the arrowhead relative to the stage
-        color: 0x2745A0,
+    mathbox
+    // Cartesian viewport
+    .viewport({
+          type: 'cartesian',
+      range: [[-3, 3], [-3, 3], [-3, 3]],
+      scale: [1, 1, 1],
+    })
+    // Apply automatic 300ms fade in/out
+    .transition(300)
+
+        // Add XYZ axes
+        .axis({
+          id: 'x-axis',
+          axis: 0,
+          color: 0xc03000,
+          ticks: 5,
+          lineWidth: 2,
+          size: .05,
+          labels: true,
+        })
+        .axis({
+          id: 'y-axis',
+          axis: 1,
+          color: 0x85144b,
+          ticks: 5,
+          lineWidth: 2,
+          size: .05,
+          labels: true,
+        })
+        .axis({
+          id: 'z-axis',
+          axis: 2,
+          color: 0xca74697,
+          ticks: 5,
+          lineWidth: 2,
+          size: .05,
+          labels: true,
+        })
+        .grid({
+            axis: [ 0, 2 ],         // Primary and secondary grid axis (0 = X, 1 = Y, 2 = Z)
+            offset: [0, 0, 0],      // Shift grid position
+            show: [ true, true ],   // Show horizontal and vertical direction
+            n: 2,                   // Number of points on grid line (set to higher for curved viewports)
+            ticks: [ 6, 6 ],      // Approximate number of ticks on axis (ticks are spaced at sensible units).
+            tickUnit: [ 1, 1],      // Base unit for ticks on each axis. Set to π e.g. to space ticks at multiples of π.
+            tickScale: [ 10, 10 ],  // Integer denoting the base for recursive division on each axis. 2 = binary, 10 = decimal
         })
 
+        .vector({
+          n: 27,                              // Number of vectors
+          data: null,                        // Array of alternating start and end points,
+                                             // each an array of 2 or 3 elements
+          expression: function (n, end) {    // Live expression for start/end points.
+              var i = n % 3, j = Math.floor((n % 9)/3) - 1, k = Math.floor(n / 9);
+              i--; k--; // 0..2 -> -1..1
+              if (!end) return [i,j,k]
+              var result = parent.vf3_f([i,j,k])
+              result = result.map(function(d){ return d/10 })
+              return [i+result[0], j+result[1], k+result[2]]
+          },
+          line: true,                        // Whether to draw vector lines
+          arrow: true,                       // Whether to draw arrowheads
+          size: .03,                         // Size of the arrowhead relative to the stage
+        })
   }
 
-  /** 
-   * Script
-   */
-  window.mathboxScript = [
-
-  ];
+  window.mathboxScript = [ ];
 
   </script>
 
