@@ -85,9 +85,9 @@ module.exports = function(){
     var symbols1 = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class='y1'>y"+utils.sub1+"</tspan> = m"+utils.sub1+"<tspan class='x1'>x</tspan> + b"+utils.sub1,
-                   "<tspan class='y1'>"+f1(curX).toFixed(2)+"</tspan> = <tspan class='dragM1'>"+m1.toFixed(2)+"</tspan>×<tspan class='x1'>"+curX.toFixed(2)+"</tspan> <tspan class='dragB1'>"+utils.b(b1)+"</tspan>",
+                   "<tspan class='y1'>"+utils.m(f1(curX))+"</tspan> = <tspan class='dragM1'>"+utils.m(m1)+"</tspan>×<tspan class='x1'>"+curX.toFixed(2)+"</tspan> <tspan class='dragB1'>"+utils.b(b1)+"</tspan>",
                    "<tspan class='y2'>y"+utils.sub2+"</tspan> = m"+utils.sub2+"<tspan class='x1'>x</tspan> + b"+utils.sub2,
-                   "<tspan class='y2'>"+f2(curX).toFixed(2)+"</tspan> = <tspan class='dragM2'>"+m2.toFixed(2)+"</tspan>×<tspan class='x1'>"+curX.toFixed(2)+"</tspan> <tspan class='dragB2'>"+utils.b(b2)+"</tspan>",
+                   "<tspan class='y2'>"+utils.m(f2(curX))+"</tspan> = <tspan class='dragM2'>"+utils.m(m2)+"</tspan>×<tspan class='x1'>"+curX.toFixed(2)+"</tspan> <tspan class='dragB2'>"+utils.b(b2)+"</tspan>",
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -121,7 +121,7 @@ module.exports = function(){
 
         g.place("g.y").translate(-20, 0)
             .selectAll("g")
-            .data([[f1(curX).toFixed(2), "y1"], [f2(curX).toFixed(2), "y2"]])
+            .data([[utils.m(f1(curX)), "y1"], [utils.m(f2(curX)), "y2"]])
             .call(utils.vec)
 
         g.place("text.eq")
@@ -130,7 +130,7 @@ module.exports = function(){
 
         g.place("g.m").translate(74, 0)
             .selectAll("g")
-            .data([[m1.toFixed(2)], [m2.toFixed(2)]])
+            .data([[utils.m(m1)], [utils.m(m2)]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
@@ -148,7 +148,7 @@ module.exports = function(){
 
         g.place("g.b").translate(200, 0)
             .selectAll("g")
-            .data([[b1.toFixed(2), "b"], [b2.toFixed(2), "b"]])
+            .data([[utils.m(b1), "b"], [utils.m(b2), "b"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerB2(d3.select(this)) : makeDraggerB1(d3.select(this))

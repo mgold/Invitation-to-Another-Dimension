@@ -40,6 +40,10 @@ module.exports.b = function(b, p){
     p = p || 2;
     return b < -0.005 ? "- "+Math.abs(b).toFixed(p) : "+ "+Math.abs(b).toFixed(p)
 }
+module.exports.m = function(b, p){
+    p = p || 2;
+    return b < -0.005 ? "-"+Math.abs(b).toFixed(p) : Math.abs(b).toFixed(p)
+}
 
 // vector and matrix drawing routines
 
