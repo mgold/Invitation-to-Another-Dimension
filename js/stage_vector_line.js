@@ -108,6 +108,8 @@ module.exports = function(){
             .call(makeDraggerM2)
         symbols.selectAll(".dragB2")
             .call(makeDraggerB2)
+        symbols.selectAll(".x1")
+            .call(makeDraggerX)
     }
 
     var symbols2 = function(g, order, initialRender){
