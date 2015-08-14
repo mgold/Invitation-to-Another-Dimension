@@ -25,14 +25,22 @@ tspan.sub, small {
     font-size: 8px;
 }
 
+$typeface: klavika-web, sans-serif;
+@mixin centered{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: justify;
+}
+
 .essay {
-    font-family: klavika-web, sans-serif;
+    font-family: $typeface;
     h1 {
-        font-family: avenir, klavika-web, sans-serif;
+        font-family: avenir, $typeface;
         margin-bottom: -4px;
     }
     h2 {
-        font-family: avenir, klavika-web, sans-serif;
+        font-family: avenir, $typeface;
         font-size: 18px;
         font-weight: normal;
         margin-top: 0px;
@@ -41,10 +49,23 @@ tspan.sub, small {
         margin-top: 16px;
     }
     width: 620px;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: justify;
+    @include centered;
+}
+
+footer {
+    border-top: 4px solid grey;
+    background-color: #3a3535;
+    padding: 20px;
+
+    p {
+        width: 700px;
+        @include centered;
+        font-family: $typeface;
+        color: #efeff9;
+        a {
+          color: #d1d1da;
+        }
+    }
 }
 
 @mixin dimension($name, $color) {

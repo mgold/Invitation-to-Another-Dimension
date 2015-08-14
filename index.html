@@ -44,11 +44,17 @@
     <div class='essay'>
         <p class='first'></p>
         <p>
-          This is the classic linear function from middle school, and it has one input and one output. It's natural to
-          ask, what happens if we put two of these functions together? The simplest approach is to have two outputs –
-          <span class=y1>y<small>1</small></span> and <span class=y2>y<small>2</small></span> – depend on a single
-          input, still called <span class=x1>x</span>. We can double-down on equations, or we can think of these outputs
-          as forming a <i>vector</i>.
+          This is the classic linear function from middle school, and it has one input and one output. You learned that
+          m is the slope, but you may not have made the connection to scaling up the identity by some factor. Also, when
+          <span class=x1>x</span> is 0, there's no scaling, so b is the y-intercept.
+        </p>
+        <p>
+          It's natural to ask, what happens if we put two of these functions together, side-by-side? The simplest
+          approach is to have two outputs – <span class=y1>y<small>1</small></span> and <span
+              class=y2>y<small>2</small></span> – depend on a single input, still called <span class=x1>x</span>. We can
+          double-down on linear equations, and plot the lines perpendicular to each other to emphasize that they're
+          independent. Or, we can think of these outputs as forming a <i>vector</i>, which basically pairs up all the
+          operations. Once again, change the numbers by dragging them:k
           </p>
     </div>
     <div class='bg'>
@@ -64,10 +70,12 @@
           on down the line.
         </p>
         <p>
-          We're used to plotting the x-axis horizontally and the y-axis vertically. Now that we want to consider two
-          inputs, we have to use the vertical axis for <span class="x2">x<small>2</small></span>. The output we encode
-          as the area of circles, either <span class=y1>positive</span> or <span class=negative>negative</span>. This
-          type of diagram is known as a <i>scalar field</i>.
+        That's one input with two outputs, known as a <i>parametric equation</i>. What about two inputs with one output?
+        This will require a change of perspecitive. We're used to plotting the x-axis horizontally and the y-axis
+        vertically. Now that we want to consider two inputs, we have to use the vertical axis for <span
+            class="x2">x<small>2</small></span>. The output we encode as the area of circles, either <span
+            class=y1>positive</span> or <span class=negative>negative</span>. This type of diagram is known as a
+        <i>scalar field</i>.
         </p>
     </div>
     <div class='bg'>
@@ -120,12 +128,13 @@
           It's worth noting that a vector field is not the only way to think about this function; two overlapping scalar
           fields would also work. Nicky Case has <a href=http://ncase.me/matrix/>a demo</a> where the two dimensions of
           input double up to also show the two dimensions of output. You can see where a point starts and where it ends
-          relative to the same pair of axes. All of these are valid tradeoffs, given the inherently tricky problem of
-          trying to depict four dimensional functions using only a 2D plane.
+          relative to the same pair of axes, the vector showing the change in position. (You can think of the vectors in
+          my vector field as showing the force on a particle at a point.) All of these are valid tradeoffs, given the
+          inherently tricky problem of trying to depict four dimensional functions using only a 2D plane.
         </p>
         <p>
           In pure mathematics, you'll typically only see the top-left two-by-two of our three-by-three matrix. The right
-          column allows us to add a constant (one in each output dimension) in addition to what we get by multiplying
+          column allows us to add constants (one in each output dimension) in addition to what we get by multiplying
           the inputs. However, in computer graphics we want to distinguish between <i>points</i>, which can be scaled
           and translated, and <i>vectors</i>, which can only be scaled. Click the <span class=point>orange</span> 1 to
           make it a 0, which turns the input from a point to a vector. Notice that the output is also now a vector,
@@ -148,16 +157,29 @@
           motion, each left counterbalanced by a right wherever the sign is flipped. By modifying the matrix, you're
           getting a glimpse into the space of all possible matrices, a <i>twelve</i> dimensional space. Do we need
           fifteen inputs to specify three outputs? Not for a single function, no, but breaking things apart allows us to
-          see adjacent functions in many dimensions. If something isn't right, you have a lot of knobs to turn.
+          see adjacent functions in many dimensions. If something isn't right, e have a lot of knobs to fix it.
         </p>
         <p>
           Perhaps more importantly, you should have some idea of what each of those knobs <i>do</i> thanks to the
           presentation. Color, notation, and interactivity have been chosen very carefully to give a consistent
           design. More importantly, each stage incrementally built on <span class=y1>y</span> = m<span class=x1>x</span>
-          + b. Addition and multiplication, translation and scaling, served as guideposts as we hoisted ourselves
+          + b. Addition and multiplication, translation and scaling, served as guideposts as we hoisted ourselves ever
           higher.
         </p>
+        <br/>
     </div>
+    <footer>
+      <p>
+        Thanks to Mike Bostock for creating D3.js, which powered the diagrams, and Steven Wittens for creating Mathbox,
+        which made a cameo in the 3D vector field.
+      </p>
+      <p>
+        Thank you to my reviewers [YOUR NAME HERE].
+      </p>
+      <p>
+        Back to my <a href=http://maxgoldste.in/>website</a>.
+      </p>
+    </footer>
   </body>
   <script charset='utf-8' src='/assets/d3.v3.js'></script>
   <script src='/compiled/bundle.js'></script>
