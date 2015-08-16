@@ -4,6 +4,8 @@ require('./d3.translate')
 require('./d3.place')
 require('./innersvg')
 
+require('./headers')
+
 var stage_linear = require('./stage_linear')()
 var stage_vector_line = require('./stage_vector_line')()
 var stage_scalar_field = require('./stage_scalar_field')()

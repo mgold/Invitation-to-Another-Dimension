@@ -37,6 +37,8 @@ $typeface: klavika-web, sans-serif;
     font-family: $typeface;
     h1 {
         font-family: avenir, $typeface;
+        font-size: 32px;
+        font-weight: bold;
         margin-bottom: -4px;
     }
     h2 {
@@ -220,6 +222,15 @@ $svg_height: 500px;
 svg {
     width: 100%;
     height: $svg_height;
+}
+
+svg.heading {
+    height: 100px;
+
+    .connector {
+        stroke-width: 2px;
+        shape-rendering: geometricPrecision;
+    }
 }
 
 .mathbox {

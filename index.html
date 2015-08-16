@@ -28,6 +28,7 @@
             </li>
         </ul>
 
+        <svg class="heading" data-x=1 data-y=1></svg>
         A linear function for an input, called <span class='x1'>x</span>, will scale the input by multiplying it by a
         scale factor called m. Then it translates the result by adding another value, called b. The output we
         call <span class='y1'>y</span>.
@@ -49,6 +50,7 @@
           m is the slope, but you may not have made the connection to scaling up the identity by some factor. Also, when
           <span class=x1>x</span> is 0, there's no scaling, so b is the y-intercept.
         </p>
+        <svg class="heading" data-x=1 data-y=2></svg>
         <p>
           It's natural to ask, what happens if we put two of these functions together, side-by-side? The simplest
           approach is to have two outputs – <span class=y1>y<small>1</small></span> and <span
@@ -68,10 +70,10 @@
           addition. Scalar multiplication (a scalar is just a single number, instead of a vector) multiplies each
           component of the vector by the scalar. Vector addition adds two vectors (of equal length) by component: the
           first component of the new vector is the sum of the first components of the two vectors being added, and so
-          on down the line.
-        </p>
+          on down the line. That's one input with two outputs, known as a <i>parametric equation</i>.
+          </p>
+        <svg class="heading" data-x=2 data-y=1></svg>
         <p>
-        That's one input with two outputs, known as a <i>parametric equation</i>. What about two inputs with one output?
         This will require a change of perspecitive. We're used to plotting the x-axis horizontally and the y-axis
         vertically. Now that we want to consider two inputs, we have to use the vertical axis for <span
             class="x2">x<small>2</small></span>. The output we encode as the area of circles, either <span
@@ -95,13 +97,12 @@
           multiplication and addition operations on the left. The dot product multiplies each pair of components
           together, and then adds them all up, taking two vectors to a single scalar.
         </p>
+        <svg class="heading" data-x=2 data-y=2></svg>
         <p>
-          Now we can ask, what happens when we have two inputs and two outputs?
-        </p>
-        <p>
-          We use a <i>matrix</i> to compactly store all the parameters. A matrix is really just a description of a
-          function; terse, but useful one you know how to think of it. The scale factors go down the main diagonal, top
-          left to bottom right. The translations are on the right side. The bottom row is always zero-zero-one.
+          It's time to put things together have have two of both outputs and inputs. We use a <i>matrix</i> to compactly
+          store all the parameters. A matrix is really just a description of a function; terse, but useful one you know
+          how to think of it. The scale factors go down the main diagonal, top left to bottom right. The translations
+          are on the right side. The bottom row is always zero-zero-one.
         </p>
         <p>
           It's the remaining numbers where things get interesting: they control the "crosstalk" between the first and
@@ -145,6 +146,7 @@
         <p>
           The same trick works in 3D as well.
         </p>
+        <svg class="heading" data-x=3 data-y=3></svg>
     </div>
     <div class='bg'>
         <iframe class='mathbox' src=''></iframe>
