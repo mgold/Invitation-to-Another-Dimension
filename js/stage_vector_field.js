@@ -6,6 +6,8 @@ module.exports = function(){
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
     var point = true;
     var curPos = null;
+    var balls = [];
+    var ballID = 0;
 
     var params = "m11 m12 m13 m21 m22 m23".split(" ");
     var transDur = 1000;
@@ -53,11 +55,13 @@ module.exports = function(){
     var layer1 = plot.append("g")
     var layer2 = plot.append("g")
     var layer3 = plot.append("g")
+    var ballLayer = plot.append("g")
 
     function render(initialRender){
         if (initialRender){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
+            initBalls();
         }
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
@@ -67,6 +71,45 @@ module.exports = function(){
         covers(layer3, 0, initialRender)
         symbols(symbolsParent, 3, initialRender);
         story(storyParent, 3, initialRender);
+    }
+
+    var initBalls = function(){
+        var ki = 0.0006;
+        var kr = 0.005;
+        plot.on("click", function(){
+            if (!utils.isFrozen()){
+                var pos = d3.mouse(plot.node()),
+                    xPos = x.invert(pos[0]),
+                    yPos = x.invert(-pos[1]),
+                    vel = f([xPos, yPos])
+                balls.push({x: xPos, y: yPos, vx: vel[0]*ki, vy: vel[1]*ki, id: ballID++})
+            }
+        })
+
+        var colors = d3.scale.category20b().range();
+        var randomFill = function(){ return colors[4*Math.floor(Math.random()*5)] }
+        var edge = 6;
+        d3.timer(function(){
+            balls = balls.filter(function(b){
+                return !(b.x > edge || b.x < -edge || b.y > edge || b.y < -edge)
+            })
+            balls = balls.map(function(b){
+                var vel = f([b.x, b.y])
+                b.x += vel[0]*kr;
+                b.y += vel[1]*kr;
+                return b;
+            })
+            var update = ballLayer.selectAll("circle").data(balls, function(b){return b.id});
+            update.exit().remove()
+            update.enter().append("circle")
+                .attr("class", "ball")
+                .attr("r", 4)
+                .style("fill", randomFill())
+            update.attr("cx", function(b){ return x(b.x) })
+                  .attr("cy", function(b){ return x(-b.y) })
+
+        })
+
     }
 
     var axes = function(g, order, initialRender){
