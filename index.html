@@ -7,28 +7,28 @@
   </head>
   <body>
     <div class='essay'>
+      <h2 style="color:red; margin: 50px 0px">REVIEW COPY - NOT FOR DISTRIBUTION!</h2>
       <h1>Invitation to Another Dimension</h1>
       <h2>from Max Goldstein</h2>
-      <h2 style="color:red; margin-bottom: 50px">REVIEW COPY - NOT FOR DISTRIBUTION!</h2>
       <p>
         So much of math seems to be unrelated bits and pieces. Learn this for the test, then forget it to make room for
         the next thing. But this is an illusion fostered by the frequently atrocious high school curriculum. Mathematics
-        has structure, ideas that start simple and then are extended and combined. Here, we're looking at two of them:
+        has structure, ideas that start simple and then are extended and combined. Here, we're focusing on two of them.
+      </p>
+      <p>
+        First, functions transform inputs into outputs. You can group similar functions by how many inputs and outputs
+        they take. For our purposes, each input or output is just a number. We'll call the inputs <span
+            class='x1'>x</span> and the outputs <span class='y1'>y</span>, adding subscript numbers once we get more
+        than one. Each input or output is called a <i>dimension</i>.
+      </p>
+      <p>
+        Second, we're looking at functions that use addition and multiplication only to turn inputs into outputs. We'll
+        see that geometrically, addition is <i>translation</i> and multiplication is <i>scaling</i>. We'll leave the
+        polynomials, exponentials, and sine waves for another day.
+      </p>
+      <p>
 
-        <ul>
-            <li>Functions transform inputs into outputs. You can group similar functions by how many inputs and outputs
-            they take. For our purposes, each input or output is just a number. We'll call the inputs <span
-                class='x1'>x</span> and the outputs <span class='y1'>y</span>, adding subscript numbers once we get more
-            than one. Each input or output is called a <i>dimension</i>.
-            </li>
-
-            <li>We're looking at functions that use addition and multiplication only to turn inputs into outputs. We'll
-            see that geometrically, addition is <i>translation</i> and multiplication is <i>scaling</i>. We'll leave the
-            polynomials, exponentials, and sine waves for another day.
-            </li>
-        </ul>
-
-        <svg class="heading" data-x=1 data-y=1></svg>
+      <svg class="heading" data-x=1 data-y=1></svg>
         A linear function for an input, called <span class='x1'>x</span>, will scale the input by multiplying it by a
         scale factor called m. Then it translates the result by adding another value, called b. The output we
         call <span class='y1'>y</span>.
@@ -99,7 +99,7 @@
         </p>
         <svg class="heading" data-x=2 data-y=2></svg>
         <p>
-          It's time to put things together have have two of both outputs and inputs. We use a <i>matrix</i> to compactly
+          It's time to put things together and have two of both outputs and inputs. We use a <i>matrix</i> to compactly
           store all the parameters. A matrix is really just a description of a function; terse, but useful one you know
           how to think of it. The scale factors go down the main diagonal, top left to bottom right. The translations
           are on the right side. The bottom row is always zero-zero-one.
@@ -112,39 +112,55 @@
         </p>
         <p>
           Graphically, a matrix's function is a <i>vector field</i>. Instead of having one number at every point in the
-          plane, we now have two. A vector field shows the result vector (but not its components), shrunken down so they
-          don't overlap when repeated. This allows us to see patterns of swirls, attraction, and repulsion. Each arrow
-          is a weather vane, and the matrix controls the wind.
-        </p>
+          plane, we now have two. Like a scalar field, a vector field starts with samples of the 2D <span
+              class=x1>input</span> <span class=x2>space</span>. For each of those samples, we draw a vector whose
+          horizontal component is proportional to <span class=y1>y<small>1</small></span> and whose vertical component
+          is proportional to <span class=y2>y<small>2</small></span>. By "proportional", we mean that the vectors are
+          shrunken down so they don't overlap when repeated. If you think of the vectors showing the force on a particle
+          at a point, we can see patterns of swirls, attraction, and repulsion. Each arrow is a weather vane, and the
+          matrix controls the wind. </p>
     </div>
     <div class='bg'>
         <svg class='fourth'></svg>
     </div>
     <div class='essay'>
         <p>
-          The pencil-and-paper notation puts the input vector right of the matrix, but it's shown above it here. This
-          emphasizes how matrices work: to compute the output vector, multiply each column of the matrix by the input
-          above it, and then add up the columns (think of squishing them together horizontally).
+          You may have been taught to write the input vector to the right of the matrix, but it's shown above it here.
+          This intentional break from pencil-and-paper notation is meant to emphasize how matrices work. To compute the
+          output vector (i.e. to apply the function), multiply each column of the matrix by the input above it, and then
+          add up the columns (think of squishing them together horizontally).
+        </p>
+        <p>
+          In pure mathematics, you'll typically only see the top-left two-by-two of our three-by-three matrix. The right
+          column allows us to add constants (one in each output dimension) in addition to what we get by multiplying the
+          inputs. However, in computer graphics we want to distinguish between <span class=point>points</span>, which
+          can be scaled and translated, and <span class=vector>vectors</span>, which can only be scaled. Click the
+          orange 1 to make it a 0, which turns the input from a point to a vector. Notice that the output is also now a
+          vector, since its last component is now zero. This means we can use the same matrix on points and vectors,
+          which is particularly handy if the matrix took a long time to compute.
+        </p>
+        <p>
+          If you focus on the lengths of the vectors, you'll see that they get longer as they move away from the origin.
+          This makes sense, since you're multiplying by larger numbers. But this appearance of growth is deceptive.
+          Focus on the arrowheads and ignore the arrow's shaft. If you trace one the straight lines we started with,
+          whether horizontal or vertical, you'll find that it's still straight, just at an odd angle. You'll also notice
+          that parallel lines remain parallel, and that three adjacent parallel lines will be evenly spaced. If you look
+          at four arrowheads that started as a square, they still form a rhombus, and this rhombus is tiled repeatedly
+          across every former square. The matrix, then, converts to another coordinate system: scaled, translated, and
+          stretched, but consistent.
         </p>
         <p>
           It's worth noting that a vector field is not the only way to think about this function; two overlapping scalar
           fields would also work. Nicky Case has <a href=http://ncase.me/matrix/>a demo</a> where the two dimensions of
-          input double up to also show the two dimensions of output. You can see where a point starts and where it ends
-          relative to the same pair of axes, the vector showing the change in position. (You can think of the vectors in
-          my vector field as showing the force on a particle at a point.) All of these are valid tradeoffs, given the
-          inherently tricky problem of trying to depict four dimensional functions using only a 2D plane.
+          input double up to also show the two dimensions of output. In other words, the vectors aren't shrunken down
+          like they are here. You can see where a point starts and where it ends relative to the same pair of axes, and
+          vector showing the change in position. The bad news is that you can't see as much of the overall structure.
+          All of these are valid tradeoffs, given the inherently tricky problem of trying to depict four dimensional
+          functions using only a 2D plane.
         </p>
         <p>
-          In pure mathematics, you'll typically only see the top-left two-by-two of our three-by-three matrix. The right
-          column allows us to add constants (one in each output dimension) in addition to what we get by multiplying
-          the inputs. However, in computer graphics we want to distinguish between <i>points</i>, which can be scaled
-          and translated, and <i>vectors</i>, which can only be scaled. Click the <span class=point>orange</span> 1 to
-          make it a 0, which turns the input from a point to a vector. Notice that the output is also now a vector,
-          since its last component is now zero. This means we can use the same matrix on points and vectors, which is
-          particularly handy if the matrix took a long time to compute.
-        </p>
-        <p>
-          The same trick works in 3D as well.
+          However, once you've gotten your head around that, it's relatively simple to understand six dimensions
+          depicted in a 3D volume.
         </p>
         <svg class="heading" data-x=3 data-y=3></svg>
     </div>
