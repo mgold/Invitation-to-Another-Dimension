@@ -32,6 +32,7 @@ module.exports.cross = function(a, b) {
     return c;
 }
 
+// easy refactor: add x1, etc
 module.exports.sub1 = "<tspan class='sub'>1</tspan>"
 module.exports.sub2 = "<tspan class='sub'>2</tspan>"
 module.exports.sub3 = "<tspan class='sub'>3</tspan>"
@@ -43,6 +44,22 @@ module.exports.b = function(b, p){
 module.exports.m = function(b, p){
     p = p || 2;
     return b < -0.005 ? "-"+Math.abs(b).toFixed(p) : Math.abs(b).toFixed(p)
+}
+
+module.exports.circleSamples = circleSamples = d3.range(-3, 4)
+
+module.exports.makeCircles = function(transDur, className, initialize, finalize){
+    return function(g, order){
+        var circles = g.selectAll("circle."+className)
+            .data(circleSamples)
+        circles.call(finalize);
+        circles.exit().transition().attr("r", 0).remove();
+        circles.enter().append("circle")
+            .attr("class", className)
+            .call(initialize)
+          .transition().duration(transDur).delay(transDur*order)
+            .call(finalize)
+    }
 }
 
 // vector and matrix drawing routines

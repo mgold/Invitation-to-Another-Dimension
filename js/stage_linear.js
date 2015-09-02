@@ -4,7 +4,6 @@ module.exports = function(){
     var m = 1, b = 0;
     var hoverX = null;
 
-    var data = d3.range(-3, 4)
     var transDur = 1000;
     var f = function(x){return m*x + b}
 
@@ -130,7 +129,7 @@ module.exports = function(){
 
     var lines = function(g, order){
         var lines = g.selectAll("line.y1")
-            .data(data)
+            .data(utils.circleSamples)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", function(d){ return -x(f(d))})
         lines.enter().append("line")
@@ -142,21 +141,7 @@ module.exports = function(){
             .attr("y2", function(d){ return -x(f(d))})
     }
 
-    var makeCircles = function(className, initialize, finalize){
-        return function(g, order){
-            var circles = g.selectAll("circle."+className)
-                .data(data)
-            circles.call(finalize);
-            circles.exit().transition().attr("r", 0).remove();
-            circles.enter().append("circle")
-                .attr("class", className)
-                .call(initialize)
-              .transition().duration(transDur).delay(transDur*order)
-                .call(finalize)
-        }
-    }
-
-    var circlesX = makeCircles("x1",
+    var circlesX = utils.makeCircles(transDur, "x1",
         function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)
             .on("mouseover", function(d){ if(!utils.isFrozen()){hoverX = d; render();}})
             .on("mouseout", function(d){ if(!utils.isFrozen()){hoverX = null; render();}})
@@ -165,7 +150,7 @@ module.exports = function(){
                          .attr("cx", function(d){ return x(d)})}
     )
 
-    var circlesY = makeCircles("y1",
+    var circlesY = utils.makeCircles(transDur, "y1",
         function(sel){
             sel.attr("r", 0).attr("cy", 0).attr("cx", function(d){ return x(d)})
         },
