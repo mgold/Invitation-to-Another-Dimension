@@ -83,7 +83,7 @@ footer {
 }
 
 @mixin dimension($name, $color) {
-    circle.#{$name}, tspan.#{$name}, text.#{$name}, .component.#{$name} rect
+    circle.#{$name}, tspan.#{$name}, text.#{$name}, .component.#{$name} rect, path.#{$name}
     {
         fill: $color;
     }
@@ -115,7 +115,6 @@ footer {
 $y-color: #0d47a1;
 @include dimension("y", $y-color);
 .marker path, .marker line {
-    fill: $y-color;
     stroke: none;
     shape-rendering: geometricPrecision;
 }

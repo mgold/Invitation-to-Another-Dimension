@@ -7,6 +7,7 @@ module.exports = function(){
         m31 = 4.8,  m32 = -1.9,  m33 = -1.8; m34 = -0.9;
     var point = true;
     var curPos = null;
+    var isolateComponent = 0;
 
     var params = "m11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34".split(" ");
     var transDur = 1500;
@@ -24,14 +25,32 @@ module.exports = function(){
         }
     }
 
+    /* You know how only 10% of a program is performance critical? This is that part.
+     * This function is called 125 times a _frame_. So yes, we're going to optimize out
+     * the isolated vector parts, and we're going to do dirty checking in the bind section.
+     * Perf testing for dirty checking consisted of __hearing my laptop fans slow down__.
+     */
     var f = function(a){
         var x1 = a[0], x2 = a[1], x3 = a[2];
-        return [x1*m11 + x2*m12 + x3*m13 + m14*point, // multiplying by booleans ;)
+        return [x1*m11 + x2*m12 + x3*m13 + m14*point,
                 x1*m21 + x2*m22 + x3*m23 + m24*point,
                 x1*m31 + x2*m32 + x3*m33 + m34*point,
                 +point
                ]
     }
+    f.color = 0x0d47a1;
+    var fIso1 = function(a){
+        return [a[0]*m11 + a[1]*m12 + a[2]*m13 + m14*point, 0, 0 ]
+    }
+    fIso1.color = 0x3080f0;
+    var fIso2 = function(a){
+        return [0, a[0]*m21 + a[1]*m22 + a[2]*m23 + m14*point, 0 ]
+    }
+    fIso2.color = 0x3596bd;
+    var fIso3 = function(a){
+        return [0, 0, a[0]*m31 + a[1]*m32 + a[2]*m33 + m14*point ]
+    }
+    fIso3.color = 0x45c5ef;
     window.vf3_f = f;
 
     var rez = 7, halfRez = Math.floor(rez/2);
@@ -149,7 +168,7 @@ module.exports = function(){
     var story = function(g, order, initialRender){
         if (initialRender){
             var timeoutID;
-            var bind = utils.bind(svg, g, ".component.");
+            var bind = utils.bind(svg, g, ".component.", function(){f.dirty = true; window.vf3_f = f});
 
             bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
             bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")
@@ -171,9 +190,10 @@ module.exports = function(){
             bind("x1", "The first input.")
             bind("x2", "The second input.")
             bind("x3", "The third input.")
-            bind("y1", "The first output.")
-            bind("y2", "The second output.")
-            bind("y3", "The third output.")
+
+            bind("y1", function(){ fIso1.dirty = true; window.vf3_f = fIso1; return "The first output."})
+            bind("y2", function(){ fIso2.dirty = true; window.vf3_f = fIso2; return "The second output."})
+            bind("y3", function(){ fIso3.dirty = true; window.vf3_f = fIso3; return "The third output."})
 
             bind("point", function(){ return point ? pointStory : vectorStory })
         }

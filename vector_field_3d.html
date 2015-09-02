@@ -175,6 +175,10 @@
           expression: function (n, end) {    // Live expression for start/end points.
               var point = pointForIndex[n];
               if (!end) return point;
+              if(n===0 && parent.vf3_f.dirty){
+                this.style.set('color', parent.vf3_f.color)
+                parent.vf3_f.dirty = undefined;
+              }
               var result = parent.vf3_f(point)
               result = result.map(function(d){ return d / 16 })
               return [point[0]+result[0], point[1]+result[1], point[2]+result[2]]

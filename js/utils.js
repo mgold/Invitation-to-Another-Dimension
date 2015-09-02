@@ -71,19 +71,20 @@ module.exports.makeCircles = function(transDur, circleSamples, className, initia
 }
 
 
-module.exports.bind = function(svg, g, baseSel){
+module.exports.bind = function(svg, g, baseSel, cb){
     baseSel = baseSel || "";
     var timeoutID;
     return function(sel, html){
     svg.selectAll(baseSel+sel)
         .on("mouseenter", function(){
             if (!module.exports.isFrozen()){
-                clearTimeout(timeoutID) // it's safe to clear an invalid ID
+                clearTimeout(timeoutID); // it's safe to clear an invalid ID
+                if (cb) cb(); // yes, this might happen twice, shh
                 typeof html === "function" ? g.html(html()) : g.html(html)
             }
         })
         .on("mouseleave", function(){
-            timeoutID = setTimeout(function(){ g.text("") }, 100);
+            timeoutID = setTimeout(function(){ g.text(""); if (cb) { cb() } }, 100);
             // don't hide it immediately to prevent flicker
         })
     }

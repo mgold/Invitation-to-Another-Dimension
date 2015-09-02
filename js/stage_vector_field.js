@@ -6,6 +6,7 @@ module.exports = function(){
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
     var point = true;
     var curPos = null;
+    var isolateComponent = 0;
     var balls = [];
     var ballID = 0;
 
@@ -67,7 +68,7 @@ module.exports = function(){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
         })
         axes(layer1, 0, initialRender)
-        circlesX(layer2, 1, initialRender)
+        vectors(layer2, 1, initialRender)
         covers(layer3, 0, initialRender)
         symbols(symbolsParent, 3, initialRender);
         story(storyParent, 3, initialRender);
@@ -129,10 +130,21 @@ module.exports = function(){
         }
     }
 
-    var circlesX = function(g, order, initialRender){
+    var vectors = function(g, order, initialRender){
         var lineEnds = function(){
-            this.attr("x2", function(d){return y(d.y1)})
-                .attr("y2", function(d){return -y(d.y2)})
+            if (!isolateComponent){
+                this.attr("x2", function(d){return y(d.y1)})
+                    .attr("y2", function(d){return -y(d.y2)})
+                    .attr("class", "y")
+            }else if (isolateComponent === 1){
+                this.attr("x2", function(d){return y(d.y1)})
+                    .attr("y2", 0)
+                    .attr("class", "y1")
+            }else{
+                this.attr("x2", 0)
+                    .attr("y2", function(d){return -y(d.y2)})
+                    .attr("class", "y2")
+            }
         }
         var bases = g.selectAll("g.base")
             .data(d3.range(rez*rez)
@@ -181,15 +193,25 @@ module.exports = function(){
         }else{
             markers = svg.selectAll(".base").select(".marker");
             markers.translate(function(d){
-                return [y(d.y1), -y(d.y2)]})
+                if (!isolateComponent){
+                    return [y(d.y1), -y(d.y2)]
+                }else if (isolateComponent === 1){
+                    return [y(d.y1), 0]
+                }else{
+                    return [0, -y(d.y2)]
+                }
+            })
         }
         markers.select(".roundhead")
             .attr("display", function(d){return isZero(d) ? null : "none"})
+            .attr("class", "roundhead y" + (isolateComponent || ""))
         markers.select(".arrowhead")
             .attr("display", function(d){return isZero(d) ? "none" : null})
             .attr("transform", function(d){
-                var angle = Math.atan2(d.y1, d.y2) * (360/Math.TAU) - 90;
-                return"rotate("+angle+")"})
+                var angle = Math.atan2(isolateComponent === 2 ? 0 : d.y1, isolateComponent === 1 ? 0 : d.y2)
+                return"rotate("+ (angle * (360/Math.TAU) - 90) +")"
+             })
+            .attr("class", "arrowhead y" + (isolateComponent || ""))
     }
 
     function covers(g, order, initialRender){
@@ -297,7 +319,7 @@ module.exports = function(){
     var vectorStory = "A 0 indicates this is a <tspan class='vector'>vector</tspan>."
     var story = function(g, order, initialRender){
         if (initialRender){
-            var bind = utils.bind(svg, g, ".component.");
+            var bind = utils.bind(svg, g, ".component.", function(){isolateComponent = 0; render()});
 
             bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
             bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")
@@ -310,8 +332,8 @@ module.exports = function(){
 
             bind("x1", "The first input.")
             bind("x2", "The second input.")
-            bind("y1", "The first output.")
-            bind("y2", "The second output.")
+            bind("y1", function(){ isolateComponent = 1; render(); return "The first output."})
+            bind("y2", function(){ isolateComponent = 2; render(); return "The second output."})
 
             bind("point", function(){ return point ? pointStory : vectorStory })
         }
