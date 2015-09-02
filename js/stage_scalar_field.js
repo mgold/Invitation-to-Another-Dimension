@@ -35,6 +35,7 @@ module.exports = function(){
         .translate(centerX - 420, 250)
     var symbols2Parent = svg.append("g")
         .translate(centerX + 240, 200)
+        .attr("class", "symbols")
     var storyParent = svg.append("text")
         .translate(centerX + 260, 335)
     var layer1 = plot.append("g")
@@ -154,7 +155,7 @@ module.exports = function(){
     var story = function(g, order, initialRender){
         if (initialRender){
             var timeoutID;
-            var bind = utils.bind(svg, g, ".");
+            var bind = utils.bind(svg, g, ".symbols .");
 
             bind("m1", "How much "+utils.x1+" affects "+utils.y+".")
             bind("m2", "How much "+utils.x2+" affects "+utils.y+".")
