@@ -27,7 +27,7 @@ module.exports = function(){
             .domain([-5, 5])
             .range([-200, 200])
 
-    var axisSpacing = 30;
+    var axisSpacing = 50;
 
     var centerX = window.innerWidth/2;
     // DOM element selections
@@ -35,9 +35,9 @@ module.exports = function(){
     var symbols1Parent = svg.append("g")
         .translate(centerX, 50)
     var symbols2Parent = svg.append("g")
-        .translate(centerX+250, 200)
+        .translate(centerX-120, 105)
     var plot = svg.append("g")
-        .translate(centerX, 250)
+        .translate(centerX, 300)
     var layer0 = plot.append("g");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
@@ -45,12 +45,14 @@ module.exports = function(){
     function render(initialRender){
         if (initialRender){
             utils.freeze();
-            d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
+            d3.timer(function(){utils.unfreeze(); return true;}, 7*transDur);
         }
+
         m1 = utils.clamp(-4, 4, m1)
         m2 = utils.clamp(-4, 4, m2)
         b1 = utils.clamp(-4, 4, b1)
         b2 = utils.clamp(-4, 4, b2)
+
         axis(     layer0, 0, initialRender);
         circlesX( layer2, 0, initialRender);
 
@@ -61,8 +63,9 @@ module.exports = function(){
         linesY2(  layer1, 4, initialRender);
         circlesY2(layer1, 4, initialRender);
         lineY2(   layer1, 5, initialRender);
+
         symbols1(symbols1Parent, 6);
-        //symbols2(symbols2Parent, 2.5, initialRender);
+        symbols2(symbols2Parent, 6.5, initialRender);
     }
 
     var axis = function(g, order, initialRender){
@@ -89,7 +92,7 @@ module.exports = function(){
                  ])
         symbols.enter().append("text")
             .style("opacity", 0)
-            .translate(function(d,i){return [i > 1 ? -175 : 50, i % 2 ? 25 : 0]})
+            .translate(function(d,i){return [i < 2 ? -175 : 50, i % 2 ? 25 : 0]})
           .transition().duration(transDur/2).delay(transDur*order)
             .style("opacity", 1)
         symbols.exit()
@@ -116,9 +119,11 @@ module.exports = function(){
               .attr("opacity", 1)
         }
 
+        var y1 = hoverX === null ? "y"+utils.sub1 : utils.m(f1(hoverX))
+        var y2 = hoverX === null ? "y"+utils.sub2 : utils.m(f2(hoverX))
         g.place("g.y").translate(-20, 0)
             .selectAll("g")
-            .data([[utils.m(f1(hoverX)), "y1"], [utils.m(f2(hoverX)), "y2"]])
+            .data([[y1, "y1"], [y2, "y2"]])
             .call(utils.vec)
 
         g.place("text.eq")
@@ -135,8 +140,9 @@ module.exports = function(){
 
         g.place("text.x1")
             .translate(134, 58)
-            .style("font-weight", "600")
-            .text(hoverX.toFixed(2))
+            .style("font-weight", 600)
+            .style("font-size", hoverX === null ? "24px" : null)
+            .text(hoverX === null ? "x" : hoverX.toFixed(2))
 
         g.place("text.plus")
             .translate(170, 63)
@@ -178,12 +184,13 @@ module.exports = function(){
     )
 
     var linesY1 = function(g, order){
-        var lines = g.selectAll("line.y1")
+        var lines = g.selectAll("line.y1.vert")
             .data(utils.circleSamples)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", -axisSpacing)
+             .attr("x2", function(d){ return x(f1(d))})
         lines.enter().append("line")
-            .attr("class", "y1")
+            .attr("class", "y1 vert")
             .attr("x1", function(d){ return x(d)})
             .attr("x2", function(d){ return x(d)})
             .attr({y1: 0, y2: 0})
@@ -243,12 +250,13 @@ module.exports = function(){
     )
 
     var linesY2 = function(g, order){
-        var lines = g.selectAll("line.y2")
+        var lines = g.selectAll("line.y2.vert")
             .data(utils.circleSamples)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", axisSpacing)
+             .attr("x2", function(d){ return x(f2(d))})
         lines.enter().append("line")
-            .attr("class", "y2")
+            .attr("class", "y2 vert")
             .attr("x1", x)
             .attr("x2", x)
             .attr({y1: 0, y2: 0})
