@@ -7,7 +7,7 @@ module.exports = function(){
     var hoverX = null;
 
     var data = d3.range(-3, 4)
-    var transDur = 40// 1000;
+    var transDur = 1000;
     var f1 = function(x){return m1*x + b1}
     var f2 = function(x){return m2*x + b2}
     var f = [f1, f2]
@@ -28,6 +28,7 @@ module.exports = function(){
             .range([-300, 300])
     var circleSamples = d3.range(-5, 6);
     var axisSpacing = 50;
+    var isZero = function(x){ return x > -0.001 && x < 0.001 }
 
     var centerX = window.innerWidth/2;
     // DOM element selections
@@ -218,6 +219,8 @@ module.exports = function(){
             .attr("r", 0)
             .attr("cy", 0)
             .attr("cx", function(d){ return x(d)})
+            .on("mouseover", function(d){ if(!utils.isFrozen() && !isZero(m1)){hoverX = d; render();}})
+            .on("mouseout", function(d){ if(!utils.isFrozen()){hoverX = null; render();}})
           .transition().duration(transDur).delay(transDur*order)
             .attr("r", 3)
             .attr("cy", function(d){ return -x(f1(d))})
@@ -243,7 +246,10 @@ module.exports = function(){
     }
 
     var circlesY2 = utils.makeCircles(transDur, circleSamples, "y2",
-        function(sel){sel.attr("r", 0).attr("cx", x).attr("cy", 0) },
+        function(sel){sel.attr("r", 0).attr("cx", x).attr("cy", 0)
+            .on("mouseover", function(d){ if(!utils.isFrozen() && !isZero(m2)){hoverX = d; render();}})
+            .on("mouseout", function(d){ if(!utils.isFrozen()){hoverX = null; render();}})
+        },
         function(sel){sel.attr("r", function(d){ return d === hoverX ? 8 : 4})
                          .attr("cy", axisSpacing)
                          .attr("cx", function(d){ return x(f2(d))})}
