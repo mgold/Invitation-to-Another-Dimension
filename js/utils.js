@@ -32,23 +32,31 @@ module.exports.cross = function(a, b) {
     return c;
 }
 
-// easy refactor: add x1, etc
-module.exports.sub1 = "<tspan class='sub'>1</tspan>"
-module.exports.sub2 = "<tspan class='sub'>2</tspan>"
-module.exports.sub3 = "<tspan class='sub'>3</tspan>"
+module.exports.sub1 = sub1 = "<tspan class='sub'>1</tspan>"
+module.exports.sub2 = sub2 = "<tspan class='sub'>2</tspan>"
+module.exports.sub3 = sub3 = "<tspan class='sub'>3</tspan>"
 
-module.exports.b = function(b, p){
-    p = p || 2;
+module.exports.x  = "<tspan class='x1'>x</tspan>"
+module.exports.x1 = "<tspan class='x1'>x"+sub1+"</tspan>"
+module.exports.x2 = "<tspan class='x2'>x"+sub2+"</tspan>"
+module.exports.x3 = "<tspan class='x3'>x"+sub3+"</tspan>"
+module.exports.y  = "<tspan class='y1'>y</tspan>"
+module.exports.y1 = "<tspan class='y1'>y"+sub1+"</tspan>"
+module.exports.y2 = "<tspan class='y2'>y"+sub2+"</tspan>"
+module.exports.y3 = "<tspan class='y3'>y"+sub3+"</tspan>"
+
+// render a number with a binary plus/minus
+module.exports.fmtB = module.exports.b = function(b, p){
+    p = p === undefined ? 1 : p; //falsey zero prevents ||
     return b < -0.005 ? "- "+Math.abs(b).toFixed(p) : "+ "+Math.abs(b).toFixed(p)
 }
-module.exports.m = function(b, p){
-    p = p || 2;
+// render a number with a unary minus or nothing
+module.exports.fmtU = module.exports.m = function(b, p){
+    p = p === undefined ? 1 : p;
     return b < -0.005 ? "-"+Math.abs(b).toFixed(p) : Math.abs(b).toFixed(p)
 }
 
-module.exports.circleSamples = circleSamples = d3.range(-3, 4)
-
-module.exports.makeCircles = function(transDur, className, initialize, finalize){
+module.exports.makeCircles = function(transDur, circleSamples, className, initialize, finalize){
     return function(g, order){
         var circles = g.selectAll("circle."+className)
             .data(circleSamples)

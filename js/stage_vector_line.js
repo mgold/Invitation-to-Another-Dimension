@@ -7,7 +7,7 @@ module.exports = function(){
     var hoverX = null;
 
     var data = d3.range(-3, 4)
-    var transDur = 1000;
+    var transDur = 40// 1000;
     var f1 = function(x){return m1*x + b1}
     var f2 = function(x){return m2*x + b2}
     var f = [f1, f2]
@@ -24,9 +24,9 @@ module.exports = function(){
     var makeDraggerB2 = makeDragger(function(){b2 += d3.event.dx/10});
 
     var x = d3.scale.linear()
-            .domain([-5, 5])
-            .range([-200, 200])
-
+            .domain([-7, 7])
+            .range([-300, 300])
+    var circleSamples = d3.range(-5, 6);
     var axisSpacing = 50;
 
     var centerX = window.innerWidth/2;
@@ -35,7 +35,7 @@ module.exports = function(){
     var symbols1Parent = svg.append("g")
         .translate(centerX, 50)
     var symbols2Parent = svg.append("g")
-        .translate(centerX-120, 105)
+        .translate(centerX-108, 105)
     var plot = svg.append("g")
         .translate(centerX, 300)
     var layer0 = plot.append("g");
@@ -85,10 +85,10 @@ module.exports = function(){
 
     var symbols1 = function(g, order){
        var symbols = g.selectAll("text")
-           .data([ "<tspan class='y1'>y"+utils.sub1+"</tspan> = <tspan class='dragM1'>"+utils.m(m1)+"</tspan><tspan class='x1'>x</tspan> <tspan class='dragB1'>"+utils.b(b1)+"</tspan>",
-                   hoverX === null ? "" : "<tspan class='y1'>"+utils.m(f1(hoverX))+"</tspan> = <tspan class='dragM1'>"+utils.m(m1)+"</tspan>×<tspan class='x1'>"+hoverX.toFixed(2)+"</tspan> <tspan class='dragB1'>"+utils.b(b1)+"</tspan>",
-                   "<tspan class='y2'>y"+utils.sub2+"</tspan> = <tspan class='dragM2'>"+utils.m(m2)+"</tspan><tspan class='x1'>x</tspan> <tspan class='dragB2'>"+utils.b(b2)+"</tspan>",
-                   hoverX === null ? "" : "<tspan class='y2'>"+utils.m(f2(hoverX))+"</tspan> = <tspan class='dragM2'>"+utils.m(m2)+"</tspan>×<tspan class='x1'>"+hoverX.toFixed(2)+"</tspan> <tspan class='dragB2'>"+utils.b(b2)+"</tspan>"
+           .data([ utils.y1+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x+" <tspan class='dragB1'>"+utils.fmtB(b1)+"</tspan>",
+                   hoverX === null ? "" : "<tspan class='y1'>"+utils.fmtU(f1(hoverX))+"</tspan> = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>×<tspan class='x1'>"+utils.fmtU(hoverX, 0)+"</tspan> <tspan class='dragB1'>"+utils.fmtB(b1)+"</tspan>",
+                   utils.y2+" = <tspan class='dragM2'>"+utils.fmtU(m2)+"</tspan>"+utils.x+" <tspan class='dragB2'>"+utils.fmtB(b2)+"</tspan>",
+                   hoverX === null ? "" : "<tspan class='y2'>"+utils.fmtU(f2(hoverX))+"</tspan> = <tspan class='dragM2'>"+utils.fmtU(m2)+"</tspan>×<tspan class='x1'>"+utils.fmtU(hoverX, 0)+"</tspan> <tspan class='dragB2'>"+utils.fmtB(b2)+"</tspan>"
                  ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -119,8 +119,8 @@ module.exports = function(){
               .attr("opacity", 1)
         }
 
-        var y1 = hoverX === null ? "y"+utils.sub1 : utils.m(f1(hoverX))
-        var y2 = hoverX === null ? "y"+utils.sub2 : utils.m(f2(hoverX))
+        var y1 = hoverX === null ? "y"+utils.sub1 : utils.fmtU(f1(hoverX))
+        var y2 = hoverX === null ? "y"+utils.sub2 : utils.fmtU(f2(hoverX))
         g.place("g.y").translate(-20, 0)
             .selectAll("g")
             .data([[y1, "y1"], [y2, "y2"]])
@@ -132,7 +132,7 @@ module.exports = function(){
 
         g.place("g.m").translate(74, 0)
             .selectAll("g")
-            .data([[utils.m(m1)], [utils.m(m2)]])
+            .data([[utils.fmtU(m1)], [utils.fmtU(m2)]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
@@ -141,16 +141,16 @@ module.exports = function(){
         g.place("text.x1")
             .translate(134, 58)
             .style("font-weight", 600)
-            .style("font-size", hoverX === null ? "24px" : null)
-            .text(hoverX === null ? "x" : hoverX.toFixed(2))
+            .style("font-size", hoverX === null ? "22px" : null)
+            .text(hoverX === null ? "x" : utils.fmtU(hoverX,0))
 
         g.place("text.plus")
-            .translate(170, 63)
+            .translate(150, 63)
             .text("+")
 
-        g.place("g.b").translate(200, 0)
+        g.place("g.b").translate(180, 0)
             .selectAll("g")
-            .data([[utils.m(b1), "b"], [utils.m(b2), "b"]])
+            .data([[utils.fmtU(b1), "b"], [utils.fmtU(b2), "b"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerB2(d3.select(this)) : makeDraggerB1(d3.select(this))
@@ -174,7 +174,7 @@ module.exports = function(){
             .attr("transform", function(d){return "rotate("+d+","+x(hoverX)+",0)"})
     }
 
-    var circlesX = utils.makeCircles(transDur, "x1",
+    var circlesX = utils.makeCircles(transDur, circleSamples, "x1",
         function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)
             .on("mouseover", function(d){ if(!utils.isFrozen()){hoverX = d; render();}})
             .on("mouseout", function(d){ if(!utils.isFrozen()){hoverX = null; render();}})
@@ -185,7 +185,7 @@ module.exports = function(){
 
     var linesY1 = function(g, order){
         var lines = g.selectAll("line.y1.vert")
-            .data(utils.circleSamples)
+            .data(circleSamples)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", -axisSpacing)
              .attr("x2", function(d){ return x(f1(d))})
@@ -210,7 +210,7 @@ module.exports = function(){
         }
 
         var circles = g.selectAll("circle.y1")
-            .data(utils.circleSamples)
+            .data(circleSamples)
         circles.call(finalize);
         circles.exit().transition().attr("r", 0).remove();
         circles.enter().append("circle")
@@ -242,7 +242,7 @@ module.exports = function(){
         }
     }
 
-    var circlesY2 = utils.makeCircles(transDur, "y2",
+    var circlesY2 = utils.makeCircles(transDur, circleSamples, "y2",
         function(sel){sel.attr("r", 0).attr("cx", x).attr("cy", 0) },
         function(sel){sel.attr("r", function(d){ return d === hoverX ? 8 : 4})
                          .attr("cy", axisSpacing)
@@ -251,7 +251,7 @@ module.exports = function(){
 
     var linesY2 = function(g, order){
         var lines = g.selectAll("line.y2.vert")
-            .data(utils.circleSamples)
+            .data(circleSamples)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", axisSpacing)
              .attr("x2", function(d){ return x(f2(d))})

@@ -16,6 +16,7 @@ module.exports = function(){
     var makeDraggerM = makeDragger(function(){m += d3.event.dx/10; render()});
     var makeDraggerB = makeDragger(function(){b += d3.event.dx/10; render()});
 
+    var circleSamples = d3.range(-3, 4);
     var x = d3.scale.linear()
             .domain([-5, 5])
             .range([-200, 200])
@@ -106,8 +107,8 @@ module.exports = function(){
     var symbols = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class='y1'>y</tspan> = m<tspan class='x1'>x</tspan> + b",
-                   "<tspan class='y1'>y</tspan> = <tspan class='dragM'>" + m.toFixed(2) + "</tspan><tspan class='x1'>x</tspan> <tspan class='dragB'>" + utils.b(b) + "</tspan>",
-                   "<tspan class='y1'>"+f(hoverX).toFixed(2)+"</tspan> = " + m.toFixed(2) + "×<tspan class='x1'>"+hoverX+"</tspan> " + utils.b(b)
+                   "<tspan class='y1'>y</tspan> = <tspan class='dragM'>" + m.toFixed(2) + "</tspan><tspan class='x1'>x</tspan> <tspan class='dragB'>" + utils.b(b, 2) + "</tspan>",
+                   "<tspan class='y1'>"+f(hoverX).toFixed(2)+"</tspan> = " + m.toFixed(2) + "×<tspan class='x1'>"+hoverX+"</tspan> " + utils.b(b, 2)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -129,7 +130,7 @@ module.exports = function(){
 
     var lines = function(g, order){
         var lines = g.selectAll("line.y1")
-            .data(utils.circleSamples)
+            .data(circleSamples)
         lines.exit().transition().style("opacity", 0).remove();
         lines.attr("y2", function(d){ return -x(f(d))})
         lines.enter().append("line")
@@ -141,7 +142,7 @@ module.exports = function(){
             .attr("y2", function(d){ return -x(f(d))})
     }
 
-    var circlesX = utils.makeCircles(transDur, "x1",
+    var circlesX = utils.makeCircles(transDur, circleSamples, "x1",
         function(sel){sel.attr("r", 0).attr("cx", x(0)).attr("cy", 0)
             .on("mouseover", function(d){ if(!utils.isFrozen()){hoverX = d; render();}})
             .on("mouseout", function(d){ if(!utils.isFrozen()){hoverX = null; render();}})
@@ -150,7 +151,7 @@ module.exports = function(){
                          .attr("cx", function(d){ return x(d)})}
     )
 
-    var circlesY = utils.makeCircles(transDur, "y1",
+    var circlesY = utils.makeCircles(transDur, circleSamples, "y1",
         function(sel){
             sel.attr("r", 0).attr("cy", 0).attr("cx", function(d){ return x(d)})
         },

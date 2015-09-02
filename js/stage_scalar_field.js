@@ -78,8 +78,8 @@ module.exports = function(){
     var symbols1 = function(g, order){
         var symbols = g.selectAll("text")
             .data(["<tspan class='y1'>y</tspan> = m"+utils.sub1+"<tspan class='x1'>x"+utils.sub1+"</tspan> + m"+utils.sub2+"<tspan class='x2'>x"+utils.sub2+"</tspan> + b",
-                   "<tspan class='y1'>y</tspan> = <tspan class='dragM1'>"+m1.toFixed(1)+"</tspan><tspan class='x1'>x"+utils.sub1+"</tspan> <tspan class='dragM2'>"+utils.b(m2, 1)+"</tspan><tspan class='x2'>x"+utils.sub2+"</tspan> <tspan class='dragB'>" + utils.b(b, 1) + "</tspan>",
-                   !curX ? "" : "<tspan class='y1'>"+f(curX).toFixed(1)+"</tspan> = "+m1.toFixed(1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.b(m2, 1)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.b(b, 1)
+                   "<tspan class='y1'>y</tspan> = <tspan class='dragM1'>"+m1.toFixed(1)+"</tspan><tspan class='x1'>x"+utils.sub1+"</tspan> <tspan class='dragM2'>"+utils.b(m2)+"</tspan><tspan class='x2'>x"+utils.sub2+"</tspan> <tspan class='dragB'>" + utils.b(b) + "</tspan>",
+                   !curX ? "" : "<tspan class='y1'>"+f(curX).toFixed(1)+"</tspan> = "+m1.toFixed(1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.b(m2)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.b(b)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
