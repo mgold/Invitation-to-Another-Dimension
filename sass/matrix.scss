@@ -1,3 +1,7 @@
+@import url(https://fonts.googleapis.com/css?family=Poiret+One|Noto+Sans);
+$typeface: noto sans, calibri, klavika, klavika-web, sans-serif;
+$header_typeface: poiret one, $typeface;
+
 body {
     margin: 0;
 }
@@ -14,6 +18,10 @@ path, line {
 
 text {
     font-family: avenir, sans-serif;
+    &.subheader {
+        font-family: $header_typeface;
+        font-size: 18px;
+    }
     not &.draggerHoriz {
         cursor: default;
         -webkit-touch-callout: none;
@@ -29,7 +37,6 @@ tspan.sub, small {
     font-size: 8px;
 }
 
-$typeface: calibri, klavika, klavika-web, sans-serif;
 @mixin centered{
     display: block;
     margin-left: auto;
@@ -39,14 +46,15 @@ $typeface: calibri, klavika, klavika-web, sans-serif;
 
 .essay {
     font-family: $typeface;
+    font-size: 16px;
     h1 {
-        font-family: avenir, $typeface;
+        font-family: $header_typeface;
         font-size: 32px;
         font-weight: bold;
         margin-bottom: -4px;
     }
     h2 {
-        font-family: avenir, $typeface;
+        font-family: $header_typeface;
         font-size: 18px;
         font-weight: normal;
         margin-top: 0px;

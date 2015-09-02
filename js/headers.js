@@ -60,5 +60,6 @@ var word = function(n){
 var s = function(n){ return n === 1 ? "" : "s" }
 
 headings.append("text")
-    .translate(150, 56)
+    .attr("class", "subheader")
+    .translate(150, 57)
     .text(function(d){ return word(d[0].n) + " Input"+s(d[0].n) + ", " + word(d[1].n) + " Output"+s(d[1].n) })
