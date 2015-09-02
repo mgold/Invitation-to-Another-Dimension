@@ -22,9 +22,13 @@
         than one. Each input or output is called a <i>dimension</i>.
       </p>
       <p>
-        Second, we're looking at functions that use addition and multiplication only to turn inputs into outputs. We'll
-        see that geometrically, addition is <i>translation</i> and multiplication is <i>scaling</i>. We'll leave the
-        polynomials, exponentials, and sine waves for another day.
+        Second, we're looking at functions that use addition and multiplication only to turn inputs into outputs. These
+        are known as <i>linear equations</i> because when graphed, they're just lines. Curves like  polynomials,
+        exponentials, and sine waves will wait for another day. We'll see that geometrically, addition is
+        <i>translation</i> and multiplication is <i>scaling</i>.
+      </p>
+      <p>
+        As we explore these ideas, we'll come across many ways of seeing, writing, and interacting.
       </p>
       <p>
 
@@ -55,10 +59,14 @@
           It's natural to ask, what happens if we put two of these functions together, side-by-side? The simplest
           approach is to have two outputs – <span class=y1>y<small>1</small></span> and <span
               class=y2>y<small>2</small></span> – depend on a single input, still called <span class=x1>x</span>. We can
-          double-down on linear equations, and plot the lines perpendicular to each other to emphasize that they're
-          independent. Or, we can think of these outputs as forming a <i>vector</i>, which basically pairs up all the
-          operations. Once again, change the numbers by dragging them:
-          </p>
+          double-down on linear equations, treating this new function as two copies of what we just saw. Or, we can
+          think of these outputs as forming a <i>vector</i>, which basically pairs up all the operations.
+        </p>
+        <p>
+          Similarly, we could just plot two linear functions on the same graph, but instead, we're going to lay out
+          three number lines side-by-side-by-size, and show the transformations from one to the next. Once again, change
+          the numbers by dragging them:
+        </p>
     </div>
     <div class='bg'>
         <svg class='second'></svg>
@@ -70,8 +78,31 @@
           addition. Scalar multiplication (a scalar is just a single number, instead of a vector) multiplies each
           component of the vector by the scalar. Vector addition adds two vectors (of equal length) by component: the
           first component of the new vector is the sum of the first components of the two vectors being added, and so
-          on down the line. That's one input with two outputs, known as a <i>parametric equation</i>.
-          </p>
+          on down the line.
+        </p>
+        <p>
+          First, note that this diagram only shows certain values that have been translated. Unlike the traditional
+          Cartesian coordinates, we're confined to <i>samples</i> (i.e. examples) of the input and outputs. Although
+          sampling isn't considered part of linear algebra, depictions of higher dimensions benefit from using it,
+          opting to show samples of many dimensions than a continuous surface in fewer.
+        </p>
+        <p>
+          Which brings us to how the <span class=x1>x</span> number line is distorted to become <span
+            class=y1>y<small>1</small></span> and <span class=y2>y<small>2</small></span>. Our samples of <span
+            class=x1>x</span> are equally spaced, and the samples of the output are as well. Although scaling changes
+          the spacing, it affects all samples equally. Linear transformations act in particularly clean and consistent
+          ways, a we'll continue to see.
+        </p>
+        <p>
+          In most cases every point in <span class=x1>x</span> goes to a different point in <span
+              class=y1>y<small>1</small></span>. If you could sample <span class=y1>y<small>1</small></span> as you
+          please, you could get back to any point in <span class=x1>x</span>. The one exception is when m&nbsp;=&nbsp;0; in that
+          case, the function is not invertible. Although we won't go into it further, there's a deep connection between
+          these topics.
+        </p>
+        <p>
+          That wraps up functions with one input and two outputs, which are known as a <i>parametric</i> equations.
+        </p>
         <svg class="heading" data-x=2 data-y=1></svg>
         <p>
         This will require a change of perspecitive. We're used to plotting the x-axis horizontally and the y-axis
