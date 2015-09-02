@@ -51,6 +51,12 @@ module.exports = function(){
         if (initialRender){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 7*transDur);
+
+            d3.select("#setMto0").node().onclick = function(){
+                m1 = 0;
+                setTimeout(render, 0);
+                return false;
+            }
         }
 
         m1 = utils.clamp(-4, 4, m1)
