@@ -71,10 +71,11 @@ module.exports.makeCircles = function(transDur, circleSamples, className, initia
 }
 
 
-module.exports.bind = function(svg, g){
+module.exports.bind = function(svg, g, baseSel){
+    baseSel = baseSel || "";
     var timeoutID;
     return function(sel, html){
-    svg.select(".component."+sel)
+    svg.selectAll(baseSel+sel)
         .on("mouseenter", function(){
             if (!module.exports.isFrozen()){
                 clearTimeout(timeoutID) // it's safe to clear an invalid ID

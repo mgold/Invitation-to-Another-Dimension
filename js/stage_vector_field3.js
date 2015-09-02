@@ -149,24 +149,24 @@ module.exports = function(){
     var story = function(g, order, initialRender){
         if (initialRender){
             var timeoutID;
-            var bind = utils.bind(svg, g);
+            var bind = utils.bind(svg, g, ".component.");
 
-            bind("m11", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
-            bind("m12", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
-            bind("m13", "How much <tspan class='x3'>x"+utils.sub3+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
+            bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
+            bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")
+            bind("m13", "How much "+utils.x3+" affects "+utils.y1+".")
 
-            bind("m21", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
-            bind("m22", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
-            bind("m23", "How much <tspan class='x3'>x"+utils.sub3+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
+            bind("m21", "How much "+utils.x1+" affects "+utils.y2+".")
+            bind("m22", "How much "+utils.x2+" affects "+utils.y2+".")
+            bind("m23", "How much "+utils.x3+" affects "+utils.y2+".")
 
-            bind("m31", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y3'>y"+utils.sub3+"</tspan>.")
-            bind("m32", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y3'>y"+utils.sub3+"</tspan>.")
-            bind("m33", "How much <tspan class='x3'>x"+utils.sub3+"</tspan> affects <tspan class='y3'>y"+utils.sub3+"</tspan>.")
+            bind("m31", "How much "+utils.x1+" affects "+utils.y3+".")
+            bind("m32", "How much "+utils.x2+" affects "+utils.y3+".")
+            bind("m33", "How much "+utils.x3+" affects "+utils.y3+".")
 
             var nothing4Vectors =  "Does nothing for <tspan class='vector'>vectors</tspan>."
-            bind("m14", function(){ return point ? "A constant added to <tspan class='y1'>y"+utils.sub1+"</tspan>." : nothing4Vectors})
-            bind("m24", function(){ return point ? "A constant added to <tspan class='y2'>y"+utils.sub2+"</tspan>." : nothing4Vectors})
-            bind("m34", function(){ return point ? "A constant added to <tspan class='y3'>y"+utils.sub3+"</tspan>." : nothing4Vectors})
+            bind("m14", function(){ return point ? "A constant added to "+utils.y1+"</tspan>." : nothing4Vectors})
+            bind("m24", function(){ return point ? "A constant added to "+utils.y2+"</tspan>." : nothing4Vectors})
+            bind("m34", function(){ return point ? "A constant added to "+utils.y3+"</tspan>." : nothing4Vectors})
 
             bind("x1", "The first input.")
             bind("x2", "The second input.")

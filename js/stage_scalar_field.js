@@ -35,6 +35,8 @@ module.exports = function(){
         .translate(centerX - 420, 250)
     var symbols2Parent = svg.append("g")
         .translate(centerX + 240, 200)
+    var storyParent = svg.append("text")
+        .translate(centerX + 260, 335)
     var layer1 = plot.append("g")
     var layer2 = plot.append("g")
     var storySliderParent = d3.select("span.third");
@@ -52,6 +54,7 @@ module.exports = function(){
         circlesY(layer2, 1);
         symbols1(symbols1Parent, 2);
         symbols2(symbols2Parent, 2.5, initialRender);
+        story(storyParent, 3, initialRender);
     }
 
     var axes = function(g, order, initialRender){
@@ -116,7 +119,7 @@ module.exports = function(){
 
         g.place("g.m").translate(74, 0)
             .selectAll("g")
-            .data([[m1.toFixed(1)], [m2.toFixed(1)]])
+            .data([[m1.toFixed(1), "param m1"], [m2.toFixed(1), "param m2"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
@@ -146,6 +149,26 @@ module.exports = function(){
             .style("font-weight", 600)
             .call(makeDraggerB)
 
+    }
+
+    var story = function(g, order, initialRender){
+        if (initialRender){
+            var timeoutID;
+            var bind = utils.bind(svg, g, ".");
+
+            bind("m1", "How much "+utils.x1+" affects "+utils.y+".")
+            bind("m2", "How much "+utils.x2+" affects "+utils.y+".")
+
+            bind("b", "A constant added to "+utils.y+".")
+
+            bind("x1", "The first input.")
+            bind("x2", "The second input.")
+
+            bind("y1", "The output.")
+
+            bind("dot", "The dot product, resulting in a scalar.")
+            bind("plus", "Scalar addition.")
+        }
     }
 
     var circlesY = function(g, order){

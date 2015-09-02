@@ -37,8 +37,12 @@ module.exports = function(){
         .translate(centerX, 50)
     var symbols2Parent = svg.append("g")
         .translate(centerX-108, 105)
+        .attr("class", "vectorEqtn")
+    var storyParent = svg.append("text")
+        .translate(centerX, 245)
+        .style("text-anchor", "middle")
     var plot = svg.append("g")
-        .translate(centerX, 300)
+        .translate(centerX, 320)
     var layer0 = plot.append("g");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
@@ -67,6 +71,7 @@ module.exports = function(){
 
         symbols1(symbols1Parent, 6);
         symbols2(symbols2Parent, 6.5, initialRender);
+        story(storyParent, 7, initialRender);
     }
 
     var axis = function(g, order, initialRender){
@@ -86,10 +91,10 @@ module.exports = function(){
 
     var symbols1 = function(g, order){
        var symbols = g.selectAll("text")
-           .data([ utils.y1+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x+" <tspan class='dragB1'>"+utils.fmtB(b1)+"</tspan>",
-                   hoverX === null ? "" : "<tspan class='y1'>"+utils.fmtU(f1(hoverX))+"</tspan> = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>×<tspan class='x1'>"+utils.fmtU(hoverX, 0)+"</tspan> <tspan class='dragB1'>"+utils.fmtB(b1)+"</tspan>",
-                   utils.y2+" = <tspan class='dragM2'>"+utils.fmtU(m2)+"</tspan>"+utils.x+" <tspan class='dragB2'>"+utils.fmtB(b2)+"</tspan>",
-                   hoverX === null ? "" : "<tspan class='y2'>"+utils.fmtU(f2(hoverX))+"</tspan> = <tspan class='dragM2'>"+utils.fmtU(m2)+"</tspan>×<tspan class='x1'>"+utils.fmtU(hoverX, 0)+"</tspan> <tspan class='dragB2'>"+utils.fmtB(b2)+"</tspan>"
+           .data([ utils.y1+" = <tspan class='m1'>"+utils.fmtU(m1)+"</tspan>"+utils.x+" <tspan class='b1'>"+utils.fmtB(b1)+"</tspan>",
+                   hoverX === null ? "" : "<tspan class='y1'>"+utils.fmtU(f1(hoverX))+"</tspan> = <tspan class='m1'>"+utils.fmtU(m1)+"</tspan>×<tspan class='x1'>"+utils.fmtU(hoverX, 0)+"</tspan> <tspan class='b1'>"+utils.fmtB(b1)+"</tspan>",
+                   utils.y2+" = <tspan class='m2'>"+utils.fmtU(m2)+"</tspan>"+utils.x+" <tspan class='b2'>"+utils.fmtB(b2)+"</tspan>",
+                   hoverX === null ? "" : "<tspan class='y2'>"+utils.fmtU(f2(hoverX))+"</tspan> = <tspan class='m2'>"+utils.fmtU(m2)+"</tspan>×<tspan class='x1'>"+utils.fmtU(hoverX, 0)+"</tspan> <tspan class='b2'>"+utils.fmtB(b2)+"</tspan>"
                  ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -102,15 +107,14 @@ module.exports = function(){
             .remove();
         symbols.html(function(d){return d})
 
-        symbols.selectAll(".dragM1")
+        symbols.selectAll(".m1")
             .call(makeDraggerM1)
-        symbols.selectAll(".dragB1")
+        symbols.selectAll(".b1")
             .call(makeDraggerB1)
-        symbols.selectAll(".dragM2")
+        symbols.selectAll(".m2")
             .call(makeDraggerM2)
-        symbols.selectAll(".dragB2")
+        symbols.selectAll(".b2")
             .call(makeDraggerB2)
-        symbols.selectAll(".x1")
     }
 
     var symbols2 = function(g, order, initialRender){
@@ -133,7 +137,7 @@ module.exports = function(){
 
         g.place("g.m").translate(74, 0)
             .selectAll("g")
-            .data([[utils.fmtU(m1)], [utils.fmtU(m2)]])
+            .data([[utils.fmtU(m1), "param m1"], [utils.fmtU(m2), "param m2"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
@@ -151,12 +155,32 @@ module.exports = function(){
 
         g.place("g.b").translate(180, 0)
             .selectAll("g")
-            .data([[utils.fmtU(b1), "b"], [utils.fmtU(b2), "b"]])
+            .data([[utils.fmtU(b1), "b b1"], [utils.fmtU(b2), "b b2"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerB2(d3.select(this)) : makeDraggerB1(d3.select(this))
             })
 
+    }
+
+    var story = function(g, order, initialRender){
+        if (initialRender){
+            var timeoutID;
+            var bind = utils.bind(svg, g, ".vectorEqtn .");
+
+            bind("m1", "How much "+utils.x+" affects "+utils.y1+".")
+            bind("m2", "How much "+utils.x+" affects "+utils.y2+".")
+
+            bind("b1", "A constant added to "+utils.y1+".")
+            bind("b2", "A constant added to "+utils.y2+".")
+
+            bind("x1", "The input, multiplied by each component of the vector to its left.")
+
+            bind("y1", "The first output.")
+            bind("y2", "The second output.")
+
+            bind("plus", "Vector addition. Add across the rows.")
+        }
     }
 
     var linesY = function(g, order){

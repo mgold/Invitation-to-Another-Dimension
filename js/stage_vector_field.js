@@ -297,16 +297,16 @@ module.exports = function(){
     var vectorStory = "A 0 indicates this is a <tspan class='vector'>vector</tspan>."
     var story = function(g, order, initialRender){
         if (initialRender){
-            var bind = utils.bind(svg, g);
+            var bind = utils.bind(svg, g, ".component.");
 
-            bind("m11", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
-            bind("m12", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
-            bind("m21", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
-            bind("m22", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y2'>y"+utils.sub2+"</tspan>.")
+            bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
+            bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")
+            bind("m21", "How much "+utils.x1+" affects "+utils.y2+".")
+            bind("m22", "How much "+utils.x2+" affects "+utils.y2+".")
 
             var nothing4Vectors =  "Does nothing for <tspan class='vector'>vectors</tspan>."
-            bind("m13", function(){ return point ? "A constant added to <tspan class='y1'>y"+utils.sub1+"</tspan>." : nothing4Vectors})
-            bind("m23", function(){ return point ? "A constant added to <tspan class='y2'>y"+utils.sub2+"</tspan>." : nothing4Vectors})
+            bind("m13", function(){ return point ? "A constant added to "+utils.y1+"." : nothing4Vectors})
+            bind("m23", function(){ return point ? "A constant added to "+utils.y2+"." : nothing4Vectors})
 
             bind("x1", "The first input.")
             bind("x2", "The second input.")
