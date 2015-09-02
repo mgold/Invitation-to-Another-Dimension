@@ -149,19 +149,7 @@ module.exports = function(){
     var story = function(g, order, initialRender){
         if (initialRender){
             var timeoutID;
-            var bind = function(sel, html){
-                svg.select(".component."+sel)
-                    .on("mouseenter", function(){
-                        if (!utils.isFrozen()){
-                            clearTimeout(timeoutID) // it's safe to clear an invalid ID
-                            typeof html === "function" ? g.html(html()) : g.html(html)
-                        }
-                    })
-                    .on("mouseleave", function(){
-                        timeoutID = setTimeout(function(){ g.text("") }, 100);
-                        // don't hide it immediately to prevent flicker
-                    })
-            }
+            var bind = utils.bind(svg, g);
 
             bind("m11", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
             bind("m12", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")

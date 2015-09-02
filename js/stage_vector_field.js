@@ -297,20 +297,7 @@ module.exports = function(){
     var vectorStory = "A 0 indicates this is a <tspan class='vector'>vector</tspan>."
     var story = function(g, order, initialRender){
         if (initialRender){
-            var timeoutID;
-            var bind = function(sel, html){
-                svg.select(".component."+sel)
-                    .on("mouseenter", function(){
-                        if (!utils.isFrozen()){
-                            clearTimeout(timeoutID) // it's safe to clear an invalid ID
-                            typeof html === "function" ? g.html(html()) : g.html(html)
-                        }
-                    })
-                    .on("mouseleave", function(){
-                        timeoutID = setTimeout(function(){ g.text("") }, 100);
-                        // don't hide it immediately to prevent flicker
-                    })
-            }
+            var bind = utils.bind(svg, g);
 
             bind("m11", "How much <tspan class='x1'>x"+utils.sub1+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
             bind("m12", "How much <tspan class='x2'>x"+utils.sub2+"</tspan> affects <tspan class='y1'>y"+utils.sub1+"</tspan>.")
@@ -326,8 +313,6 @@ module.exports = function(){
             bind("y1", "The first output.")
             bind("y2", "The second output.")
 
-            //TODO make this update when the component is clicked
-            //Also it relies on it being a point not a vector on start
             bind("point", function(){ return point ? pointStory : vectorStory })
         }
     }

@@ -70,6 +70,23 @@ module.exports.makeCircles = function(transDur, circleSamples, className, initia
     }
 }
 
+
+module.exports.bind = function(svg, g){
+    var timeoutID;
+    return function(sel, html){
+    svg.select(".component."+sel)
+        .on("mouseenter", function(){
+            if (!module.exports.isFrozen()){
+                clearTimeout(timeoutID) // it's safe to clear an invalid ID
+                typeof html === "function" ? g.html(html()) : g.html(html)
+            }
+        })
+        .on("mouseleave", function(){
+            timeoutID = setTimeout(function(){ g.text("") }, 100);
+            // don't hide it immediately to prevent flicker
+        })
+    }
+}
 // vector and matrix drawing routines
 
 var s = 50, half_s = 25, margin = 4, offset = s+margin;
