@@ -6,13 +6,13 @@ An interactive essay about transforming many numbers at once according to simple
 If you find a bug, please open an issue.
 
 ## Run it locally
-```shell
+```
 git clone git@github.com:mgold/Invitation-to-Another-Dimension.git
 cd Invitation-to-Another-Dimension
 npm install
-node node_modules/gulp/bin/gulp.js sass browserify
 ```
-Now fire up your favorite web server.
+Now fire up your favorite web server. As you develop, you'll want to have `gulp` running to take care of browserifying
+the JS and compiling the SASS.
 
 Although an attempt has been made to keep the code reasonably nice, it's a side project. Each stage follows the same
 module pattern: expose a function that sets up a small amount of initial state, various constants and functions, and
