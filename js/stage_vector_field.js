@@ -4,7 +4,6 @@ module.exports = function(){
     // Matrix index notation is row then column
     var m11 = -3.4, m12 = -0.65, m13 = 1.5,
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
-    m11 = m12 = m13 = m21 = m22 = m23 = 0;
     var point = true;
     var curPos = null;
     var isolateComponent = 0;
