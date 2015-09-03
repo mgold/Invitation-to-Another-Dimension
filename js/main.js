@@ -1,5 +1,6 @@
 Math.TAU = Math.PI*2;
 
+require('../assets/d3.v3.js')
 require('./d3.translate')
 require('./d3.place')
 require('./innersvg')
