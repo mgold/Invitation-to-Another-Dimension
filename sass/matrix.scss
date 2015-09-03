@@ -124,6 +124,12 @@ $point-color: #FF851B;
 $vector-color: #ECCC00;
 @include dimension("point", $point-color);
 @include dimension("vector", $vector-color);
+a.point {
+    color: $point-color;
+}
+a.vector {
+    color: $vector-color;
+}
 
 .component{
     text {

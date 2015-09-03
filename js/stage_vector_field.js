@@ -64,6 +64,7 @@ module.exports = function(){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 3.5*transDur);
             initBalls();
+            initLinks();
         }
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
@@ -113,6 +114,23 @@ module.exports = function(){
 
         })
 
+    }
+
+    initLinks = function(){
+        d3.select("#setPoint").node().onclick = function(){
+            if (!point){
+                point = true;
+                setTimeout(render, 0);
+            }
+            return false;
+        }
+        d3.select("#setVector").node().onclick = function(){
+            if (point){
+                point = false;
+                setTimeout(render, 0);
+            }
+            return false;
+        }
     }
 
     var axes = function(g, order, initialRender){

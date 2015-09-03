@@ -100,7 +100,7 @@
           In most cases every point in <span class=x1>x</span> goes to a different point in <span
               class=y1>y<small>1</small></span>. If you could sample <span class=y1>y<small>1</small></span> as you
           please, you could get back to any point in <span class=x1>x</span>. The one exception is when <a href=""
-              id="setMto0">m&nbsp;=&nbsp;0</a>; in that case, the function is not invertible. Although we won't go into
+              id="setMto0" style="font-weight: bold">m&nbsp;=&nbsp;0</a>; in that case, the function is not invertible. Although we won't go into
           it further, there's a deep connection between these topics.
         </p>
         <p>
@@ -111,7 +111,7 @@
         This will require a change of perspecitive. We're used to plotting the x-axis horizontally and the y-axis
         vertically. Now that we want to consider two inputs, we have to use the vertical axis for <span
             class="x2">x<small>2</small></span>. The output we encode as the area of circles, either <span
-            class=y1>positive</span> or <span class=negative>negative</span>. This type of diagram is known as a
+            class=y1 style="font-weight:bold">positive</span> or <span class=negative style="font-weight:bold">negative</span>. This type of diagram is known as a
         <i>scalar field</i>.
         </p>
     </div>
@@ -147,13 +147,14 @@
         </p>
         <p>
           Graphically, a matrix's function is a <i>vector field</i>. Instead of having one number at every point in the
-          plane, we now have two. Like a scalar field, a vector field starts with samples of the 2D <span
-              class=x1>input</span> <span class=x2>space</span>. For each of those samples, we draw a vector whose
-          horizontal component is proportional to <span class=y1>y<small>1</small></span> and whose vertical component
-          is proportional to <span class=y2>y<small>2</small></span>. By "proportional", we mean that the vectors are
-          shrunken down so they don't overlap when repeated. If you think of the vectors showing the velocity of a particle
-          at a point, we can see patterns of swirls, attraction, and repulsion. Each arrow is a weather vane, and the
-          matrix controls the wind. </p>
+          plane, we now have two. Like a scalar field, a vector field starts with samples of the 2D <span class=x1
+              style="font-weight:bold">input</span> <span class=x2 style="font-weight:bold">space</span>. For each of
+          those samples, we draw a vector whose horizontal component is proportional to <span
+              class=y1>y<small>1</small></span> and whose vertical component is proportional to <span
+              class=y2>y<small>2</small></span>. By "proportional", we mean that the vectors are shrunken down so they
+          don't overlap when repeated. If you think of the vectors showing the velocity of a particle at a point, we can
+          see patterns of swirls, attraction, and repulsion. Each arrow is a weather vane, and the matrix controls the
+          wind. </p>
     </div>
     <div class='bg'>
         <svg class='fourth'></svg>
@@ -168,11 +169,12 @@
         <p>
           In pure mathematics, you'll typically only see the top-left two-by-two of our three-by-three matrix. The right
           column allows us to add constants (one in each output dimension) in addition to what we get by multiplying the
-          inputs. However, in computer graphics we want to distinguish between <span class=point>points</span>, which
-          can be scaled and translated, and <span class=vector>vectors</span>, which can only be scaled. Click the
-          orange 1 to make it a 0, which turns the input from a point to a vector. Notice that the output is also now a
-          vector, since its last component is now zero. This means we can use the same matrix on points and vectors,
-          which is particularly handy if the matrix took a long time to compute.
+          inputs. However, in computer graphics we want to distinguish between <a class=point style="font-weight:
+              bold" id="setPoint" href="">points</a>, which can be scaled and translated, and <a class=vector
+              style="font-weight: bold" id="setVector" href="">vectors</a>, which can only be scaled. Points are padded with
+          a 1, causing one copy of the last column, the translation, to be added to the output. Vectors are padded with
+          a 0, which causes the translation to be zeros as well. This means we can use the same matrix on points and
+          vectors, which is particularly handy if the matrix took a long time to compute.
         </p>
         <p>
           If you focus on the lengths of the vectors, you'll see that they get longer as they move away from the origin.
