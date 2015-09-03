@@ -12,7 +12,7 @@ cd Invitation-to-Another-Dimension
 npm install
 ```
 Now fire up your favorite web server. As you develop, you'll want to have `gulp` running to take care of browserifying
-the JS and compiling the SASS.
+the JS and compiling the SASS. You may also want to change out `d3.min.js` for `d3.v3.js` in `js/main.js`.
 
 Although an attempt has been made to keep the code reasonably nice, it's a side project. Each stage follows the same
 module pattern: expose a function that sets up a small amount of initial state, various constants and functions, and

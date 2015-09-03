@@ -1,9 +1,9 @@
 Math.TAU = Math.PI*2;
 
-require('../assets/d3.v3.js')
+require('../assets/d3.min.js')
 require('./d3.translate')
 require('./d3.place')
-require('./innersvg')
+require('../assets/innersvg')
 
 
 window.onload = function(){
