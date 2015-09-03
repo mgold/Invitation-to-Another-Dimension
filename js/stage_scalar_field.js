@@ -82,7 +82,7 @@ module.exports = function(){
     var symbols1 = function(g, order){
         var symbols = g.selectAll("text")
             .data([utils.y+" = m"+utils.sub1+utils.x1+" + m"+utils.sub2+utils.x2+" + b",
-                   utils.y+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x1+" <tspan class='dragM2'>"+utils.fmtB(m2)+"</tspan>"+utils.x2+"<tspan class='dragB'>" + utils.b(b) + "</tspan>",
+                   utils.y+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x1+" <tspan class='dragM2'>"+utils.fmtB(m2)+"</tspan>"+utils.x2+"<tspan class='dragB'>" + utils.fmtB(b) + "</tspan>",
                    !curX ? "" : "<tspan class='y1'>"+utils.fmtU(f(curX))+"</tspan> = "+utils.fmtU(m1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.fmtB(m2)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.fmtB(b)
                    ])
         symbols.enter().append("text")

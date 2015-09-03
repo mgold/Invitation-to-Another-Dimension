@@ -46,12 +46,12 @@ module.exports.y2 = "<tspan class='y2'>y"+sub2+"</tspan>"
 module.exports.y3 = "<tspan class='y3'>y"+sub3+"</tspan>"
 
 // render a number with a binary plus/minus
-module.exports.fmtB = module.exports.b = function(b, p){
+module.exports.fmtB = function(b, p){
     p = p === undefined ? 1 : p; //falsey zero prevents ||
     return b < -0.005 ? "- "+Math.abs(b).toFixed(p) : "+ "+Math.abs(b).toFixed(p)
 }
 // render a number with a unary minus or nothing
-module.exports.fmtU = module.exports.m = function(b, p){
+module.exports.fmtU = function(b, p){
     p = p === undefined ? 1 : p;
     return b < -0.005 ? "-"+Math.abs(b).toFixed(p) : Math.abs(b).toFixed(p)
 }
