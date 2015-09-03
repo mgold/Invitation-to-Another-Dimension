@@ -151,8 +151,10 @@ module.exports = function(){
         var y3 = curPos && utils.fmtU(curPos.y3) || "y"+utils.sub3
         g.place("g.vectorY").translate(250, 0)
             .selectAll("g")
-            .data([[y1, "y1"], [y2, "y2"], [y3, "y3"], [point ? 1 : 0]])
+            .data([[y1, "y1"], [y2, "y2"], [y3, "y3"], [point ? 1 : 0, "inactive"]])
             .call(utils.vec)
+        g.select(".vectorY .inactive text")
+         .attr("class", point ? "point" : "vector")
 
         g.selectAll("g.vectorY, text.eq")
           .call(function(){

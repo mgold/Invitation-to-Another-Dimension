@@ -310,8 +310,10 @@ module.exports = function(){
         var y2 = curPos && utils.fmtU(curPos.y2) || "y"+utils.sub2
         g.place("g.vectorY").translate(205, 0)
             .selectAll("g")
-            .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])
+            .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0, "inactive"]])
             .call(utils.vec)
+        g.select(".vectorY .inactive text")
+            .attr("class", point ? "point" : "vector")
 
         g.selectAll("g.vectorY, text.eq")
           .call(function(){
@@ -343,6 +345,7 @@ module.exports = function(){
             bind("y2", function(){ isolateComponent = 2; render(); return "The second output."})
 
             bind("point", function(){ return point ? pointStory : vectorStory })
+
         }
     }
 

@@ -59,9 +59,6 @@ tspan.sub, small {
         font-weight: normal;
         margin-top: 0px;
     }
-    li:not(:first-child){
-        margin-top: 16px;
-    }
     width: 620px;
     @include centered;
 }
@@ -122,13 +119,21 @@ line.y {
     shape-rendering: geometricPrecision;
 }
 
-@include dimension("point", #FF851B);
-@include dimension("vector", #ECCC00);
+$point-color: #FF851B;
+$vector-color: #ECCC00;
+@include dimension("point", $point-color);
+@include dimension("vector", $vector-color);
 
 .component{
     text {
         fill: white;
         text-anchor: middle;
+        &.point{
+            fill: $point-color;
+        }
+        &.vector{
+            fill: $vector-color;
+        }
     }
 
     &.x1, &.x2 {
@@ -140,7 +145,7 @@ line.y {
             fill: #e2e2e2;
             stroke: #999;
         }
-        text {
+        text:not(.vector, .point) {
             fill: #555;
         }
     }
