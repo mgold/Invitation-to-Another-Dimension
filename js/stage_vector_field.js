@@ -4,6 +4,7 @@ module.exports = function(){
     // Matrix index notation is row then column
     var m11 = -3.4, m12 = -0.65, m13 = 1.5,
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
+    m11 = m12 = m13 = m21 = m22 = m23 = 0;
     var point = true;
     var curPos = null;
     var isolateComponent = 0;
@@ -28,6 +29,7 @@ module.exports = function(){
 
     var f = function(a){
         var x1 = a[0], x2 = a[1]
+
         return [x1*m11 + x2*m12 + m13*point, // multiplying by booleans ;)
                 x1*m21 + x2*m22 + m23*point,
                 +point]
@@ -66,6 +68,7 @@ module.exports = function(){
         }
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
+            eval("if (Math.abs("+matrixElem+") < 0.01) "+matrixElem+" = 0")
         })
         axes(layer1, 0, initialRender)
         vectors(layer2, 1, initialRender)
@@ -239,6 +242,11 @@ module.exports = function(){
             .on("mouseenter", function(d){
                 if (!utils.isFrozen()){
                     curPos = d.point.d;
+
+                    //this "shouldn't" be necessary but it is...
+                    var image = f([curPos.x1, curPos.x2]);
+                    curPos.y1 = image[0], curPos.y2 = image[1];
+
                     render();
                 }})
             .on("mouseout", function(d){
@@ -251,9 +259,9 @@ module.exports = function(){
     var symbols = function(g, order, initialRender){
         g.place("g.matrix")
             .selectAll("g")
-            .data([[m11.toFixed(1), "param m11"], [m21.toFixed(1), "mOffDiag m21"], [0, "inactive"],
-                   [m12.toFixed(1), "mOffDiag m12"], [m22.toFixed(1), "param m22"], [0, "inactive"],
-                   [m13.toFixed(1), "b m13"], [m23.toFixed(1), "b m23"], [1, "inactive"]])
+            .data([[utils.fmtU(m11), "param m11"], [utils.fmtU(m21), "mOffDiag m21"], [0, "inactive"],
+                   [utils.fmtU(m12), "mOffDiag m12"], [utils.fmtU(m22), "param m22"], [0, "inactive"],
+                   [utils.fmtU(m13), "b m13"], [utils.fmtU(m23), "b m23"], [1, "inactive"]])
             .call(utils.matrix)
             .call(function(){
                 if (initialRender){
@@ -264,8 +272,8 @@ module.exports = function(){
 
         params.forEach(makeDragger(g));
 
-        var x1 = curPos && curPos.x1.toFixed(0) || "x"+utils.sub1
-        var x2 = curPos && curPos.x2.toFixed(0) || "x"+utils.sub2
+        var x1 = curPos && utils.fmtU(curPos.x1, 0) || "x"+utils.sub1
+        var x2 = curPos && utils.fmtU(curPos.x2, 0) || "x"+utils.sub2
         g.place("g.vectorX")
             .attr("transform", "translate(0, -15), rotate(-90)")
             .selectAll("g")
@@ -299,8 +307,8 @@ module.exports = function(){
             .translate(170, 90)
             .text("=")
 
-        var y1 = curPos && curPos.y1.toFixed(1) || "y"+utils.sub1
-        var y2 = curPos && curPos.y2.toFixed(1) || "y"+utils.sub2
+        var y1 = curPos && utils.fmtU(curPos.y1) || "y"+utils.sub1
+        var y2 = curPos && utils.fmtU(curPos.y2) || "y"+utils.sub2
         g.place("g.vectorY").translate(205, 0)
             .selectAll("g")
             .data([[y1, "y1"], [y2, "y2"], [point ? 1 : 0]])

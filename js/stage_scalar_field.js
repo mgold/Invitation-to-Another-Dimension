@@ -76,14 +76,14 @@ module.exports = function(){
     }
 
     var storySlider = function(g){
-        g.text(b.toFixed(1)).call(makeDraggerB)
+        g.text(utils.fmtU(b)).call(makeDraggerB)
     }
 
     var symbols1 = function(g, order){
         var symbols = g.selectAll("text")
-            .data(["<tspan class='y1'>y</tspan> = m"+utils.sub1+"<tspan class='x1'>x"+utils.sub1+"</tspan> + m"+utils.sub2+"<tspan class='x2'>x"+utils.sub2+"</tspan> + b",
-                   "<tspan class='y1'>y</tspan> = <tspan class='dragM1'>"+m1.toFixed(1)+"</tspan><tspan class='x1'>x"+utils.sub1+"</tspan> <tspan class='dragM2'>"+utils.b(m2)+"</tspan><tspan class='x2'>x"+utils.sub2+"</tspan> <tspan class='dragB'>" + utils.b(b) + "</tspan>",
-                   !curX ? "" : "<tspan class='y1'>"+f(curX).toFixed(1)+"</tspan> = "+m1.toFixed(1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.b(m2)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.b(b)
+            .data([utils.y+" = m"+utils.sub1+utils.x1+" + m"+utils.sub2+utils.x2+" + b",
+                   utils.y+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x1+" <tspan class='dragM2'>"+utils.fmtB(m2)+"</tspan>"+utils.x2+"<tspan class='dragB'>" + utils.b(b) + "</tspan>",
+                   !curX ? "" : "<tspan class='y1'>"+utils.fmtU(f(curX))+"</tspan> = "+utils.fmtU(m1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.fmtB(m2)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.fmtB(b)
                    ])
         symbols.enter().append("text")
             .style("opacity", 0)
@@ -107,7 +107,7 @@ module.exports = function(){
                 .attr("opacity", 1)
         }
 
-        var y = curX ? f(curX).toFixed(1) : "y"
+        var y = curX ? utils.fmtU(f(curX)) : "y"
         g.place("text.y1")
             .translate(30, 59)
             .text(y)
@@ -120,7 +120,7 @@ module.exports = function(){
 
         g.place("g.m").translate(74, 0)
             .selectAll("g")
-            .data([[m1.toFixed(1), "param m1"], [m2.toFixed(1), "param m2"]])
+            .data([[utils.fmtU(m1), "param m1"], [utils.fmtU(m2), "param m2"]])
             .call(utils.vec)
             .each(function(d,i){
                 i ? makeDraggerM2(d3.select(this)) : makeDraggerM1(d3.select(this))
@@ -146,7 +146,7 @@ module.exports = function(){
 
         g.place("text.b")
             .translate(245, 58)
-            .text(Math.abs(b).toFixed(1))
+            .text(utils.fmtU(b))
             .style("font-weight", 600)
             .call(makeDraggerB)
 

@@ -96,10 +96,10 @@ module.exports = function(){
     var symbols = function(g, order, initialRender){
         g.place("g.matrix")
             .selectAll("g")
-            .data([[m11.toFixed(1), "param m11"],    [m21.toFixed(1), "mOffDiag m21"], [m31.toFixed(1), "mOffDiag m31"], [0, "inactive"],
-                   [m12.toFixed(1), "mOffDiag m12"], [m22.toFixed(1), "param m22"],    [m32.toFixed(1), "mOffDiag m32"], [0, "inactive"],
-                   [m13.toFixed(1), "mOffDiag m13"], [m23.toFixed(1), "mOffDiag m23"], [m33.toFixed(1), "param m33"],    [0, "inactive"],
-                   [m14.toFixed(1), "b m14"],        [m24.toFixed(1), "b m24"],        [m34.toFixed(1), "b m34"],        [1, "inactive"]])
+            .data([[utils.fmtU(m11), "param m11"],    [utils.fmtU(m21), "mOffDiag m21"], [utils.fmtU(m31), "mOffDiag m31"], [0, "inactive"],
+                   [utils.fmtU(m12), "mOffDiag m12"], [utils.fmtU(m22), "param m22"],    [utils.fmtU(m32), "mOffDiag m32"], [0, "inactive"],
+                   [utils.fmtU(m13), "mOffDiag m13"], [utils.fmtU(m23), "mOffDiag m23"], [utils.fmtU(m33), "param m33"],    [0, "inactive"],
+                   [utils.fmtU(m14), "b m14"],        [utils.fmtU(m24), "b m24"],        [utils.fmtU(m34), "b m34"],        [1, "inactive"]])
             .call(utils.matrix)
             .call(function(){
                 if (initialRender){
@@ -110,9 +110,9 @@ module.exports = function(){
 
         params.forEach(makeDragger(g));
 
-        var x1 = curPos && curPos.x1.toFixed(0) || "x"+utils.sub1
-        var x2 = curPos && curPos.x2.toFixed(0) || "x"+utils.sub2
-        var x3 = curPos && curPos.x3.toFixed(0) || "x"+utils.sub3
+        var x1 = curPos && utils.fmtU(curPos.x1, 0) || "x"+utils.sub1
+        var x2 = curPos && utils.fmtU(curPos.x2, 0) || "x"+utils.sub2
+        var x3 = curPos && utils.fmtU(curPos.x3, 0) || "x"+utils.sub3
         g.place("g.vectorX")
             .attr("transform", "translate(0, -15), rotate(-90)")
             .selectAll("g")
@@ -146,9 +146,9 @@ module.exports = function(){
             .translate(220, 118)
             .text("=")
 
-        var y1 = curPos && curPos.y1.toFixed(1) || "y"+utils.sub1
-        var y2 = curPos && curPos.y2.toFixed(1) || "y"+utils.sub2
-        var y3 = curPos && curPos.y3.toFixed(1) || "y"+utils.sub3
+        var y1 = curPos && utils.fmtU(curPos.y1) || "y"+utils.sub1
+        var y2 = curPos && utils.fmtU(curPos.y2) || "y"+utils.sub2
+        var y3 = curPos && utils.fmtU(curPos.y3) || "y"+utils.sub3
         g.place("g.vectorY").translate(250, 0)
             .selectAll("g")
             .data([[y1, "y1"], [y2, "y2"], [y3, "y3"], [point ? 1 : 0]])
