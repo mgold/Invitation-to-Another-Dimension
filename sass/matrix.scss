@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,400italic,700|Poiret+One);
 $typeface: noto sans, calibri, klavika, klavika-web, sans-serif;
-$header_typeface: poiret one, $typeface;
+$heading_typeface: poiret one, $typeface;
 
 body {
     margin: 0;
@@ -18,8 +18,8 @@ path, line {
 
 text {
     font-family: avenir, sans-serif;
-    &.subheader {
-        font-family: $header_typeface;
+    &.subheading {
+        font-family: $heading_typeface;
         font-size: 18px;
     }
     not &.draggerHoriz {
@@ -48,13 +48,13 @@ tspan.sub, small {
     font-family: $typeface;
     font-size: 16px;
     h1 {
-        font-family: $header_typeface;
+        font-family: $heading_typeface;
         font-size: 32px;
         font-weight: bold;
         margin-bottom: -4px;
     }
     h2 {
-        font-family: $header_typeface;
+        font-family: $heading_typeface;
         font-size: 18px;
         font-weight: normal;
         margin-top: 0px;

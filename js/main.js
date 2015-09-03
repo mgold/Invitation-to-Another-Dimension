@@ -4,7 +4,7 @@ require('./d3.translate')
 require('./d3.place')
 require('./innersvg')
 
-require('./headers')
+require('./headings')
 
 window.onload = function(){
     var stage_linear = require('./stage_linear')()
