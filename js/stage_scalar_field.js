@@ -82,7 +82,7 @@ module.exports = function(){
     var symbols1 = function(g, order){
         var symbols = g.selectAll("text")
             .data([utils.y+" = m"+utils.sub1+utils.x1+" + m"+utils.sub2+utils.x2+" + b",
-                   utils.y+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x1+" <tspan class='dragM2'>"+utils.fmtB(m2)+"</tspan>"+utils.x2+"<tspan class='dragB'>" + utils.fmtB(b) + "</tspan>",
+                   utils.y+" = <tspan class='dragM1'>"+utils.fmtU(m1)+"</tspan>"+utils.x1+" <tspan class='dragM2'>"+utils.fmtB(m2)+"</tspan>"+utils.x2+" <tspan class='dragB'>" + utils.fmtB(b) + "</tspan>",
                    !curX ? "" : "<tspan class='y1'>"+utils.fmtU(f(curX))+"</tspan> = "+utils.fmtU(m1)+"×<tspan class='x1'>"+curX.x1+"</tspan> "+utils.fmtB(m2)+"×<tspan class='x2'>"+curX.x2+"</tspan> " + utils.fmtB(b)
                    ])
         symbols.enter().append("text")
@@ -146,7 +146,7 @@ module.exports = function(){
 
         g.place("text.b")
             .translate(245, 58)
-            .text(utils.fmtU(b))
+            .text(Math.abs(b).toFixed(1)) //sign is taken care of above
             .style("font-weight", 600)
             .call(makeDraggerB)
 
@@ -168,7 +168,7 @@ module.exports = function(){
             bind("y1", "The output.")
 
             bind("dot", "The dot product, resulting in a scalar.")
-            bind("plus", "Scalar addition.")
+            bind("plus", function(){return b > -0.05 ? "Scalar addition." : "Scalar subtraction."})
         }
     }
 
