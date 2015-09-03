@@ -4,9 +4,11 @@ require('./d3.translate')
 require('./d3.place')
 require('./innersvg')
 
-require('./headings')
 
 window.onload = function(){
+    require('./header')
+    require('./headings')
+
     var stage_linear = require('./stage_linear')()
     var stage_vector_line = require('./stage_vector_line')()
     var stage_scalar_field = require('./stage_scalar_field')()

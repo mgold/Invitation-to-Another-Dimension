@@ -47,10 +47,13 @@ tspan.sub, small {
 .essay {
     font-family: $typeface;
     font-size: 16px;
+    width: 620px;
+    @include centered;
     h1 {
         font-family: $heading_typeface;
         font-size: 32px;
         font-weight: bold;
+        margin-top: 0px;
         margin-bottom: -4px;
     }
     h2 {
@@ -59,8 +62,6 @@ tspan.sub, small {
         font-weight: normal;
         margin-top: 0px;
     }
-    width: 620px;
-    @include centered;
 }
 
 footer {
@@ -238,14 +239,27 @@ $svg_height: 500px;
 svg {
     width: 100%;
     height: $svg_height;
-}
 
-svg.heading {
-    height: 100px;
+    &.header {
+        height: 500px;
+        position: absolute;
+        display: block;
+        z-index: -1;
+    }
 
-    .connector {
-        stroke-width: 2px;
-        shape-rendering: geometricPrecision;
+    &.footer {
+        height: 30px;
+        margin-top: -4px;
+        margin-bottom: 20px;
+    }
+
+    &.heading {
+        height: 100px;
+
+        .connector {
+            stroke-width: 2px;
+            shape-rendering: geometricPrecision;
+        }
     }
 }
 
