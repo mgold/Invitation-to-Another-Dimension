@@ -3,7 +3,7 @@ module.exports = function(){
 
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     var m1 = 0.4, b1 = 0;
-    var m2 = 1.4, b2 = 0;
+    var m2 = 1.4, b2 = 0.5;
     var hoverX = null;
 
     var data = d3.range(-3, 4)
