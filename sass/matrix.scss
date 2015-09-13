@@ -2,6 +2,8 @@
 $typeface: noto sans, calibri, klavika, klavika-web, sans-serif;
 $heading_typeface: poiret one, $typeface;
 
+$dark-gray: #666666;
+
 body {
     margin: 0;
 }
@@ -13,7 +15,7 @@ a {
 
 path, line {
   fill: none;
-  stroke: #888;
+  stroke: $dark-gray;
   shape-rendering: crispEdges;
 }
 
@@ -194,7 +196,6 @@ a.vector {
     cursor: ew-resize;
 }
 
-$dark-gray: #666666;
 $negative-color: #254e88;
 #scalar-field .y1 {
     fill-opacity: 0.9;
@@ -230,6 +231,11 @@ path.brace {
 
 text.eq, text.plus, text.dot {
     font-size: 34px;
+    fill: $dark-gray;
+}
+
+text.zero {
+    font-size: 12px;
     fill: $dark-gray;
 }
 

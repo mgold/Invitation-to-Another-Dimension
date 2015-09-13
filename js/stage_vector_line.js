@@ -30,19 +30,19 @@ module.exports = function(){
     var axisSpacing = 50;
     var isZero = function(x){ return x > -0.001 && x < 0.001 }
 
-    var centerX = window.innerWidth/2;
+    var halfWidth = window.innerWidth/2;
     // DOM element selections
     var svg = d3.select("svg.second")
     var symbols1Parent = svg.append("g")
-        .translate(centerX, 50)
+        .translate(halfWidth, 50)
     var symbols2Parent = svg.append("g")
-        .translate(centerX-108, 105)
+        .translate(halfWidth-108, 105)
         .attr("class", "vectorEqtn")
     var storyParent = svg.append("text")
-        .translate(centerX, 245)
+        .translate(halfWidth, 245)
         .style("text-anchor", "middle")
     var plot = svg.append("g")
-        .translate(centerX, 320)
+        .translate(halfWidth, 335)
     var layer0 = plot.append("g");
     var layer1 = plot.append("g");
     var layer2 = plot.append("g");
@@ -78,6 +78,7 @@ module.exports = function(){
         symbols1(symbols1Parent, 6);
         symbols2(symbols2Parent, 6.5, initialRender);
         story(storyParent, 7, initialRender);
+        zeroTicks(layer1, 7, initialRender);
     }
 
     var axis = function(g, order, initialRender){
@@ -87,7 +88,7 @@ module.exports = function(){
                 .attr("class", "x1")
                 .attr({x1: zero, x2: zero, y1: 0, y2: 0})
               .transition().duration(transDur).delay(transDur*order)
-                .attr({x1: x.range()[0], x2: x.range()[1]})
+                .attr({x1: -halfWidth, x2: halfWidth})
             g.append("line")
                 .attr({x1: zero, x2: zero, y1: 0, y2: 0})
               .transition().duration(transDur).delay(transDur*order)
@@ -269,7 +270,7 @@ module.exports = function(){
               .transition().duration(transDur).delay(transDur*order)
                 .attr({x2: endX, y2: endY})
               .transition().duration(transDur)
-                .attr({y1: -axisSpacing, y2: -axisSpacing})
+                .attr({x1: -halfWidth, x2: halfWidth, y1: -axisSpacing, y2: -axisSpacing})
               .transition().duration(0)
                 .style("shape-rendering", null)
         }
@@ -308,8 +309,34 @@ module.exports = function(){
                 .attr("class", "y2")
                 .attr({x1: 0, x2: 0, y1: axisSpacing, y2: axisSpacing})
               .transition().delay(transDur*order).duration(transDur)
-                .attr({x1: x.range()[0], x2: x.range()[1]})
+                .attr({x1: -halfWidth, x2: halfWidth})
         }
+    }
+
+
+    var zeroTicks = function(g, order, initialRender){
+        g.selectAll("line.zero")
+            .data([axisSpacing+25, -axisSpacing-5])
+            .enter()
+            .append("line")
+            .attr("class", "zero")
+            .style("opacity", 0)
+            .attr("y1", function(d){return d})
+            .attr("y2", function(d){return d-20})
+          .transition().delay(order*transDur).duration(transDur/2)
+            .style("opacity", 1)
+
+        g.selectAll("text.zero")
+            .data([{}])
+            .enter()
+            .append("text")
+            .attr("class", "zero")
+            .style("opacity", 0)
+            .text("0")
+            .translate(-3.5, 87)
+          .transition().delay(order*transDur).duration(transDur/2)
+            .style("opacity", 1)
+
     }
 
 
