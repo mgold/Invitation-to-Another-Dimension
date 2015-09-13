@@ -45,17 +45,17 @@ module.exports = function(){
     function render(initialRender){
         if (initialRender){
             utils.freeze();
-            d3.timer(function(){utils.unfreeze(); return true;}, 3*transDur);
+            d3.timer(function(){utils.unfreeze(); return true;}, 4*transDur);
         }
         m1 = utils.clamp(-10, 10, m1)
         m2 = utils.clamp(-10, 10, m2)
         b = utils.clamp(-10, 10, b)
         storySlider(storySliderParent);
         axes(layer1, 0, initialRender)
-        circlesY(layer2, 1);
-        symbols1(symbols1Parent, 2);
-        symbols2(symbols2Parent, 2.5, initialRender);
-        story(storyParent, 3, initialRender);
+        circlesY(layer2, 2);
+        symbols1(symbols1Parent, 3);
+        symbols2(symbols2Parent, 4.5, initialRender);
+        story(storyParent, 4, initialRender);
     }
 
     var axes = function(g, order, initialRender){
@@ -70,7 +70,7 @@ module.exports = function(){
                 .attr("class", "x2")
                 .style("stroke-width", "2px")
                 .attr({x1: 0, x2: 0, y1: 0, y2: 0})
-                .transition().duration(transDur).delay(transDur*order)
+                .transition().duration(transDur).delay(transDur*(order+1))
                 .attr({x1: 0, x2: 0, y1: x.range()[0], y2: x.range()[1]})
         }
     }
