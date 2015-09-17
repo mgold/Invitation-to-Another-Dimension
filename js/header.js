@@ -28,7 +28,7 @@ svg.selectAll("circle")
 
 svg = d3.select("svg.footer")
     .append("g")
-    .translate((window.innerWidth-620)/2, 10)
+    .translate(620/2, 10)
 
 var x = d3.scale.linear()
         .domain([0, 5])
