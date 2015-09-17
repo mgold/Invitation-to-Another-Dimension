@@ -154,9 +154,10 @@
           those samples, we draw a vector whose horizontal component is proportional to <span
               class=y1>y<small>1</small></span> and whose vertical component is proportional to <span
               class=y2>y<small>2</small></span>. By "proportional", we mean that the vectors are shrunken down so they
-          don't overlap when repeated. If you think of the vectors showing the velocity of a particle at a point, we can
-          see patterns of swirls, attraction, and repulsion. Each arrow is a weather vane, and the matrix controls the
-          wind. </p>
+          don't overlap when repeated. (You can isolate one output by hovering over the output vector.) If you think of
+          the vectors showing the velocity of a particle at a point, we can see patterns of swirls, attraction, and
+          repulsion. Each arrow is a weather vane, and the matrix controls the wind.
+       </p>
     </div>
     <div class='bg'>
         <svg class='fourth'></svg>
@@ -170,30 +171,31 @@
         </p>
         <p>
           In pure mathematics, you'll typically only see the top-left two-by-two of our three-by-three matrix. The right
-          column allows us to add constants (one in each output dimension) in addition to what we get by multiplying the
-          inputs. However, in computer graphics we want to distinguish between <a class=point style="font-weight:
-              bold" id="setPoint" href="">points</a>, which can be scaled and translated, and <a class=vector
-              style="font-weight: bold" id="setVector" href="">vectors</a>, which can only be scaled. Points are padded with
-          a 1, causing one copy of the last column, the translation, to be added to the output. Vectors are padded with
-          a 0, which causes the translation to be zeros as well. This means we can use the same matrix on points and
-          vectors, which is particularly handy if the matrix took a long time to compute.
+          column allows us to add constants (one in each output dimension) in addition (literally) to what we get by
+          multiplying the inputs. However, in computer graphics we want to distinguish between <a class=point
+              style="font-weight: bold" id="setPoint" href="">points</a>, which can be scaled and translated, and <a
+              class=vector style="font-weight: bold" id="setVector" href="">vectors</a>, which can only be scaled.
+          Points are padded with a 1, causing one copy of the last column, the translation, to be added to the output.
+          Vectors are padded with a 0, which causes the translation to be zeros as well. This means we can use the same
+          matrix on points and vectors, which is particularly handy if the matrix took a long time to compute.
         </p>
         <p>
           If you focus on the lengths of the vectors, you'll see that they get longer as they move away from the origin.
           This makes sense, since you're multiplying by larger numbers. But this appearance of growth is deceptive.
           Focus on the arrowheads and ignore the arrow's shaft. If you trace one the straight lines we started with,
-          whether horizontal or vertical, you'll find that it's still straight, just at an odd angle. You'll also notice
+          whether horizontal or vertical, you'll find that they're still straight, just at an odd angle. You'll also notice
           that parallel lines remain parallel, and that three adjacent parallel lines will be evenly spaced. If you look
           at four arrowheads that started as a square, they still form a parallelogram, and this parallelogram is tiled
-          repeatedly across every former square. The matrix, then, converts to another coordinate system: scaled,
-          translated, and stretched, but consistent.
+          repeatedly across every former square. The matrix, then, converts to another coordinate system (or grid): scaled,
+          translated, and stretched, but consistent. It's like a superpower: the ability to bend and distort space, and
+          in a useful, orderly way.
         </p>
         <p>
           It's worth noting that a vector field is not the only way to think about this function; two overlapping scalar
           fields would also work. Nicky Case has <a href=http://ncase.me/matrix/>a demo</a> where the two dimensions of
           input double up to also show the two dimensions of output. In other words, the vectors aren't shrunken down
           like they are here. You can see where a point starts and where it ends relative to the same pair of axes, and
-          vector showing the change in position. The bad news is that you can't see as much of the overall structure.
+          a vector showing the change in position. The bad news is that you can't see as much of the overall structure.
           All of these are valid tradeoffs, given the inherently tricky problem of trying to depict four dimensional
           functions using only a 2D plane.
         </p>
@@ -211,10 +213,14 @@
         <p>
           A 3D vector field might look like a forest of blue arrows, but it's actually easier to see when you adjust the
           matrix and see how the arrows change – predictably, in lines and at right angles. There is symmetry in the
-          motion, each left counterbalanced by a right wherever the sign is flipped. By modifying the matrix, you're
-          getting a glimpse into the space of all possible matrices, a <i>twelve</i> dimensional space. Do we need
-          fifteen inputs to specify three outputs? Not for a single function, no, but breaking things apart allows us to
-          see adjacent functions in many dimensions. If something isn't right, we have a lot of knobs to fix it.
+          motion, each left counterbalanced by a right wherever the sign is flipped. Down the main diagonal, two
+          half-volumes attract or repel; shearing looks like tectonic plates sliding past each other.
+        </p>
+        <p>
+          By modifying the matrix, you're getting a glimpse into the space of all possible matrices, a <i>twelve</i>
+          dimensional space. Do we need fifteen inputs to specify three outputs? Not for a single function, no, but
+          breaking things apart allows us to see adjacent functions in many dimensions. If something isn't right, we
+          have a lot of knobs to fix it.
         </p>
         <p>
           Perhaps more importantly, you should have some idea of what each of those knobs <i>do</i> thanks to the
@@ -222,8 +228,8 @@
           More importantly, each stage incrementally built on <span class=y1>y</span> = m<span class=x1>x</span> + b.
           There, we saw that looking at zero showed us the addition only, and that's true even in the 3D vector field,
           for the very simple reason that scaling zero by anything is always zero.
-          </p>
-          <p>
+        </p>
+        <p>
           We've added more numbers, and seen the surprising effect of shear between them, but the fundamental concepts
           have stayed the same. Addition and multiplication, translation and scaling, served as guideposts as we hoisted
           ourselves ever higher.
