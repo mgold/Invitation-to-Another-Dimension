@@ -207,9 +207,9 @@ module.exports = function(){
             bind("m33", "How much "+utils.x3+" affects "+utils.y3+".")
 
             var nothing4Vectors =  "Does nothing for <tspan class='vector'>vectors</tspan>."
-            bind("m14", function(){ return point ? "A constant added to "+utils.y1+"</tspan>." : nothing4Vectors})
-            bind("m24", function(){ return point ? "A constant added to "+utils.y2+"</tspan>." : nothing4Vectors})
-            bind("m34", function(){ return point ? "A constant added to "+utils.y3+"</tspan>." : nothing4Vectors})
+            bind("m14", function(){ return point ? "A constant added to "+utils.y1+"." : nothing4Vectors})
+            bind("m24", function(){ return point ? "A constant added to "+utils.y2+"." : nothing4Vectors})
+            bind("m34", function(){ return point ? "A constant added to "+utils.y3+"." : nothing4Vectors})
 
             bind("x1", "The first input.")
             bind("x2", "The second input.")
