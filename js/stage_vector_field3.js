@@ -1,16 +1,45 @@
 var utils = require('./utils');
+
 module.exports = function(){
+    var mathboxSelection = d3.select(".mathbox")
+
     // These are the only ones that actually vary - the rest are constants. Silly JavaScript.
     // Matrix index notation is row then column
     var m11 = -3.4, m12 = -0.65, m13 = 1.5,  m14 = 1.2,
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8, m24 = 0.3,
         m31 = 4.8,  m32 = -1.9,  m33 = -1.8; m34 = -0.9;
     var point = true;
-    var curPos = null;
     var isolateComponent = 0;
+    var mathbox = mathBox({
+          element: mathboxSelection.node(),
+          plugins: ['core', 'cursor', 'controls'],
+          controls: {
+                  klass: THREE.OrbitControls,
+          },
+    });
+    if (mathbox.fallback) throw "WebGL error";
+
+    // do this now to avoid a flash of black
+    mathboxSelection.style("opacity", 0);
+    setTimeout(function(){ // won't work synchronously
+        mathbox.three.renderer.setClearColor(new THREE.Color(colors.bg), 1.0);
+    }, 0)
+
+    function degToRad(deg){return Math.PI*deg/180}
+    var cameraAngleInterpolate = d3.interpolateNumber(degToRad(45), degToRad(225))
+    var cameraInclineInterpolate = d3.interpolateNumber(1, 0.2);
+    var ease = d3.ease("cubic-in-out");
 
     var params = "m11 m12 m13 m14 m21 m22 m23 m24 m31 m32 m33 m34".split(" ");
     var transDur = 1500;
+    var colors = {bg: "#fafafa", // no easy way to read sass in JS
+                  x1: "#c03000",
+                  x2: "#85144b",
+                  x3: "#a74697",
+                  y:  "#0d47a1",
+                  y1: "#3080f0",
+                  y2: "#3596bd",
+                  y3: "#45c5ef"}
 
     var makeDragger = function(selection){
         return function(matrixElem){
@@ -25,72 +54,57 @@ module.exports = function(){
         }
     }
 
-    /* You know how only 10% of a program is performance critical? This is that part.
-     * This function is called 125 times a _frame_. So yes, we're going to optimize out
-     * the isolated vector parts, and we're going to do dirty checking in the bind section.
-     * Perf testing for dirty checking consisted of __hearing my laptop fans slow down__.
-     */
-    var f = function(a){
-        var x1 = a[0], x2 = a[1], x3 = a[2];
-        return [x1*m11 + x2*m12 + x3*m13 + m14*point,
-                x1*m21 + x2*m22 + x3*m23 + m24*point,
-                x1*m31 + x2*m32 + x3*m33 + m34*point,
-                +point
-               ]
+    var f = function(x1, x2, x3){
+        var a =  [x1*m11 + x2*m12 + x3*m13 + m14*point,
+                  x1*m21 + x2*m22 + x3*m23 + m24*point,
+                  x1*m31 + x2*m32 + x3*m33 + m34*point,
+                  +point
+                 ]
+        if (isolateComponent === 0){
+            // do nothing but skip the following checks
+        }else if (isolateComponent === 1){
+            a[1] = a[2] = 0;
+        }else if (isolateComponent === 2){
+            a[0] = a[2] = 0;
+        }else if (isolateComponent === 3){
+            a[0] = a[1] = 0;
+        }
+        return a;
     }
-    f.color = 0x0d47a1;
-    var fIso1 = function(a){
-        return [a[0]*m11 + a[1]*m12 + a[2]*m13 + m14*point, 0, 0 ]
-    }
-    fIso1.color = 0x3080f0;
-    var fIso2 = function(a){
-        return [0, a[0]*m21 + a[1]*m22 + a[2]*m23 + m14*point, 0 ]
-    }
-    fIso2.color = 0x3596bd;
-    var fIso3 = function(a){
-        return [0, 0, a[0]*m31 + a[1]*m32 + a[2]*m33 + m14*point ]
-    }
-    fIso3.color = 0x45c5ef;
-    window.vf3_f = f;
-
-    var rez = 7, halfRez = Math.floor(rez/2);
-
-    var x = d3.scale.linear()
-        .domain([-3, 3])
-        .range([-200, 200])
-
-    var y = d3.scale.linear()
-        .domain([-10, 10])
-        .range([x.range()[0]/rez, x.range()[1]/rez])
 
     // DOM element selections
-    var svg = d3.select("svg.fifth").style("width", "320px")
+    var svg = d3.select("svg.fifth")
+        .style("width", "320px")
+        .style("padding-left", "20px")
     var symbolsParent = svg.append("g")
         .translate(5, 175)
     var storyParent = svg.append("g")
         .translate(0, 410)
         .append("text")
-    var mathbox = d3.select(".mathbox")
 
     function render(initialRender){
         if (initialRender){
             utils.freeze();
             d3.timer(function(){utils.unfreeze(); return true;}, 2.5*transDur);
 
-            mathbox.attr("src", "vector_field_3d.html")
-            setInterval(function(){
-                var wid = svg.node().parentNode.getClientRects()[0].width
-                var padding = wid - 500 - 30 - 320; // mathbox width, padding, svg width
-                mathbox.style("padding-left", padding/2+"px")
-            }, 750)
+            adjustPadding();
         }
 
         params.forEach(function(matrixElem){
             eval(matrixElem + " = utils.clamp(-5, 5, "+matrixElem+")");
         })
 
+        vectorField(mathboxSelection, 0, initialRender);
         symbols(symbolsParent, 1, initialRender);
-        story(storyParent, 1, initialRender);
+        story(storyParent, 2, initialRender);
+    }
+
+    var adjustPadding = function(){
+        var wid = svg.node().parentNode.getClientRects()[0].width // width of div.bg
+        var mathboxWidth = +mathboxSelection.select("canvas").style("width").slice(0,3)
+        var padding = wid - mathboxWidth - 30 - 320; // mathbox width, padding, svg width
+        console.log("new padding:", padding, mathboxWidth)
+        mathboxSelection.style("padding-left", padding/2+"px")
     }
 
     var symbols = function(g, order, initialRender){
@@ -110,9 +124,9 @@ module.exports = function(){
 
         params.forEach(makeDragger(g));
 
-        var x1 = curPos && utils.fmtU(curPos.x1, 0) || "x"+utils.sub1
-        var x2 = curPos && utils.fmtU(curPos.x2, 0) || "x"+utils.sub2
-        var x3 = curPos && utils.fmtU(curPos.x3, 0) || "x"+utils.sub3
+        var x1 = "x"+utils.sub1
+        var x2 = "x"+utils.sub2
+        var x3 = "x"+utils.sub3
         g.place("g.vectorX")
             .attr("transform", "translate(0, -15), rotate(-90)")
             .selectAll("g")
@@ -146,9 +160,9 @@ module.exports = function(){
             .translate(220, 118)
             .text("=")
 
-        var y1 = curPos && utils.fmtU(curPos.y1) || "y"+utils.sub1
-        var y2 = curPos && utils.fmtU(curPos.y2) || "y"+utils.sub2
-        var y3 = curPos && utils.fmtU(curPos.y3) || "y"+utils.sub3
+        var y1 = "y"+utils.sub1
+        var y2 = "y"+utils.sub2
+        var y3 = "y"+utils.sub3
         g.place("g.vectorY").translate(250, 0)
             .selectAll("g")
             .data([[y1, "y1"], [y2, "y2"], [y3, "y3"], [point ? 1 : 0, "inactive"]])
@@ -165,12 +179,20 @@ module.exports = function(){
             }})
     }
 
+    var setColor = function(color){
+        mathbox.select("vector").set("color", color);
+    }
+
     var pointStory = "A 1 indicates this is a <tspan class='point'>point</tspan>."
     var vectorStory = "A 0 indicates this is a <tspan class='vector'>vector</tspan>."
     var story = function(g, order, initialRender){
         if (initialRender){
             var timeoutID;
-            var bind = utils.bind(svg, g, ".component.", function(){f.dirty = true; window.vf3_f = f});
+            var bind = utils.bind(svg, g, ".component.", function(){
+                // do this when hiding overlays
+                isolateComponent = 0;
+                setColor(colors.y);
+            });
 
             bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
             bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")
@@ -193,11 +215,64 @@ module.exports = function(){
             bind("x2", "The second input.")
             bind("x3", "The third input.")
 
-            bind("y1", function(){ fIso1.dirty = true; window.vf3_f = fIso1; return "The first output."})
-            bind("y2", function(){ fIso2.dirty = true; window.vf3_f = fIso2; return "The second output."})
-            bind("y3", function(){ fIso3.dirty = true; window.vf3_f = fIso3; return "The third output."})
+            bind("y1", function(){ isolateComponent = 1; setColor(colors.y1); return "The first output."})
+            bind("y2", function(){ isolateComponent = 2; setColor(colors.y2); return "The second output."})
+            bind("y3", function(){ isolateComponent = 3; setColor(colors.y3); return "The third output."})
 
             bind("point", function(){ return point ? pointStory : vectorStory })
+        }
+    }
+
+    var vectorField = function(g, order, initialRender){
+        if (initialRender){
+            g.transition().duration(1.7*transDur).delay(200)
+              .style("opacity", 1)
+
+            var n = 4; // distance in either direction
+            mathbox.three.controls.minDistance = mathbox.three.controls.maxDistance = 3;
+            mathbox.set({ scale: 720, focus: 3 });
+            var theta = cameraAngleInterpolate(0);
+            mathbox.camera({ proxy: true, position: [Math.cos(theta), cameraInclineInterpolate(0), Math.sin(theta)] });
+            var view = mathbox.cartesian({
+                  scale: [2, 2, 2],
+                  range: [[-n, n], [-n, n], [-n, n]],
+            });
+            view.axis({ axis: 1, width: 3, color: colors.x1 });
+            view.axis({ axis: 2, width: 3 , color: colors.x2});
+            view.axis({ axis: 3, width: 3 , color: colors.x3});
+            view.grid({ divideX: n, divideY: n, axes: "xz" });
+
+            n = 2; // distance in either direction
+            var rez = 2*n+1; // number of samples per dimension
+            view = mathbox.cartesian({
+                  range: [[-n, n], [-n, n], [-n, n]],
+            });
+            view
+                .volume({
+                    channels: 3, // three dimensions of output
+                    items: 2, // each datum calls emit twice, for tip and tail
+                    width: rez,
+                    height: rez,
+                    depth: rez,
+                    expr: function (emit, x, y, z, i, j, k){
+                        emit(x,y,z);
+                        var a = f(x,y,z).map(function(d){ return d / 16 })
+                        emit(x+a[0], y+a[1], z+a[2])
+                    },
+                })
+            .vector({
+                size: 3,
+                end: true,
+                color: colors.y
+            });
+
+            var duration = 5000;
+            d3.timer(function(t){
+                var frac = ease(Math.min(1, t/duration));
+                var theta = cameraAngleInterpolate(frac);
+                mathbox.three.camera.position.set(Math.cos(theta), cameraInclineInterpolate(frac), Math.sin(theta));
+                return t > duration;
+            }, 2*transDur);
         }
     }
 
