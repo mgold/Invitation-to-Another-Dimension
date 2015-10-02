@@ -233,7 +233,7 @@ module.exports = function(){
             var n = 4; // distance in either direction
             var controls = mathbox.three.controls;
             controls.minDistance = 3;
-            controls.noZoom = controls.noPan = controls.noKeys = true;
+            controls.noRotate = controls.noZoom = controls.noPan = controls.noKeys = true;
             mathbox.set({ scale: 720, focus: 3 });
             var theta = cameraAngleInterpolate(0);
             mathbox.camera({ proxy: true, position: [Math.cos(theta), cameraInclineInterpolate(0), Math.sin(theta)] });
@@ -278,6 +278,8 @@ module.exports = function(){
                 mathbox.three.camera.position.set(Math.cos(theta), cameraInclineInterpolate(frac), Math.sin(theta));
                 return t > duration;
             }, 2*transDur);
+            // don't allow rotate until we're done spinning
+            setTimeout(function(){ controls.noRotate = false }, duration + 2*transDur);
         }
     }
 
