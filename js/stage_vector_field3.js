@@ -9,6 +9,7 @@ module.exports = function(){
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8, m24 = 0.3,
         m31 = 4.8,  m32 = -1.9,  m33 = -1.8; m34 = -0.9;
     var point = true;
+    var isDragging = false;
     var isolateComponent = 0;
     var mathbox = mathBox({
           element: mathboxSelection.node(),
@@ -49,8 +50,9 @@ module.exports = function(){
                     if (!utils.isFrozen()){
                         eval(matrixElem + " += d3.event.dx/10"); // it's not evil, it's metaprogramming!
                         render();
-                    }
-                }))
+                    }})
+                .on("dragstart", function(){ isDragging = true; })
+                .on("dragend", function(){ isDragging = false; }))
         }
     }
 
@@ -192,7 +194,7 @@ module.exports = function(){
                 // do this when hiding overlays
                 isolateComponent = 0;
                 setColor(colors.y);
-            });
+            },function(){ return isDragging}); // disable when true
 
             bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
             bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")

@@ -71,13 +71,13 @@ module.exports.makeCircles = function(transDur, circleSamples, className, initia
 }
 
 
-module.exports.bind = function(svg, g, baseSel, cb){
+module.exports.bind = function(svg, g, baseSel, cb, disable){
     baseSel = baseSel || "";
     var timeoutID;
     return function(sel, html){
     svg.selectAll(baseSel+sel)
         .on("mouseenter", function(){
-            if (!module.exports.isFrozen()){
+            if (!module.exports.isFrozen() && (!disable || !disable())){
                 clearTimeout(timeoutID); // it's safe to clear an invalid ID
                 if (cb) cb(); // yes, this might happen twice, shh
                 typeof html === "function" ? g.html(html()) : g.html(html)

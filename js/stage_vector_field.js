@@ -5,6 +5,7 @@ module.exports = function(){
     var m11 = -3.4, m12 = -0.65, m13 = 1.5,
         m21 = 4.8,  m22 = -1.9,  m23 = -1.8;
     var point = true;
+    var isDragging = false;
     var curPos = null;
     var isolateComponent = 0;
     var balls = [];
@@ -21,8 +22,9 @@ module.exports = function(){
                     if (!utils.isFrozen()){
                         eval(matrixElem + " += d3.event.dx/10"); // it's not evil, it's metaprogramming!
                         render();
-                    }
-                }))
+                    }})
+                .on("dragstart", function(){ isDragging = true; })
+                .on("dragend", function(){ isDragging = false; }))
         }
     }
 
@@ -346,7 +348,9 @@ module.exports = function(){
     var vectorStory = "A 0 indicates this is a <tspan class='vector'>vector</tspan>."
     var story = function(g, order, initialRender){
         if (initialRender){
-            var bind = utils.bind(svg, g, ".component.", function(){isolateComponent = 0; render()});
+            var bind = utils.bind(svg, g, ".component.",
+                function(){isolateComponent = 0; render()}, // callback on mouseout
+                function(){return isDragging}) // disable on drag
 
             bind("m11", "How much "+utils.x1+" affects "+utils.y1+".")
             bind("m12", "How much "+utils.x2+" affects "+utils.y1+".")
