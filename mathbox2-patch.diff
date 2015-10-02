@@ -1,0 +1,16 @@
+diff --git a/src/shaders/glsl/arrow.position.glsl b/src/shaders/glsl/arrow.position.glsl
+index 2da5574..cb0af5c 100644
+--- a/src/shaders/glsl/arrow.position.glsl
++++ b/src/shaders/glsl/arrow.position.glsl
+@@ -69,6 +69,10 @@ vec3 getArrowPosition() {
+   
+   getArrowGeometry(p, attach.x, attach.y, left, right, start);
+   mat4 matrix = getArrowMatrix(left, right, start);
+-  return (matrix * vec4(arrow.xyz, 1.0)).xyz;
++  // Offset so that cones don't overlap lines
++  // I tried adding this to right right column of the matrix on line 59,
++  // since t is already computed, and it didn't work for some reason.
++  vec3 offset = normalize(left-right) * -0.01;
++  return (matrix * vec4(arrow.xyz, 1.0)).xyz + offset;
+ 
+ }
