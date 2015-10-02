@@ -333,7 +333,7 @@ module.exports = function(){
             .attr("class", "zero")
             .style("opacity", 0)
             .text("0")
-            .translate(-3.5, 87)
+            .translate(-2.85, 87)
           .transition().delay(order*transDur).duration(transDur/2)
             .style("opacity", 1)
 
