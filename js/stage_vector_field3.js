@@ -105,7 +105,6 @@ module.exports = function(){
         var wid = svg.node().parentNode.getClientRects()[0].width // width of div.bg
         var mathboxWidth = +mathboxSelection.select("canvas").style("width").slice(0,3)
         var padding = wid - mathboxWidth - 30 - 320; // mathbox width, padding, svg width
-        console.log("new padding:", padding, mathboxWidth)
         mathboxSelection.style("padding-left", padding/2+"px")
     }
 
