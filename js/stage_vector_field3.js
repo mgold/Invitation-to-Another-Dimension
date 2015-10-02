@@ -27,7 +27,7 @@ module.exports = function(){
     }, 0)
 
     function degToRad(deg){return Math.PI*deg/180}
-    var cameraAngleInterpolate = d3.interpolateNumber(degToRad(45), degToRad(225))
+    var cameraAngleInterpolate = d3.interpolateNumber(degToRad(225), degToRad(405))
     var cameraInclineInterpolate = d3.interpolateNumber(1, 0.2);
     var ease = d3.ease("cubic-in-out");
 
@@ -239,9 +239,9 @@ module.exports = function(){
                   scale: [2, 2, 2],
                   range: [[-n, n], [-n, n], [-n, n]],
             });
-            view.axis({ axis: 1, width: 3, color: colors.x1 });
-            view.axis({ axis: 2, width: 3 , color: colors.x2});
-            view.axis({ axis: 3, width: 3 , color: colors.x3});
+            view.axis({ axis: 3, width: 3, color: colors.x1 });
+            view.axis({ axis: 1, width: 3 , color: colors.x2});
+            view.axis({ axis: 2, width: 3 , color: colors.x3});
             view.grid({ divideX: n, divideY: n, axes: "xz" });
 
             n = 2; // distance in either direction
@@ -257,9 +257,9 @@ module.exports = function(){
                     height: rez,
                     depth: rez,
                     expr: function (emit, x, y, z, i, j, k){
-                        emit(x,y,z);
+                        emit(y,z,x); // order is scrambled to have xy be flat and z be vertical
                         var a = f(x,y,z).map(function(d){ return d / 16 })
-                        emit(x+a[0], y+a[1], z+a[2])
+                        emit(y+a[1], z+a[2], x+a[0])
                     },
                 })
             .vector({
@@ -268,6 +268,7 @@ module.exports = function(){
                 color: colors.y
             });
 
+            // There is probably a way to do this with mathbox2 but D3 and Three.js are a lot better documented
             var duration = 5000;
             d3.timer(function(t){
                 var frac = ease(Math.min(1, t/duration));
