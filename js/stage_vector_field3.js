@@ -275,10 +275,8 @@ module.exports = function(){
                 var frac = ease(Math.min(1, t/duration));
                 var theta = cameraAngleInterpolate(frac);
                 mathbox.three.camera.position.set(Math.cos(theta), cameraInclineInterpolate(frac), Math.sin(theta));
-                return t > duration;
+                return t > duration && !(controls.noRotate = false); // assignment only done on last iteration
             }, 2*transDur);
-            // don't allow rotate until we're done spinning
-            setTimeout(function(){ controls.noRotate = false }, duration + 2*transDur);
         }
     }
 
