@@ -181,7 +181,7 @@ module.exports = function(){
         circles.enter().append("circle")
             .attr("class", "y1")
             .attr("cx", function(d){return x(d.x1)})
-            .attr("cy", function(d){return x(d.x2)})
+            .attr("cy", function(d){return -x(d.x2)})
             .attr("r", 0)
             .classed("negative", function(d){return f(d) < 0})
             .on("mouseenter", function(d){ if (!curX){ curX = d; d3.select(this).classed("current", true); render()}})
