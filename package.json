@@ -11,10 +11,11 @@
   "author": "Max Goldstein",
   "license": "CC-BY-NC-SA",
   "devDependencies": {
-    "browserify": "^10.2.6",
-    "gulp": "^3.9.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^2.2.0",
-    "vinyl-source-stream": "^1.1.0"
+    "browserify": "^17.0.0",
+    "gulp": "^5.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "vinyl-source-stream": "^2.0.0",
+    "sass": "^1.77.6"
   }
 }
